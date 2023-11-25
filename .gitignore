@@ -24,3 +24,5 @@ obj/
 
 # Visual Studio Code
 .vscode-test/
+
+.DS_Store
