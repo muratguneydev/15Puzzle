@@ -1,0 +1,34 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+	  {
+		"label": "Build 15Puzzle.CLI",
+		"type": "shell",
+		"command": "dotnet",
+		"args": ["build", "15Puzzle.CLI"],
+		"group": {
+		  "kind": "build",
+		  "isDefault": true
+		}
+	  },
+	  {
+		"label": "Build 15Puzzle.Tests",
+		"type": "shell",
+		"command": "dotnet",
+		"args": ["build", "15Puzzle.Tests"]
+	  },
+	  {
+		"label": "Run 15Puzzle.CLI",
+		"type": "shell",
+		"command": "dotnet",
+		"args": ["run", "--project", "15Puzzle.CLI"]
+	  },
+	  {
+		"label": "Test 15Puzzle.Tests",
+		"type": "shell",
+		"command": "dotnet",
+		"args": ["test", "15Puzzle.Tests"]
+	  }
+	]
+  }
+  

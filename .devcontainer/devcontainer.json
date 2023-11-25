@@ -1,0 +1,13 @@
+{
+	"name": "15Puzzle",
+	"image": "mcr.microsoft.com/devcontainers/dotnet:0-7.0",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"formulahendry.dotnet-test-explorer",
+				"ms-dotnettools.csharp"
+			]
+		}
+	}
+}
+  

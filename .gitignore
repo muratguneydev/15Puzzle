@@ -6,13 +6,13 @@
 *.user
 *.aps
 *.pch
-*.vscode
+#*.vscode
 *.vscode-test
-.vscode
+#.vscode
 bin/
 obj/
 .dotnet/
-.devcontainer/
+#.devcontainer/
 
 # User-specific files
 *.rsuser
@@ -23,5 +23,4 @@ obj/
 *.sln.docstates
 
 # Visual Studio Code
-.vscode/
 .vscode-test/
