@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "15Puzzle.CLI", "15Puzzle.CLI\15Puzzle.CLI.csproj", "{8028636E-7F7D-430A-97B3-73A8BC553A9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FifteenPuzzle.CLI", "FifteenPuzzle.CLI\FifteenPuzzle.CLI.csproj", "{8028636E-7F7D-430A-97B3-73A8BC553A9B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "15Puzzle.Tests", "15Puzzle.Tests\15Puzzle.Tests.csproj", "{30C14124-C8AA-4C77-B412-4B6E1906BAD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FifteenPuzzle.Tests", "FifteenPuzzle.Tests\FifteenPuzzle.Tests.csproj", "{30C14124-C8AA-4C77-B412-4B6E1906BAD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

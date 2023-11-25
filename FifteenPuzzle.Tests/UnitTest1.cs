@@ -1,6 +1,7 @@
+namespace FifteenPuzzle.Tests;
+
 using NUnit.Framework;
 
-namespace _15Puzzle.Tests;
 
 public class Tests
 {

@@ -1,5 +1,5 @@
 {
-	"name": "15Puzzle",
+	"name": "FifteenPuzzle",
 	"image": "mcr.microsoft.com/devcontainers/dotnet:0-7.0",
 	"customizations": {
 		"vscode": {
