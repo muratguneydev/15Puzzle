@@ -1,0 +1,19 @@
+# EditorConfig helps developers define and maintain consistent
+# coding styles between different editors and IDEs
+
+# This file is for a project with a mix of C# and VB.NET
+
+# Apply to all files
+[*]
+# Set tab width to 4 spaces
+indent_style = space
+indent_size = 4
+
+# C# files
+[*.cs]
+
+# Specify the rules for C# files
+# Enforce underscore as a prefix for field names
+dotnet_naming_style.field_names = _<Name>
+dotnet_naming_symbols.field = private, protected, internal, public
+dotnet_naming_rules.field_name_required_prefix.suffix = true
