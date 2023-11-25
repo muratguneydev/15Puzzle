@@ -1,0 +1,27 @@
+# .NET
+*.obj
+*.dll
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vscode
+*.vscode-test
+.vscode
+bin/
+obj/
+.dotnet/
+.devcontainer/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+.vscode-test/
