@@ -4,24 +4,29 @@ namespace FifteenPuzzle.Game;
 
 public class Board : IEnumerable<Row>
 {
-	private readonly int[,] _cells = new int[4, 4];
+	private readonly int[,] _cells = new int[4,4];
 
 	public Board(int[,] cells)
-	{
-		if (cells.GetUpperBound(0) != 3)
-		{
-			throw new Exception("Board should have 3 rows.");
-		}
+    {
+        AssertBoardBoundaries(cells);
+        _cells = cells;
+    }
 
-		if (cells.GetUpperBound(1) != 3)
-		{
-			throw new Exception("Board should have 3 columns.");
-		}
+    private static void AssertBoardBoundaries(int[,] cells)
+    {
+        AssertBoundary(cells, 0, "row");
+        AssertBoundary(cells, 1, "column");
+    }
 
-		_cells = cells;
-	}
+    private static void AssertBoundary(int[,] cells, int dimension, string dimensionName)
+    {
+        if (cells.GetUpperBound(dimension) != 3)
+        {
+            throw new Exception($"Board should have 3 {dimensionName}s.");
+        }
+    }
 
-	public int[,] Cells => (int[,])_cells.Clone();
+    public int[,] Cells => (int[,])_cells.Clone();
 	public int ColumnLength => _cells.GetUpperBound(0) + 1;
 	public int RowLength => _cells.GetUpperBound(1) + 1;
 
