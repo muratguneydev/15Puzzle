@@ -2,9 +2,9 @@ using System.Collections;
 
 namespace FifteenPuzzle.Game;
 
-public class Board : IEnumerable<int[]>
+public class Board : IEnumerable<Row>
 {
-	private int[,] _cells = new int[4, 4];
+	private readonly int[,] _cells = new int[4, 4];
 
 	public Board(int[,] cells)
 	{
@@ -34,24 +34,27 @@ public class Board : IEnumerable<int[]>
 			{ 13, 14, 15, 0 }
 		});
 
-	public IEnumerable<int[]> Rows
+	public IEnumerable<Row> Rows
 	{
 		get
 		{
-			var rows = new int[RowLength][];
-			for (var row = 0; row < RowLength; row++)
+			var rows = new Row[RowLength];
+			for (var rowIndex = 0; rowIndex < RowLength; rowIndex++)
 			{
-				rows[row] = new int[ColumnLength];
-				for (var column = 0; column < ColumnLength; column++)
-				{
-					rows[row][column] = _cells[row, column];
-				}
+				rows[rowIndex] = GetRow(rowIndex);
 			}
 			return rows;
 		}
 	}
 
-	public IEnumerator<int[]> GetEnumerator()
+	private Row GetRow(int rowIndex)
+    {
+        return new Row(Enumerable.Range(0, _cells.GetLength(1))
+                .Select(x => _cells[rowIndex, x])
+                .ToArray());
+    }
+
+	public IEnumerator<Row> GetEnumerator()
 	{
 
 		return Rows.GetEnumerator();

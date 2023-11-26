@@ -25,7 +25,8 @@ public class BoardRenderer
 
 		foreach(var row in _board.Rows)
 		{
-			table.AddRow(row[0].ToString(), row[1].ToString(), row[2].ToString(), row[3].ToString());
+			//table.AddRow(row[0].ToString(), row[1].ToString(), row[2].ToString(), row[3].ToString());
+			table.AddRow(row.Select(number => number.ToString()).ToArray());
 		}
 
 		_console.Write(table);

@@ -32,7 +32,8 @@ public class BoardRendererTests
 
         foreach (var row in board.Rows)
         {
-            expectedTable.AddRow(row[0].ToString(), row[1].ToString(), row[2].ToString(), row[3].ToString());
+			expectedTable.AddRow(row.Select(number => number.ToString()).ToArray());
+
         }
 
         return expectedTable;
