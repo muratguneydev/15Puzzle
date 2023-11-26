@@ -1,6 +1,6 @@
-using System.Collections;
-
 namespace FifteenPuzzle.Game;
+
+using System.Collections;
 
 public class Board : IEnumerable<Row>
 {
@@ -12,6 +12,36 @@ public class Board : IEnumerable<Row>
         AssertBoardBoundaries(cells);
         _cells = cells;
     }
+
+    public int[,] Cells => (int[,])_cells.Clone();
+
+	public static Board Solved = new(
+		new[,]
+		{
+			{ 1, 2, 3, 4 },
+			{ 5, 6, 7, 8 },
+			{ 9, 10, 11, 12 },
+			{ 13, 14, 15, 0 }
+		});
+
+	public IEnumerable<Row> Rows =>
+		Enumerable
+			.Range(0, RowLength)
+            .Select(GetRow)
+            .ToArray();
+
+	public IEnumerator<Row> GetEnumerator() => Rows.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+	private int ColumnLength => Dimension;
+	private int RowLength => Dimension;
+
+    private Row GetRow(int rowIndex) => new Row(
+		Enumerable
+			.Range(0, ColumnLength)
+            .Select(x => _cells[rowIndex, x])
+            .ToArray());
 
     private static void AssertBoardBoundaries(int[,] cells)
     {
@@ -26,41 +56,4 @@ public class Board : IEnumerable<Row>
             throw new Exception($"Board should have 3 {dimensionName}s.");
         }
     }
-
-    public int[,] Cells => (int[,])_cells.Clone();
-	public int ColumnLength => Dimension;
-	public int RowLength => Dimension;
-
-	public static Board Solved = new(
-		new[,]
-		{
-			{ 1, 2, 3, 4 },
-			{ 5, 6, 7, 8 },
-			{ 9, 10, 11, 12 },
-			{ 13, 14, 15, 0 }
-		});
-
-	public IEnumerable<Row> Rows
-	{
-		get
-		{
-			var rows = new Row[RowLength];
-			for (var rowIndex = 0; rowIndex < RowLength; rowIndex++)
-			{
-				rows[rowIndex] = GetRow(rowIndex);
-			}
-			return rows;
-		}
-	}
-
-	private Row GetRow(int rowIndex)
-    {
-        return new Row(Enumerable.Range(0, ColumnLength-1)
-                .Select(x => _cells[rowIndex, x])
-                .ToArray());
-    }
-
-    public IEnumerator<Row> GetEnumerator() => Rows.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
