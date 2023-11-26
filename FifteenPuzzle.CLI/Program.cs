@@ -18,6 +18,6 @@ using FifteenPuzzle.CLI;
 
 
 
-new BoardRenderer(AnsiConsole.Console, Board.Complete).Render();
+new BoardRenderer(AnsiConsole.Console, Board.Solved).Render();
 
 //AnsiConsole.Write(board);

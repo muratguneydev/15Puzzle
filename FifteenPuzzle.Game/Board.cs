@@ -25,7 +25,7 @@ public class Board : IEnumerable<int[]>
 	public int ColumnLength => _cells.GetUpperBound(0) + 1;
 	public int RowLength => _cells.GetUpperBound(1) + 1;
 
-	public static Board Complete = new(
+	public static Board Solved = new(
 		new[,]
 		{
 			{ 1, 2, 3, 4 },
