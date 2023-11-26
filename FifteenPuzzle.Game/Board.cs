@@ -4,7 +4,8 @@ namespace FifteenPuzzle.Game;
 
 public class Board : IEnumerable<Row>
 {
-	private readonly int[,] _cells = new int[4,4];
+	private const int Dimension = 4;
+	private readonly int[,] _cells = new int[Dimension,Dimension];
 
 	public Board(int[,] cells)
     {
@@ -20,15 +21,15 @@ public class Board : IEnumerable<Row>
 
     private static void AssertBoundary(int[,] cells, int dimension, string dimensionName)
     {
-        if (cells.GetUpperBound(dimension) != 3)
+        if (cells.GetUpperBound(dimension) != Dimension-1)
         {
             throw new Exception($"Board should have 3 {dimensionName}s.");
         }
     }
 
     public int[,] Cells => (int[,])_cells.Clone();
-	public int ColumnLength => _cells.GetUpperBound(0) + 1;
-	public int RowLength => _cells.GetUpperBound(1) + 1;
+	public int ColumnLength => Dimension;
+	public int RowLength => Dimension;
 
 	public static Board Solved = new(
 		new[,]
@@ -54,19 +55,12 @@ public class Board : IEnumerable<Row>
 
 	private Row GetRow(int rowIndex)
     {
-        return new Row(Enumerable.Range(0, _cells.GetLength(1))
+        return new Row(Enumerable.Range(0, ColumnLength-1)
                 .Select(x => _cells[rowIndex, x])
                 .ToArray());
     }
 
-	public IEnumerator<Row> GetEnumerator()
-	{
+    public IEnumerator<Row> GetEnumerator() => Rows.GetEnumerator();
 
-		return Rows.GetEnumerator();
-	}
-
-	IEnumerator IEnumerable.GetEnumerator()
-	{
-		return GetEnumerator();
-	}
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
