@@ -5,7 +5,8 @@
 		"vscode": {
 			"extensions": [
 				"formulahendry.dotnet-test-explorer",
-				"ms-dotnettools.csharp"
+				"ms-dotnettools.csharp",
+				"ms-dotnettools.csdevkit"
 			]
 		}
 	}
