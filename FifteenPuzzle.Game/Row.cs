@@ -2,13 +2,13 @@ using System.Collections;
 
 namespace FifteenPuzzle.Game;
 
-public record Row : IEnumerable<int>
+public record Row : IEnumerable<Cell>
 {
-    private readonly List<int> _items;
+    private readonly IList<Cell> _items;
 
-    public Row(int[] items) => _items = new(items);
+    public Row(Cell[] cells) => _items = new List<Cell>(cells);
 
-    public IEnumerator<int> GetEnumerator() => _items.GetEnumerator();
+    public IEnumerator<Cell> GetEnumerator() => _items.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 } 
