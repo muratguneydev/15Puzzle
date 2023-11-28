@@ -30,17 +30,18 @@ public class BoardTests
     [Test]
 	public void ShouldMoveToEmptyCell_WhenAdjacent()
 	{
-		var board1 = new Board(new[,]
+		//Arrange
+		var board = new Board(new[,]
 		{
 			{ 1, 2, 3, 4 },
 			{ 5, 6, 7, 8 },
 			{ 9, 0, 11, 12 },
 			{ 13, 14, 15, 10 }
 		});
-
-		board1.Move(9);
-
-		var board2 = new Board(new[,]
+		//Act
+		board.Move("9");
+		//Assert
+		var expectedBoard = new Board(new[,]
 		{
 			{ 1, 2, 3, 4 },
 			{ 5, 6, 7, 8 },
@@ -48,25 +49,88 @@ public class BoardTests
 			{ 13, 14, 15, 10 }
 		});
 
-		board1.Cells.Should().BeEquivalentTo(board2.Cells);
-		board1.Rows.Should().BeEquivalentTo(board2.Rows);
+		board.Cells.Should().BeEquivalentTo(expectedBoard.Cells);
+		board.Rows.Should().BeEquivalentTo(expectedBoard.Rows);
 	}
 
 	[Test]
 	public void ShouldNotMoveToEmptyCell_WhenNotAdjacent()
 	{
-		var board1 = new Board(new[,]
+		//Arrange
+		var board = new Board(new[,]
 		{
 			{ 1, 2, 3, 4 },
 			{ 5, 6, 7, 8 },
 			{ 9, 0, 11, 12 },
 			{ 13, 14, 15, 10 }
 		});
-		var board2 = new Board(board1);
+		var expectedBoard = new Board(board);
+		//Act
+		board.Move("2");
+		//Assert
+		board.Cells.Should().BeEquivalentTo(expectedBoard.Cells);
+		board.Rows.Should().BeEquivalentTo(expectedBoard.Rows);
+	}
 
-		board1.Move(2);
+	[Test]
+	public void ShouldProvideFrontierBoards_ForEachPossibleNextMove()
+	{
+		//Arrange
+		var board = new Board(new[,]
+		{
+			{ 1, 2, 3, 4 },
+			{ 5, 6, 7, 8 },
+			{ 9, 0, 11, 12 },
+			{ 13, 14, 15, 10 }
+		});
+		
+		var expectedFrontierBoards = new []
+		{
+			new Board(new[,]
+			{
+				{ 1, 2, 3, 4 },
+				{ 5, 0, 7, 8 },
+				{ 9, 6, 11, 12 },
+				{ 13, 14, 15, 10 }
+			}),
+			new Board(new[,]
+			{
+				{ 1, 2, 3, 4 },
+				{ 5, 6, 7, 8 },
+				{ 9, 14, 11, 12 },
+				{ 13, 0, 15, 10 }
+			}),new Board(new[,]
+			{
+				{ 1, 2, 3, 4 },
+				{ 5, 6, 7, 8 },
+				{ 0, 9, 11, 12 },
+				{ 13, 14, 15, 10 }
+			}),new Board(new[,]
+			{
+				{ 1, 2, 3, 4 },
+				{ 5, 6, 7, 8 },
+				{ 9, 11, 0, 12 },
+				{ 13, 14, 15, 10 }
+			}),
+		};
+		//Act
+		var frontierBoards = board.GetFrontierBoards();
+		//Assert
+		frontierBoards.Should().BeEquivalentTo(expectedFrontierBoards);
+	}
 
-		board1.Cells.Should().BeEquivalentTo(board2.Cells);
-		board1.Rows.Should().BeEquivalentTo(board2.Rows);
+	[Test]
+	public void ShouldFlatten()
+	{
+		//Arrange
+		var flattened = new Cell[] {
+			new (0, 0, "1"), new (0, 1, "2"), new (0, 2, "3"), new (0, 3, "4"),
+			new (1, 0, "5"), new (1, 1, "6"), new (1, 2, "7"), new (1, 3, "8"),
+			new (2, 0, "9"), new (2, 1, "10"), new (2, 2, "11"), new (2, 3, "12"),
+			new (3, 0, "13"), new (3, 1, "14"), new (3, 2, "15"), new (3, 3, "")
+		};
+		//Act & Assert
+		Board.Solved.Flattened.Should().BeEquivalentTo(flattened);
 	}
 }
+

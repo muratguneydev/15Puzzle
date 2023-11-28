@@ -1,6 +1,7 @@
 namespace FifteenPuzzle.Game;
 
 using System.Collections;
+using System.Text;
 
 public class Board : IEnumerable<Row>
 {
@@ -11,11 +12,11 @@ public class Board : IEnumerable<Row>
     {
         AssertBoardBoundaries(cells);
 
-		for (var x = 0; x < SideLength; x++)
+		for (var row = 0; row < RowLength; row++)
         {
-            for (var y = 0; y < SideLength; y++)
+            for (var column = 0; column < ColumnLength; column++)
             {
-                _cells[x, y] = new Cell(x, y, cells[x,y]);
+                _cells[row, column] = new Cell(row, column, cells[row,column]);
             }
         }
     }
@@ -28,16 +29,48 @@ public class Board : IEnumerable<Row>
 
 	public Board(Board board)
     {
-		for (var x = 0; x < SideLength; x++)
+		for (var row = 0; row < RowLength; row++)
         {
-            for (var y = 0; y < SideLength; y++)
+            for (var column = 0; column < ColumnLength; column++)
             {
-                _cells[x, y] = board.Cells[x,y].Copy();
+                _cells[row, column] = board.Cells[row,column].Copy();
             }
         }
     }
 
-    public Cell[,] Cells => (Cell[,])_cells.Clone();
+    public Cell[,] Cells
+	{
+		get
+		{
+			var cells = new Cell[SideLength,SideLength];
+			for (var row = 0; row < RowLength; row++)
+			{
+				for (var column = 0; column < ColumnLength; column++)
+				{
+					cells[row, column] = _cells[row,column].Copy();
+				}
+			}
+			return cells;
+		}
+	}
+
+	public Cell[] Flattened
+	{
+		get
+		{
+			var result = new Cell[_cells.Length];
+
+			int write = 0;
+			for (int y = 0; y < RowLength; y++)
+			{
+				for (int x = 0; x < ColumnLength; x++)
+				{
+					result[write++] = _cells[y, x];
+				}
+			}
+			return result;
+		}
+	}
 
 	public static Board Solved = new(
 		new[,]
@@ -54,10 +87,10 @@ public class Board : IEnumerable<Row>
             .Select(GetRow)
             .ToArray();
 
-	public void Move(int value)
+	public void Move(string value)
     {
-        var empty = GetCell(string.Empty);
-        var from = GetCell(value.ToString());
+        Cell empty = GetEmptyCell();
+        var from = GetCell(value);
 
         var sameColumnAdjacentRow = empty.IsOnSameColumn(from) && Math.Abs(empty.RowDifference(from)) == 1;
         var sameRowAdjacentColumn = empty.IsOnSameRow(from) && Math.Abs(empty.ColumnDifference(from)) == 1;
@@ -66,19 +99,76 @@ public class Board : IEnumerable<Row>
             return;//return invalid move
         }
 
-        _cells[empty.X, empty.Y].SetValue(_cells[from.X, from.Y].Value);
-        _cells[from.X, from.Y].SetValue(string.Empty);
+        _cells[empty.Row, empty.Column].SetValue(_cells[from.Row, from.Column].Value);
+        _cells[from.Row, from.Column].SetValue(string.Empty);
     }
 
-    private Cell GetCell(string value)
+    public IEnumerable<Board> GetFrontierBoards()
+	{
+		var adjacentCells = GetAdjacentCells(GetEmptyCell());
+		var result = new List<Board>();
+
+		foreach(var cell in adjacentCells)
+		{
+			var clone = new Board(this);
+			clone.Move(cell.Value);
+			result.Add(clone);
+		}
+
+		return result;
+	}
+
+	public IEnumerator<Row> GetEnumerator() => Rows.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    public override string ToString()
     {
-        for (var x = 0; x < SideLength; x++)
+        var stringBuilder = new StringBuilder(_cells.Length);
+		for (var row = 0; row < RowLength; row++)
+		{
+			for (var column = 0; column < ColumnLength; column++)
+			{
+				stringBuilder.Append($"{_cells[row,column]}-");
+			}
+		}
+		return stringBuilder.ToString();
+    }
+
+    private IEnumerable<Cell> GetAdjacentCells(Cell cell)
+	{
+		var adjacentCells = new List<Cell>();
+		if (TryGetCell(cell.Row - 1, cell.Column, out var aboveCell))
+		{
+			adjacentCells.Add(aboveCell);
+		}
+		if (TryGetCell(cell.Row + 1, cell.Column, out var belowCell))
+		{
+			adjacentCells.Add(belowCell);
+		}
+		if (TryGetCell(cell.Row, cell.Column - 1, out var leftCell))
+		{
+			adjacentCells.Add(leftCell);
+		}
+		if (TryGetCell(cell.Row, cell.Column + 1, out var rightCell))
+		{
+			adjacentCells.Add(rightCell);
+		}
+
+		return adjacentCells;
+	}
+
+    private Cell GetEmptyCell() => GetCell(string.Empty);
+
+	private Cell GetCell(string value)
+    {
+        for (var row = 0; row < RowLength; row++)
         {
-            for (var y = 0; y < SideLength; y++)
+            for (var column = 0; column <  ColumnLength; column++)
             {
-                if (_cells[x, y].Value == value)
+                if (_cells[row, column].Value == value)
                 {
-                    return _cells[x, y];
+                    return _cells[row, column];
                 }
             }
         }
@@ -86,11 +176,23 @@ public class Board : IEnumerable<Row>
         throw new Exception("There is no empty cell on the board.");
     }
 
-    public IEnumerator<Row> GetEnumerator() => Rows.GetEnumerator();
+	private bool TryGetCell(int row, int column, out Cell cell)
+	{
+		cell = new Cell(0,0,"");//TODO
+		if (row < 0)
+			return false;
+		if (row >= SideLength)
+			return false;
+		if (column < 0)
+			return false;
+		if (column >= SideLength)
+			return false;
+		
+		cell = _cells[row,column];
+		return true;
+	}
 
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-	private int ColumnLength => SideLength;
+    private int ColumnLength => SideLength;
 	private int RowLength => SideLength;
 
     private Row GetRow(int rowIndex) => new Row(
@@ -116,11 +218,11 @@ public class Board : IEnumerable<Row>
 	private static string[,] Convert(int[,] cellValues)
 	{
 		var stringCellValues = new string[SideLength,SideLength];
-		for (var x = 0; x < SideLength; x++)
+		for (var row = 0; row < SideLength; row++)
         {
-            for (var y = 0; y < SideLength; y++)
+            for (var column = 0; column < SideLength; column++)
             {
-                stringCellValues[x, y] = cellValues[x,y] == 0 ? string.Empty : cellValues[x,y].ToString();
+                stringCellValues[row, column] = cellValues[row,column] == 0 ? string.Empty : cellValues[row,column].ToString();
             }
         }
 		return stringCellValues;

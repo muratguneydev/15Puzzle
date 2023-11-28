@@ -7,8 +7,7 @@
 		"command": "dotnet",
 		"args": ["build", "FifteenPuzzle.CLI"],
 		"group": {
-		  "kind": "build",
-		  "isDefault": true
+		  "kind": "build"
 		}
 	  },
 	  {
@@ -17,15 +16,18 @@
 		"command": "dotnet",
 		"args": ["build", "FifteenPuzzle.Game"],
 		"group": {
-		  "kind": "build",
-		  "isDefault": true
+		  "kind": "build"
 		}
 	  },
 	  {
 		"label": "Build FifteenPuzzle.Tests",
 		"type": "shell",
 		"command": "dotnet",
-		"args": ["build", "FifteenPuzzle.Tests"]
+		"args": ["build", "FifteenPuzzle.Tests"],
+		"group": {
+		  "kind": "build",
+		  "isDefault": true
+		}
 	  },
 	  {
 		"label": "Run FifteenPuzzle.CLI",

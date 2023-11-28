@@ -2,7 +2,6 @@ namespace FifteenPuzzle.CLI;
 
 using FifteenPuzzle.Game;
 using Spectre.Console;
-using Spectre.Console.Advanced;
 
 public class BoardRenderer
 {
@@ -25,8 +24,7 @@ public class BoardRenderer
 
 		foreach(var row in _board.Rows)
 		{
-			//table.AddRow(row[0].ToString(), row[1].ToString(), row[2].ToString(), row[3].ToString());
-			table.AddRow(row.Select(number => number.ToString()).ToArray());
+			table.AddRow(row.Select(cell => cell.Value).ToArray());
 		}
 
 		_console.Write(table);
