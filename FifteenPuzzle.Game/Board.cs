@@ -108,21 +108,23 @@ public record Board : IEnumerable<Row>
     }
 
     public IEnumerable<Board> GetFrontierBoards()
-	{
-		var adjacentCells = GetAdjacentCells(GetEmptyCell());
-		var result = new List<Board>();
+    {
+        var movableCells = GetMovableCells();
+        var result = new List<Board>();
 
-		foreach(var cell in adjacentCells)
-		{
-			var clone = new Board(this);
-			clone.Move(cell.Value);
-			result.Add(clone);
-		}
+        foreach (var cell in movableCells)
+        {
+            var clone = new Board(this);
+            clone.Move(cell.Value);
+            result.Add(clone);
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public IEnumerator<Row> GetEnumerator() => Rows.GetEnumerator();
+    public IEnumerable<Cell> GetMovableCells() => GetAdjacentCells(GetEmptyCell());
+
+    public IEnumerator<Row> GetEnumerator() => Rows.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

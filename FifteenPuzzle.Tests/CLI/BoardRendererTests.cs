@@ -15,7 +15,7 @@ public class BoardRendererTests
         //Arrange
         var consoleSpy = new Mock<IAnsiConsole>();
         var board = Board.Solved;
-        var sut = new BoardRenderer(consoleSpy.Object, board);
+        var sut = new TableBoardRenderer(consoleSpy.Object, board);
         //Act
         sut.Render();
         //Assert
