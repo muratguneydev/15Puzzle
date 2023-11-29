@@ -18,6 +18,30 @@ public class BoardTests
 		}).Cells);
 	}
 
+	[Test]
+	public void ShouldIdentifySolvedBoard()
+	{
+		new Board(new[,]
+		{
+			{ 1, 2, 3, 4 },
+			{ 5, 6, 7, 8 },
+			{ 9, 10, 11, 12 },
+			{ 13, 14, 15, 0 }
+		}).IsSolved.Should().BeTrue();
+	}
+
+	[Test]
+	public void ShouldIdentifyUnsolvedBoard()
+	{
+		new Board(new[,]
+		{
+			{ 1, 2, 3, 4 },
+			{ 5, 6, 7, 8 },
+			{ 9, 10, 11, 12 },
+			{ 13, 14, 0, 15 }
+		}).IsSolved.Should().BeFalse();
+	}
+
     [Test]
     public void ShouldProvideRows() => Board.Solved.Should().BeEquivalentTo(new Board(new[,]
         {

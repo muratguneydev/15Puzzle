@@ -3,7 +3,7 @@ namespace FifteenPuzzle.Game;
 using System.Collections;
 using System.Text;
 
-public class Board : IEnumerable<Row>
+public record Board : IEnumerable<Row>
 {
 	public const int SideLength = 4;
 	private readonly Cell[,] _cells = new Cell[SideLength,SideLength];
@@ -29,6 +29,7 @@ public class Board : IEnumerable<Row>
 
 	public Board(Board board)
     {
+		_cells = new Cell[SideLength,SideLength];//??
 		for (var row = 0; row < RowLength; row++)
         {
             for (var column = 0; column < ColumnLength; column++)
@@ -80,6 +81,9 @@ public class Board : IEnumerable<Row>
 			{ "9", "10", "11", "12" },
 			{ "13", "14", "15", "" }
 		});
+
+	public bool IsSolved => new BoardComparer().Equals(this, Solved);
+	
 
 	public IEnumerable<Row> Rows =>
 		Enumerable

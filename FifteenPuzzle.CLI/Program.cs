@@ -16,8 +16,25 @@ using FifteenPuzzle.CLI;
 
 // AnsiConsole.Write(table);
 
+var solver = new DepthFirstSolver(Render);
 
+void Render(Board board)
+{
+    new BoardRenderer(AnsiConsole.Console, board).Render();
+	Thread.Sleep(1000);
+}
 
-new BoardRenderer(AnsiConsole.Console, Board.Solved).Render();
+var board = new Board(new[,]
+		{
+			{ 1, 2, 3, 4 },
+			{ 5, 6, 7, 8 },
+			{ 9, 10, 0, 11 },
+			{ 13, 14, 15, 12 }
+		});
+		//Act
+		solver.Solve(board);
+Console.WriteLine("Complete");
+Console.ReadLine();
+//new BoardRenderer(AnsiConsole.Console, Board.Solved).Render();
 
 //AnsiConsole.Write(board);
