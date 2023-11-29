@@ -1,6 +1,6 @@
-using System.Collections;
-
 namespace FifteenPuzzle.Game;
+
+using System.Collections;
 
 public record Row : IEnumerable<Cell>
 {

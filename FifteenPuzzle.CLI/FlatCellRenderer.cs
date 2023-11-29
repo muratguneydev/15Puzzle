@@ -11,7 +11,7 @@ public class FlatCellRenderer
     public FlatCellRenderer(Cell cell, Board board)
 	{
         _cell = cell;
-		_isMovable = board.GetMovableCells().Select(x => x.Value).Contains(cell.Value);
+		_isMovable = board.GetMovableCells().Contains(cell);
     }
 
     //public IRenderable Render() => new Markup($"[blue]{_cell.Value}[/]");

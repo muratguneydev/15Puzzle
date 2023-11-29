@@ -5,39 +5,44 @@ public class DepthFirstSolver
 	private readonly Stack<Board> _stack = new();
 	private readonly HashSet<Board> _history = new();
     private readonly Action<Board> _onNewItemTested;
-	private readonly BoardComparer _boardComparer = new BoardComparer();
+	private readonly BoardComparer _boardComparer = new();
     private bool _solved;
 
     public DepthFirstSolver(Action<Board> onNewItemTested) => _onNewItemTested = onNewItemTested;
 
     public IReadOnlyList<Board> History => _history.ToList();
 
-	public void Solve(Board initialBoard)
+	public void Solve(Board currentBoard)
     {
-        if (HasBeenTested(initialBoard) || _solved)
+        if (HasBeenTested(currentBoard) || _solved)
             return;
 
-        _onNewItemTested(initialBoard);
+        _onNewItemTested(currentBoard);
 
-        _history.Add(initialBoard);
+        _history.Add(currentBoard);
 
-        if (initialBoard.IsSolved)
+        if (currentBoard.IsSolved)
         {
             _solved = true;
             return;
         }
 
-        foreach (var nextPossibleBoard in initialBoard.GetFrontierBoards())
-        {
-            if (!HasBeenTested(nextPossibleBoard))
-                _stack.Push(nextPossibleBoard);
-        }
+        AddFrontiersToStack(currentBoard);
 
         if (!_stack.Any())
             return;
 
         var nextBoard = _stack.Pop();
         Solve(nextBoard);
+    }
+
+    private void AddFrontiersToStack(Board currentBoard)
+    {
+        foreach (var nextPossibleBoard in currentBoard.GetFrontierBoards())
+        {
+            if (!HasBeenTested(nextPossibleBoard))
+                _stack.Push(nextPossibleBoard);
+        }
     }
 
     private bool HasBeenTested(Board board) => _history.Contains(board, _boardComparer);
