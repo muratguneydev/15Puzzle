@@ -6,6 +6,7 @@ using FifteenPuzzle.Game;
 using FifteenPuzzle.Game.Solvers.ReinforcementLearning;
 using FluentAssertions;
 using NUnit.Framework;
+using Shouldly;
 
 public class QValueReaderTests
 {
@@ -20,8 +21,6 @@ public class QValueReaderTests
 		//Act
 		var qValueTable = qValueReader.Read();
 		//Assert
-		qValueTable.Should().HaveCount(1);
-
 		var expectedBoard = new Board(new[,]
 			{
 				{ 1, 2, 3, 4 },
@@ -29,13 +28,57 @@ public class QValueReaderTests
 				{ 9, 6, 11, 12 },
 				{ 13, 14, 15, 10 }
 			});
-		var actualBoardActionQValues = qValueTable.Single();
+		var actualBoardActionQValues = qValueTable.ShouldHaveSingleItem();
 
 		var actualBoard = actualBoardActionQValues.Board;
-		actualBoard.Cells.Should().BeEquivalentTo(expectedBoard.Cells);
-		actualBoard.Rows.Should().BeEquivalentTo(expectedBoard.Rows);
+		BoardAsserter.ShouldBeEquivalent(expectedBoard, actualBoard);
 
 		var actualActionQValues = actualBoardActionQValues.ActionQValues;
 		actualActionQValues.Should().Be(expectedActionQValues);
+	}
+
+	[Test, AutoData]
+	public void ShouldReadQValuesWithMultipleBoardStates(ActionQValues[] expectedActionQValues)
+	{
+		//Arrange
+		var existingQValueCsv = @$"1,2,3,4,5,,7,8,9,6,11,12,13,14,15,10,{expectedActionQValues[0].Up},{expectedActionQValues[0].Right},{expectedActionQValues[0].Down},{expectedActionQValues[0].Left}
+1,2,3,,5,4,7,8,9,6,11,12,13,14,15,10,{expectedActionQValues[1].Up},{expectedActionQValues[1].Right},{expectedActionQValues[1].Down},{expectedActionQValues[1].Left}
+1,2,3,4,5,8,7,,9,6,11,12,13,14,15,10,{expectedActionQValues[2].Up},{expectedActionQValues[2].Right},{expectedActionQValues[2].Down},{expectedActionQValues[2].Left}";
+		
+		var byteArray = Encoding.UTF8.GetBytes(existingQValueCsv);
+		var stream = new MemoryStream(byteArray);
+		var qValueReader = new QValueReader(stream);
+		//Act
+		var qValueTable = qValueReader.Read();
+		//Assert
+		qValueTable.Should().HaveCount(3);
+
+		var expectedBoards = new[] {
+			new Board(new[,]
+			{
+				{ 1, 2, 3, 4 },
+				{ 5, 0, 7, 8 },
+				{ 9, 6, 11, 12 },
+				{ 13, 14, 15, 10 }
+			}),
+			new Board(new[,]
+			{
+				{ 1, 2, 3, 0 },
+				{ 5, 4, 7, 8 },
+				{ 9, 6, 11, 12 },
+				{ 13, 14, 15, 10 }
+			}),
+			new Board(new[,]
+			{
+				{ 1, 2, 3, 4 },
+				{ 5, 8, 7, 0 },
+				{ 9, 6, 11, 12 },
+				{ 13, 14, 15, 10 }
+			}),
+		};
+		BoardAsserter.ShouldBeEquivalent(expectedBoards, qValueTable.Select(boardActionQValue => boardActionQValue.Board));
+
+		var actualActionQValues = qValueTable.Select(boardActionQValue => boardActionQValue.ActionQValues);
+		actualActionQValues.Should().BeEquivalentTo(expectedActionQValues);
 	}
 }

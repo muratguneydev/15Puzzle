@@ -73,8 +73,7 @@ public class BoardTests
 			{ 13, 14, 15, 10 }
 		});
 
-		board.Cells.Should().BeEquivalentTo(expectedBoard.Cells);
-		board.Rows.Should().BeEquivalentTo(expectedBoard.Rows);
+		BoardAsserter.ShouldBeEquivalent(expectedBoard, board);
 	}
 
 	[Test]
@@ -92,8 +91,8 @@ public class BoardTests
 		//Act
 		board.Move("2");
 		//Assert
-		board.Cells.Should().BeEquivalentTo(expectedBoard.Cells);
-		board.Rows.Should().BeEquivalentTo(expectedBoard.Rows);
+		BoardAsserter.ShouldBeEquivalent(expectedBoard, board);
+
 	}
 
 	[Test]
