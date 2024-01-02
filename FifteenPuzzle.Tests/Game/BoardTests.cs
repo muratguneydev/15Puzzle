@@ -1,8 +1,8 @@
+namespace FifteenPuzzle.Tests.Game;
+
 using FifteenPuzzle.Game;
 using FluentAssertions;
 using NUnit.Framework;
-
-namespace FifteenPuzzle.Tests.Game;
 
 public class BoardTests
 {

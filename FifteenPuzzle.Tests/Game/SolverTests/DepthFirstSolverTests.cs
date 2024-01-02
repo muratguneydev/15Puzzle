@@ -1,10 +1,11 @@
-namespace FifteenPuzzle.Tests.Game;
+namespace FifteenPuzzle.Tests.Game.SolverTests;
 
 using FifteenPuzzle.Game;
+using FifteenPuzzle.Game.Solvers;
 using FluentAssertions;
 using NUnit.Framework;
 
-public class SolverTests
+public class DepthFirstSolverTests
 {
 	[Test]
 	public void ShouldSolve_WhenAlreadySolved()

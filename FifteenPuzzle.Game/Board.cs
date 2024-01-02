@@ -83,7 +83,6 @@ public record Board : IEnumerable<Row>
 		});
 
 	public bool IsSolved => new BoardComparer().Equals(this, Solved);
-	
 
 	public IEnumerable<Row> Rows =>
 		Enumerable

@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.Game;
+namespace FifteenPuzzle.Game.Solvers;
 
 public class DepthFirstSolver
 {
