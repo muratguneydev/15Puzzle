@@ -17,6 +17,8 @@ public record QValueTable : IEnumerable<BoardActionQValues>
 		return _boardActionQValues[_boardComparer.GetHashCode(board)].ActionQValues;
 	}
 
+	//public 
+
     public IEnumerator<BoardActionQValues> GetEnumerator() => _boardActionQValues.Values.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

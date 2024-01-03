@@ -16,13 +16,13 @@ public class QValueReader
     public async Task<QValueTable> Read()
     {
         using var reader = new StreamReader(_qValueStream, Encoding.UTF8);
-        var fileContent = await reader.ReadToEndAsync();
-		if (string.IsNullOrEmpty(fileContent))
+        var existingContent = await reader.ReadToEndAsync();
+		if (string.IsNullOrEmpty(existingContent))
 		{
 			return new EmptyQValueTable();
 		}
 
-		var csvLines = fileContent.Split(Environment.NewLine);
+		var csvLines = existingContent.Split(Environment.NewLine);
 		var boardActionQValues = csvLines.Select(_boardActionQValuesStringConverter.GetFromLine);
 
         return new QValueTable(boardActionQValues);

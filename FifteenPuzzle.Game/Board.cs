@@ -200,7 +200,7 @@ public record Board : IEnumerable<Row>
     private int ColumnLength => SideLength;
 	private int RowLength => SideLength;
 
-    private Row GetRow(int rowIndex) => new Row(
+    private Row GetRow(int rowIndex) => new (
 		Enumerable
 			.Range(0, ColumnLength)
             .Select(columnIndex => _cells[rowIndex, columnIndex])
