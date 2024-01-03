@@ -156,4 +156,3 @@ public class BoardTests
 		Board.Solved.Flattened.Should().BeEquivalentTo(flattened);
 	}
 }
-
