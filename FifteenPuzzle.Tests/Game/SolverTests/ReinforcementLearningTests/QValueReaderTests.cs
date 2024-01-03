@@ -11,15 +11,16 @@ using Shouldly;
 public class QValueReaderTests
 {
 	[Test, AutoData]
-	public void ShouldReadQValuesWith1BoardState(ActionQValues expectedActionQValues)
+	public async Task ShouldReadQValuesWith1BoardState(ActionQValues expectedActionQValues,
+		BoardActionQValuesStringConverter boardActionQValuesStringConverter)
 	{
 		//Arrange
 		var existingQValueCsv = @$"1,2,3,4,5,,7,8,9,6,11,12,13,14,15,10,{expectedActionQValues.Up},{expectedActionQValues.Right},{expectedActionQValues.Down},{expectedActionQValues.Left}";
 		var byteArray = Encoding.UTF8.GetBytes(existingQValueCsv);
 		var stream = new MemoryStream(byteArray);
-		var qValueReader = new QValueReader(stream);
+		var sut = new QValueReader(boardActionQValuesStringConverter, stream);
 		//Act
-		var qValueTable = qValueReader.Read();
+		var qValueTable = await sut.Read();
 		//Assert
 		var expectedBoard = new Board(new[,]
 			{
@@ -38,7 +39,8 @@ public class QValueReaderTests
 	}
 
 	[Test, AutoData]
-	public void ShouldReadQValuesWithMultipleBoardStates(ActionQValues[] expectedActionQValues)
+	public async Task ShouldReadQValuesWithMultipleBoardStates(ActionQValues[] expectedActionQValues,
+		BoardActionQValuesStringConverter boardActionQValuesStringConverter)
 	{
 		//Arrange
 		var existingQValueCsv = @$"1,2,3,4,5,,7,8,9,6,11,12,13,14,15,10,{expectedActionQValues[0].Up},{expectedActionQValues[0].Right},{expectedActionQValues[0].Down},{expectedActionQValues[0].Left}
@@ -47,9 +49,9 @@ public class QValueReaderTests
 		
 		var byteArray = Encoding.UTF8.GetBytes(existingQValueCsv);
 		var stream = new MemoryStream(byteArray);
-		var qValueReader = new QValueReader(stream);
+		var sut = new QValueReader(boardActionQValuesStringConverter, stream);
 		//Act
-		var qValueTable = qValueReader.Read();
+		var qValueTable = await sut.Read();
 		//Assert
 		qValueTable.Should().HaveCount(3);
 

@@ -29,7 +29,7 @@ public record Board : IEnumerable<Row>
 
 	public Board(Board board)
     {
-		_cells = new Cell[SideLength,SideLength];//??
+		_cells = new Cell[SideLength,SideLength];
 		for (var row = 0; row < RowLength; row++)
         {
             for (var column = 0; column < ColumnLength; column++)
