@@ -1,14 +1,17 @@
 namespace FifteenPuzzle.Tests.Game.SolverTests.ReinforcementLearningTests;
 
 using System.Text;
-using AutoFixture.NUnit3;
 using FifteenPuzzle.Game;
 using FifteenPuzzle.Game.Solvers.ReinforcementLearning;
 using FluentAssertions;
+using global::AutoFixture.NUnit3;
 using NUnit.Framework;
 
 public class QValueWriterTests
 {
+	private const char Separator = ',';
+	private const char ActionQValueSeparator = '/';
+
 	[Test, AutoData]
 	public async Task ShouldWriteQValues(ActionQValues[] expectedActionQValues,
 		BoardActionQValuesStringConverter boardActionQValuesStringConverter)
@@ -38,9 +41,9 @@ public class QValueWriterTests
 			}),
 		};
 
-		var expectedQValueCsv = @$"1,2,3,4,5,,7,8,9,6,11,12,13,14,15,10,{expectedActionQValues[0].Up},{expectedActionQValues[0].Right},{expectedActionQValues[0].Down},{expectedActionQValues[0].Left}
-1,2,3,,5,4,7,8,9,6,11,12,13,14,15,10,{expectedActionQValues[1].Up},{expectedActionQValues[1].Right},{expectedActionQValues[1].Down},{expectedActionQValues[1].Left}
-1,2,3,4,5,8,7,,9,6,11,12,13,14,15,10,{expectedActionQValues[2].Up},{expectedActionQValues[2].Right},{expectedActionQValues[2].Down},{expectedActionQValues[2].Left}";
+		var expectedQValueCsv = @$"1,2,3,4,5,,7,8,9,6,11,12,13,14,15,10,{GetActionQValuesString(expectedActionQValues[0])}
+1,2,3,,5,4,7,8,9,6,11,12,13,14,15,10,{GetActionQValuesString(expectedActionQValues[1])}
+1,2,3,4,5,8,7,,9,6,11,12,13,14,15,10,{GetActionQValuesString(expectedActionQValues[2])}";
 		
 		var qValueTable = new QValueTable(new[] {
 			new BoardActionQValues(expectedBoards[0], expectedActionQValues[0]),
@@ -60,4 +63,7 @@ public class QValueWriterTests
 		sut.Dispose();//we need the stream until this point. Disposing the StreamWriter will also dispose the stream.
 		writtenText.Should().Be(expectedQValueCsv);
 	}
+
+	private static string GetActionQValuesString(ActionQValues actionQValues) =>
+		string.Join(Separator, actionQValues.Select(a => $"{a.Move.Number}{ActionQValueSeparator}{a.QValue}"));
 }

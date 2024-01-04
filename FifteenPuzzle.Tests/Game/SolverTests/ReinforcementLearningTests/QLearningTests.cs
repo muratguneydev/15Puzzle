@@ -1,8 +1,8 @@
 namespace FifteenPuzzle.Tests.Game.SolverTests.ReinforcementLearningTests;
 
-using AutoFixture.NUnit3;
 using FifteenPuzzle.Game.Solvers.ReinforcementLearning;
 using FluentAssertions;
+using global::AutoFixture.NUnit3;
 using NUnit.Framework;
 
 public class QLearningTests
