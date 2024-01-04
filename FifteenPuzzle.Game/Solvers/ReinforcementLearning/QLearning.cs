@@ -25,7 +25,7 @@ from random import random, choice as random_choice, shuffle
 
 # Pseudo-code for Q-learning iteration
 
-# Initialize Q-values for all state-action pairs to arbitrary values
+# Initialize Q-values for all state-action pairs to arbitrary values. i.e. read existing from previously saved file, return empty if no file
 Q = initialize_q_values()
 
 # Set hyperparameters
@@ -38,7 +38,7 @@ num_iterations = 1000
 
 # Main learning loop
 for iteration in range(num_iterations):
-    # Reset the environment to the initial state
+    # Reset the environment to the initial state. i.e. get a random board
     state = reset_environment()
 
     # Iterate within an episode until a terminal state is reached
@@ -78,7 +78,7 @@ def update_q_value(Q, state, action, next_state, reward, alpha, gamma):
     new_q_value = current_q_value + alpha * (reward + gamma * max_future_q_value - current_q_value)
     Q[state][action] = new_q_value
 
-# Function to reset the environment to the initial state
+# Function to reset the environment to the initial state i.e. RandomBoard
 def reset_environment():
     # Generate a list representing the solved state [1, 2, 3, ..., n**2-1, 0]
     solved_state = list(range(1, n**2)) + [0]

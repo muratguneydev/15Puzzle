@@ -73,7 +73,7 @@ public record Board : IEnumerable<Row>
 		}
 	}
 
-	public static Board Solved = new(
+	public static Board Solved => new(
 		new[,]
 		{
 			{ "1", "2", "3", "4" },
@@ -123,6 +123,22 @@ public record Board : IEnumerable<Row>
 
     public IEnumerable<Cell> GetMovableCells() => GetAdjacentCells(GetEmptyCell());
 
+	public Cell GetCell(string value)
+    {
+        for (var row = 0; row < RowLength; row++)
+        {
+            for (var column = 0; column <  ColumnLength; column++)
+            {
+                if (_cells[row, column].Value == value)
+                {
+                    return _cells[row, column];
+                }
+            }
+        }
+
+        throw new Exception("There is no empty cell on the board.");
+    }
+
     public IEnumerator<Row> GetEnumerator() => Rows.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -164,22 +180,6 @@ public record Board : IEnumerable<Row>
 	}
 
     private Cell GetEmptyCell() => GetCell(string.Empty);
-
-	private Cell GetCell(string value)
-    {
-        for (var row = 0; row < RowLength; row++)
-        {
-            for (var column = 0; column <  ColumnLength; column++)
-            {
-                if (_cells[row, column].Value == value)
-                {
-                    return _cells[row, column];
-                }
-            }
-        }
-
-        throw new Exception("There is no empty cell on the board.");
-    }
 
 	private bool TryGetCell(int row, int column, out Cell cell)
 	{

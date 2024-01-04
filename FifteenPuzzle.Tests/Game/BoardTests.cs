@@ -3,6 +3,7 @@ namespace FifteenPuzzle.Tests.Game;
 using FifteenPuzzle.Game;
 using FluentAssertions;
 using NUnit.Framework;
+using Shouldly;
 
 public class BoardTests
 {
@@ -154,5 +155,25 @@ public class BoardTests
 		};
 		//Act & Assert
 		Board.Solved.Flattened.Should().BeEquivalentTo(flattened);
+	}
+
+	[Test]
+	public void ShouldFindCell()
+	{
+		//Arrange
+		var sut = new Board(new[,]
+			{
+				{ 1, 2, 3, 4 },
+				{ 5, 0, 7, 8 },
+				{ 9, 6, 11, 12 },
+				{ 13, 14, 15, 10 }
+			});
+		//Act & Assert
+		sut.GetCell("1").ShouldBe(new Cell(0, 0, "1"));
+		sut.GetCell("2").ShouldBe(new Cell(0, 1, "2"));
+		sut.GetCell("4").ShouldBe(new Cell(0, 3, "4"));
+		sut.GetCell("9").ShouldBe(new Cell(2, 0, "9"));
+		sut.GetCell("10").ShouldBe(new Cell(3, 3, "10"));
+		sut.GetCell("").ShouldBe(new Cell(1, 1, ""));
 	}
 }
