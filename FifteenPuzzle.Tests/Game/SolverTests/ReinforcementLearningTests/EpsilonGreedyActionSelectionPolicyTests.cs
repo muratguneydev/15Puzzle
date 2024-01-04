@@ -1,26 +1,74 @@
-using AutoFixture.NUnit3;
+namespace FifteenPuzzle.Tests.Game.SolverTests.ReinforcementLearningTests;
+
 using FifteenPuzzle.Game.Solvers.ReinforcementLearning;
 using FifteenPuzzle.Tests.AutoFixture;
+using global::AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
-
-namespace FifteenPuzzle.Tests.Game.SolverTests.ReinforcementLearningTests;
+using Shouldly;
 
 public class EpsilonGreedyActionSelectionPolicyTests
 {
 	[Test, AutoMoqData]
 	public void ShouldExplore_WhenRandomIsLessThan_ExplorationProbabilityEpsilon(
+		BoardActionQValues boardActionQValues,
 		[Frozen] [Mock] Mock<Random> randomStub,
 		EpsilonGreedyActionSelectionPolicy sut
 	)
 	{
 		//Arrange
-		//var explorationProbability = 0.9;
+		var explorationProbabilityEpsilon = 0.9;
 		var randomLessThanExplorationProbability = 0.3;
         randomStub.Setup(r => r.NextDouble()).Returns(randomLessThanExplorationProbability);
-		//Act
-		//var action = sut.GetAction();
-        
 
+		var actionQValues = boardActionQValues.ActionQValues.ToArray();
+		const int indexToPick = 1;
+        randomStub.Setup(r => r.Next(0, actionQValues.Length-1)).Returns(indexToPick);
+
+		var expectedRandomExploreActionQValue = actionQValues[indexToPick];
+		//Act
+		var result = sut.PickAction(boardActionQValues, explorationProbabilityEpsilon);
+        //Assert
+		result.ShouldBe(expectedRandomExploreActionQValue);
+	}
+
+	[Test, AutoMoqData]
+	public void ShouldExploit_WhenRandomIsGreaterThan_ExplorationProbabilityEpsilon(
+		BoardActionQValues boardActionQValues,
+		[Frozen] [Mock] Mock<Random> randomStub,
+		EpsilonGreedyActionSelectionPolicy sut
+	)
+	{
+		//Arrange
+		var explorationProbabilityEpsilon = 0.6;
+		var randomGreaterThanExplorationProbability = 0.8;
+        randomStub.Setup(r => r.NextDouble()).Returns(randomGreaterThanExplorationProbability);
+
+		var actionQValues = boardActionQValues.ActionQValues.ToArray();
+		var expectedExploitActionWithMaxQValue = actionQValues.MaxBy(a => a.QValue);
+		//Act
+		var result = sut.PickAction(boardActionQValues, explorationProbabilityEpsilon);
+        //Assert
+		result.ShouldBe(expectedExploitActionWithMaxQValue);
+	}
+
+	[Test, AutoMoqData]
+	public void ShouldExploit_WhenRandomEquals_ExplorationProbabilityEpsilon(
+		BoardActionQValues boardActionQValues,
+		[Frozen] [Mock] Mock<Random> randomStub,
+		EpsilonGreedyActionSelectionPolicy sut
+	)
+	{
+		//Arrange
+		var explorationProbabilityEpsilon = 0.6;
+		var randomSameAsExplorationProbability = explorationProbabilityEpsilon;
+        randomStub.Setup(r => r.NextDouble()).Returns(randomSameAsExplorationProbability);
+
+		var actionQValues = boardActionQValues.ActionQValues.ToArray();
+		var expectedExploitActionWithMaxQValue = actionQValues.MaxBy(a => a.QValue);
+		//Act
+		var result = sut.PickAction(boardActionQValues, explorationProbabilityEpsilon);
+        //Assert
+		result.ShouldBe(expectedExploitActionWithMaxQValue);
 	}
 }

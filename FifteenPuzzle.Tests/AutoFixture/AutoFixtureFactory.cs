@@ -8,6 +8,7 @@ public class AutoFixtureFactory
     {
         var fixture = new Fixture();
 		fixture.Customizations.Add(new MoveSpecimenBuilder());
+		fixture.Customizations.Add(new BoardSpecimenBuilder());
 		return fixture;
     }
 }

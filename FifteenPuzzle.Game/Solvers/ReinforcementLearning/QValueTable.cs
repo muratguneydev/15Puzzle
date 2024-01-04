@@ -6,10 +6,10 @@ using FifteenPuzzle.Game;
 public record QValueTable : IEnumerable<BoardActionQValues>
 {
 	private readonly Dictionary<int,BoardActionQValues> _boardActionQValues;
-	private static readonly BoardComparer _boardComparer = new BoardComparer();
+	private static readonly BoardComparer _boardComparer = new();
 
     public QValueTable(IEnumerable<BoardActionQValues> boardActionQValues) =>
-	_boardActionQValues = boardActionQValues.ToDictionary(b => _boardComparer.GetHashCode(b.Board));
+		_boardActionQValues = boardActionQValues.ToDictionary(b => _boardComparer.GetHashCode(b.Board));
 
     public ActionQValues Get(Board board)
 	{
