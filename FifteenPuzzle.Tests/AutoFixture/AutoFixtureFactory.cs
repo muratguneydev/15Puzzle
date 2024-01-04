@@ -4,5 +4,10 @@ using global::AutoFixture;
 
 public class AutoFixtureFactory
 {
-	public static IFixture Create() => new Fixture();
+    public static IFixture Create()
+    {
+        var fixture = new Fixture();
+		fixture.Customizations.Add(new MoveSpecimenBuilder());
+		return fixture;
+    }
 }

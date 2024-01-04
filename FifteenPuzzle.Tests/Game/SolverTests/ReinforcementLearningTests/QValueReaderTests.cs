@@ -3,8 +3,8 @@ namespace FifteenPuzzle.Tests.Game.SolverTests.ReinforcementLearningTests;
 using System.Text;
 using FifteenPuzzle.Game;
 using FifteenPuzzle.Game.Solvers.ReinforcementLearning;
+using FifteenPuzzle.Tests.AutoFixture;
 using FluentAssertions;
-using global::AutoFixture.NUnit3;
 using NUnit.Framework;
 using Shouldly;
 
@@ -13,7 +13,7 @@ public class QValueReaderTests
 	private const char Separator = ',';
 	private const char ActionQValueSeparator = '/';
 
-	[Test, AutoData]
+	[Test, DomainAutoData]
 	public async Task ShouldReadQValuesWith1BoardState(ActionQValues expectedActionQValues,
 		BoardActionQValuesStringConverter boardActionQValuesStringConverter)
 	{
@@ -41,7 +41,7 @@ public class QValueReaderTests
 		actualActionQValues.Should().BeEquivalentTo(expectedActionQValues);
 	}
 
-	[Test, AutoData]
+	[Test, DomainAutoData]
 	public async Task ShouldReadQValuesWithMultipleBoardStates(ActionQValues[] expectedActionQValues,
 		BoardActionQValuesStringConverter boardActionQValuesStringConverter)
 	{

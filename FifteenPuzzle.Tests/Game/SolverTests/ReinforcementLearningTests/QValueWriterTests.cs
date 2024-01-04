@@ -3,8 +3,8 @@ namespace FifteenPuzzle.Tests.Game.SolverTests.ReinforcementLearningTests;
 using System.Text;
 using FifteenPuzzle.Game;
 using FifteenPuzzle.Game.Solvers.ReinforcementLearning;
+using FifteenPuzzle.Tests.AutoFixture;
 using FluentAssertions;
-using global::AutoFixture.NUnit3;
 using NUnit.Framework;
 
 public class QValueWriterTests
@@ -12,7 +12,7 @@ public class QValueWriterTests
 	private const char Separator = ',';
 	private const char ActionQValueSeparator = '/';
 
-	[Test, AutoData]
+	[Test, DomainAutoData]
 	public async Task ShouldWriteQValues(ActionQValues[] expectedActionQValues,
 		BoardActionQValuesStringConverter boardActionQValuesStringConverter)
 	{
