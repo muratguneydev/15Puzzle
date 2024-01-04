@@ -1,9 +1,9 @@
 namespace FifteenPuzzle.Game.Solvers.ReinforcementLearning;
 public class QLearning
 {
-    private readonly QLearningParameters _parameters;
+    private readonly QLearningHyperparameters _parameters;
 
-    public QLearning(QLearningParameters parameters)
+    public QLearning(QLearningHyperparameters parameters)
 	{
         _parameters = parameters;
     }

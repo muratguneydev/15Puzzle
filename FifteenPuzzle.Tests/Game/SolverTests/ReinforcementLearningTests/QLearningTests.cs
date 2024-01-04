@@ -8,7 +8,7 @@ using NUnit.Framework;
 public class QLearningTests
 {
 	[Test, AutoData]
-	public void ShouldStopAfterNIterations(QLearningParameters learningParameters, int numberOfIterations)
+	public void ShouldStopAfterNIterations(QLearningHyperparameters learningParameters, int numberOfIterations)
 	{
 		//Arrange
 		learningParameters = learningParameters with { NumberOfIterations = numberOfIterations };
@@ -20,7 +20,7 @@ public class QLearningTests
 	}
 
 	[Test, AutoData]
-	public void ShouldInitializeQValuesBeforeStart(QLearningParameters learningParameters)
+	public void ShouldInitializeQValuesBeforeStart(QLearningHyperparameters learningParameters)
 	{
 		//Arrange
 		learningParameters = learningParameters with { NumberOfIterations = 0 };
