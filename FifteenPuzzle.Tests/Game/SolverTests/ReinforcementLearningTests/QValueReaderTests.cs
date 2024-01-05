@@ -21,9 +21,9 @@ public class QValueReaderTests
 		var existingQValueCsv = @$"1,2,3,4,5,,7,8,9,6,11,12,13,14,15,10,{GetActionQValuesString(expectedActionQValues)}";
 		var byteArray = Encoding.UTF8.GetBytes(existingQValueCsv);
 		var stream = new MemoryStream(byteArray);
-		var sut = new QValueReader(boardActionQValuesStringConverter, stream);
+		var sut = new QValueReader(boardActionQValuesStringConverter);
 		//Act
-		var qValueTable = await sut.Read();
+		var qValueTable = await sut.Read(stream);
 		//Assert
 		var expectedBoard = new Board(new[,]
 			{
@@ -52,9 +52,9 @@ public class QValueReaderTests
 		
 		var byteArray = Encoding.UTF8.GetBytes(existingQValueCsv);
 		var stream = new MemoryStream(byteArray);
-		var sut = new QValueReader(boardActionQValuesStringConverter, stream);
+		var sut = new QValueReader(boardActionQValuesStringConverter);
 		//Act
-		var qValueTable = await sut.Read();
+		var qValueTable = await sut.Read(stream);
 		//Assert
 		qValueTable.Should().HaveCount(3);
 
@@ -85,6 +85,19 @@ public class QValueReaderTests
 
 		var actualActionQValues = qValueTable.Select(boardActionQValue => boardActionQValue.ActionQValues);
 		actualActionQValues.Should().BeEquivalentTo(expectedActionQValues);
+	}
+
+	[Test, DomainAutoData]
+	public async Task ShouldReturnEmptyTableWhenFileDoesntExist(
+		BoardActionQValuesStringConverter boardActionQValuesStringConverter)
+	{
+		//Arrange
+		var stream = new MemoryStream();
+		var sut = new QValueReader(boardActionQValuesStringConverter);
+		//Act
+		var qValueTable = await sut.Read(stream);
+		//Assert
+		qValueTable.ShouldBeEmpty();
 	}
 
 	private static string GetActionQValuesString(ActionQValues actionQValues) =>

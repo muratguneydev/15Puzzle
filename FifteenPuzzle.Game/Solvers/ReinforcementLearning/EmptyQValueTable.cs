@@ -1,3 +1,4 @@
-namespace FifteenPuzzle.Game.Solvers.ReinforcementLearning;
+// namespace FifteenPuzzle.Game.Solvers.ReinforcementLearning;
 
-public record EmptyQValueTable() : QValueTable(Enumerable.Empty<BoardActionQValues>());
+// public record EmptyQValueTable(QLearningHyperparameters qLearningHyperparameters)
+// 	: QValueTable(Enumerable.Empty<BoardActionQValues>(), qLearningHyperparameters);

@@ -14,7 +14,8 @@ public class QValueWriterTests
 
 	[Test, DomainAutoData]
 	public async Task ShouldWriteQValues(ActionQValues[] expectedActionQValues,
-		BoardActionQValuesStringConverter boardActionQValuesStringConverter)
+		BoardActionQValuesStringConverter boardActionQValuesStringConverter,
+		QLearningHyperparameters qLearningHyperparameters)
 	{
 		//Arrange
 		var expectedBoards = new[] {
@@ -49,7 +50,7 @@ public class QValueWriterTests
 			new BoardActionQValues(expectedBoards[0], expectedActionQValues[0]),
 			new BoardActionQValues(expectedBoards[1], expectedActionQValues[1]),
 			new BoardActionQValues(expectedBoards[2], expectedActionQValues[2])
-		});
+		}, qLearningHyperparameters);
 
 		using var stream = new MemoryStream();
 		var sut = new QValueWriter(boardActionQValuesStringConverter, stream);
