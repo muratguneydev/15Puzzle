@@ -20,6 +20,15 @@
 		}
 	  },
 	  {
+		"label": "Build FifteenPuzzle.Solutions",
+		"type": "shell",
+		"command": "dotnet",
+		"args": ["build", "FifteenPuzzle.Solutions"],
+		"group": {
+		  "kind": "build"
+		}
+	  },
+	  {
 		"label": "Build FifteenPuzzle.Tests",
 		"type": "shell",
 		"command": "dotnet",

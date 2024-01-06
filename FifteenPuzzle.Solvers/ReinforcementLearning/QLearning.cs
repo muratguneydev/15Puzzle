@@ -1,21 +1,65 @@
-namespace FifteenPuzzle.Game.Solvers.ReinforcementLearning;
+namespace FifteenPuzzle.Solvers.ReinforcementLearning;
+
 public class QLearning
 {
     private readonly QLearningHyperparameters _parameters;
+    private readonly QValueReader _qValueReader;
+    private readonly QValueWriter _qValueWriter;
+    private readonly string _qValueFilePath;
 
-    public QLearning(QLearningHyperparameters parameters)
+    public QLearning(QLearningHyperparameters parameters, QValueReader qValueReader, QValueWriter qValueWriter, string qValueFilePath)
 	{
         _parameters = parameters;
+        _qValueReader = qValueReader;
+        _qValueWriter = qValueWriter;
+        _qValueFilePath = qValueFilePath;
     }
 
     public int NumberOfIterations { get; private set; }
 
-    public void Learn()
+    public async Task Learn()
     {
-        for (var iteration=0;iteration < _parameters.NumberOfIterations;iteration++)
-		{
+        var qValueTable = await LoadPreviousLearningResults();
+        for (var iteration = 0; iteration < _parameters.NumberOfIterations; iteration++)
+        {
 
-			NumberOfIterations++;
+            NumberOfIterations++;
+        }
+
+        await SaveLearningResults(qValueTable);
+    }
+
+    private async Task SaveLearningResults(QValueTable qValueTable)
+    {
+		try
+		{
+        	using var fileStream = new FileStream(_qValueFilePath, FileMode.Open, FileAccess.Write);
+			await _qValueWriter.Write(qValueTable, fileStream);
+		}
+		catch//(Exception e)
+		{
+			//Log
+		}
+    }
+
+    private async ValueTask<QValueTable> LoadPreviousLearningResults()
+    {
+		if (!File.Exists(_qValueFilePath))
+		{
+			return QValueTable.Empty(_parameters);
+		}
+
+  		try
+		{
+        	using var fileStream = new FileStream(_qValueFilePath, FileMode.Open, FileAccess.Read);
+
+			var boardActionQValuesCollection = await _qValueReader.Read(fileStream);
+			return new QValueTable(boardActionQValuesCollection, _parameters);
+		}
+		catch//(Exception e)
+		{
+			//Log
+			return QValueTable.Empty(_parameters);
 		}
     }
 }

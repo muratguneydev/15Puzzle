@@ -1,7 +1,7 @@
 namespace FifteenPuzzle.Tests.AutoFixture;
 
 using FifteenPuzzle.Game;
-using FifteenPuzzle.Game.Solvers.ReinforcementLearning;
+using FifteenPuzzle.Solvers.ReinforcementLearning;
 using global::AutoFixture.Kernel;
 
 public class BoardActionQValuesSpecimenBuilder : ISpecimenBuilder

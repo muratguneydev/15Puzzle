@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.Game.Solvers.ReinforcementLearning;
+namespace FifteenPuzzle.Solvers.ReinforcementLearning;
 
 using System.Text;
 
@@ -11,7 +11,7 @@ public class QValueReader
         _boardActionQValuesStringConverter = boardActionQValuesStringConverter;
     }
 
-    public async Task<IEnumerable<BoardActionQValues>> Read(Stream qValueStream)
+    public virtual async Task<IEnumerable<BoardActionQValues>> Read(Stream qValueStream)
     {
         using var reader = new StreamReader(qValueStream, Encoding.UTF8);
         var existingContent = await reader.ReadToEndAsync();

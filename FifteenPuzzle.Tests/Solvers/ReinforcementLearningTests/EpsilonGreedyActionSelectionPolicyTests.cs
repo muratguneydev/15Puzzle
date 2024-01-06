@@ -1,6 +1,6 @@
-namespace FifteenPuzzle.Tests.Game.SolverTests.ReinforcementLearningTests;
+namespace FifteenPuzzle.Tests.SolverTests.ReinforcementLearningTests;
 
-using FifteenPuzzle.Game.Solvers.ReinforcementLearning;
+using FifteenPuzzle.Solvers.ReinforcementLearning;
 using FifteenPuzzle.Tests.AutoFixture;
 using global::AutoFixture.NUnit3;
 using Moq;

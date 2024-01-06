@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.Tests.Game;
+namespace FifteenPuzzle.Tests;
 
 using FifteenPuzzle.Game;
 using FluentAssertions;

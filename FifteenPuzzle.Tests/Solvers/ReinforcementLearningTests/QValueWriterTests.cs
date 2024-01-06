@@ -1,8 +1,8 @@
-namespace FifteenPuzzle.Tests.Game.SolverTests.ReinforcementLearningTests;
+namespace FifteenPuzzle.Tests.SolverTests.ReinforcementLearningTests;
 
 using System.Text;
 using FifteenPuzzle.Game;
-using FifteenPuzzle.Game.Solvers.ReinforcementLearning;
+using FifteenPuzzle.Solvers.ReinforcementLearning;
 using FifteenPuzzle.Tests.AutoFixture;
 using FluentAssertions;
 using NUnit.Framework;
@@ -53,15 +53,15 @@ public class QValueWriterTests
 		}, qLearningHyperparameters);
 
 		using var stream = new MemoryStream();
-		var sut = new QValueWriter(boardActionQValuesStringConverter, stream);
+		var sut = new QValueWriter(boardActionQValuesStringConverter);
 		//Act
-		await sut.Write(qValueTable);
+		await sut.Write(qValueTable, stream);
 		//Assert
 		stream.Seek(0, SeekOrigin.Begin);
 		using var reader = new StreamReader(stream, Encoding.UTF8);
 		var writtenText = await reader.ReadToEndAsync();
 		
-		sut.Dispose();//we need the stream until this point. Disposing the StreamWriter will also dispose the stream.
+		//sut.Dispose();//we need the stream until this point. Disposing the StreamWriter will also dispose the stream.
 		writtenText.Should().Be(expectedQValueCsv);
 	}
 

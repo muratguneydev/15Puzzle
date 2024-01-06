@@ -1,7 +1,7 @@
-namespace FifteenPuzzle.Tests.Game.SolverTests;
+namespace FifteenPuzzle.Tests.SolverTests;
 
 using FifteenPuzzle.Game;
-using FifteenPuzzle.Game.Solvers;
+using FifteenPuzzle.Solvers;
 using FluentAssertions;
 using NUnit.Framework;
 

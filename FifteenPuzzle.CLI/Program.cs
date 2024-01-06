@@ -1,7 +1,7 @@
 ﻿using Spectre.Console;
 using FifteenPuzzle.Game;
 using FifteenPuzzle.CLI;
-using FifteenPuzzle.Game.Solvers;
+using FifteenPuzzle.Solvers;
 
 var solver = new DepthFirstSolver(Render);
 

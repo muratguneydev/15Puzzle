@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.Game.Solvers.ReinforcementLearning;
+namespace FifteenPuzzle.Solvers.ReinforcementLearning;
 
 public class EpsilonGreedyActionSelectionPolicy
 {

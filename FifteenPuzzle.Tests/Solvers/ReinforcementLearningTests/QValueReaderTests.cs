@@ -1,8 +1,8 @@
-namespace FifteenPuzzle.Tests.Game.SolverTests.ReinforcementLearningTests;
+namespace FifteenPuzzle.Tests.SolverTests.ReinforcementLearningTests;
 
 using System.Text;
 using FifteenPuzzle.Game;
-using FifteenPuzzle.Game.Solvers.ReinforcementLearning;
+using FifteenPuzzle.Solvers.ReinforcementLearning;
 using FifteenPuzzle.Tests.AutoFixture;
 using FluentAssertions;
 using NUnit.Framework;

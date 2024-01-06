@@ -1,6 +1,5 @@
-namespace FifteenPuzzle.Game.Solvers.ReinforcementLearning;
+namespace FifteenPuzzle.Solvers.ReinforcementLearning;
 
-using System;
 using FifteenPuzzle.Game;
 
 public class BoardActionQValuesStringConverter
@@ -28,16 +27,6 @@ public class BoardActionQValuesStringConverter
 		var board = new Board(cells);
         var boardActionQValues = new BoardActionQValues(board, new ActionQValues(actionQValues));
         return boardActionQValues;
-		
-
-        // var up = double.Parse(values[boardValueItemLength]);
-        // var right = double.Parse(values[boardValueItemLength + 1]);
-        // var down = double.Parse(values[boardValueItemLength + 2]);
-        // var left = double.Parse(values[boardValueItemLength + 3]);
-        // var actionQValues = new ActionQValues(up, right, down, left);
-        // var board = new Board(cells);
-        // var boardActionQValues = new BoardActionQValues(board, actionQValues);
-        // return boardActionQValues;
     }
 
     private ActionQValue GetActionQValue(string actionQValueString)

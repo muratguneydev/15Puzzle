@@ -1,4 +1,6 @@
-namespace FifteenPuzzle.Game.Solvers.ReinforcementLearning;
+namespace FifteenPuzzle.Solvers.ReinforcementLearning;
+
+using FifteenPuzzle.Game;
 
 public record ActionQValue
 {

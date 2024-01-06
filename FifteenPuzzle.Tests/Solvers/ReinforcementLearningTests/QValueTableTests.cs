@@ -1,9 +1,10 @@
-namespace FifteenPuzzle.Tests.Game.SolverTests.ReinforcementLearningTests;
+namespace FifteenPuzzle.Tests.SolverTests.ReinforcementLearningTests;
 
-using AutoFixture;
 using FifteenPuzzle.Game;
-using FifteenPuzzle.Game.Solvers.ReinforcementLearning;
+using FifteenPuzzle.Solvers.ReinforcementLearning;
+using FifteenPuzzle.Tests.AutoFixture;
 using global::AutoFixture;
+using global::AutoFixture.NUnit3;
 using NUnit.Framework;
 using Shouldly;
 
@@ -54,6 +55,12 @@ public class QValueTableTests
 		sut.UpdateQValues(selectedBoard, selectedActionQValue, reward);
 		//Assert
 		selectedActionQValue.QValue.ShouldBe(expectedQValue);
+	}
+
+	[Test, DomainAutoData]
+	public void ShouldProvideEmptyQValueTable(QLearningHyperparameters qLearningHyperparameters)
+	{
+		QValueTable.Empty(qLearningHyperparameters).ShouldBeEmpty();
 	}
 
 	private double GetExpectedCalculatedQValue(BoardActionQValues next, ActionQValue selectedAction,

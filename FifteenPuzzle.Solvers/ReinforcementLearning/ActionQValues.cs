@@ -1,6 +1,6 @@
-using System.Collections;
+namespace FifteenPuzzle.Solvers.ReinforcementLearning;
 
-namespace FifteenPuzzle.Game.Solvers.ReinforcementLearning;
+using System.Collections;
 
 public class ActionQValues : IEnumerable<ActionQValue>
 {

@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.Game.Solvers.ReinforcementLearning;
+namespace FifteenPuzzle.Solvers.ReinforcementLearning;
 
 using System.Collections;
 using FifteenPuzzle.Game;
@@ -39,6 +39,9 @@ public record QValueTable : IEnumerable<BoardActionQValues>
 
 		action.UpdateQValue(newCurrentQValue);
 	}
+
+	public static QValueTable Empty(QLearningHyperparameters qLearningHyperparameters) =>
+		new QValueTable(Enumerable.Empty<BoardActionQValues>(), qLearningHyperparameters);
 
     public IEnumerator<BoardActionQValues> GetEnumerator() => _boardActionQValues.Values.GetEnumerator();
 
