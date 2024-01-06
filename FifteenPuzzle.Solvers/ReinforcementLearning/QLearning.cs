@@ -1,3 +1,5 @@
+using FifteenPuzzle.Brokers;
+
 namespace FifteenPuzzle.Solvers.ReinforcementLearning;
 
 public class QLearning
@@ -5,13 +7,16 @@ public class QLearning
     private readonly QLearningHyperparameters _parameters;
     private readonly QValueReader _qValueReader;
     private readonly QValueWriter _qValueWriter;
+    private readonly PuzzleLogger _logger;
 
-	//TODO: Dispose QValueWriter by the caller.
-    public QLearning(QLearningHyperparameters parameters, QValueReader qValueReader, QValueWriter qValueWriter)
+    //TODO: Dispose QValueWriter by the caller.
+    public QLearning(QLearningHyperparameters parameters, QValueReader qValueReader, QValueWriter qValueWriter,
+		PuzzleLogger logger)
 	{
         _parameters = parameters;
         _qValueReader = qValueReader;
         _qValueWriter = qValueWriter;
+        _logger = logger;
     }
 
     public int NumberOfIterations { get; private set; }
@@ -34,9 +39,10 @@ public class QLearning
 		{
 			await _qValueWriter.Write(qValueTable);
 		}
-		catch//(Exception e)
+		catch(Exception e)
 		{
-			//Log
+			_logger.LogError("Error while saving learning results.", e);
+			throw;
 		}
     }
 
@@ -47,9 +53,9 @@ public class QLearning
 			var boardActionQValuesCollection = await _qValueReader.Read();
 			return new QValueTable(boardActionQValuesCollection, _parameters);
 		}
-		catch//(Exception e)
+		catch(Exception e)
 		{
-			//Log
+			_logger.LogError("Error while loading previous learning results.", e);
 			return QValueTable.Empty(_parameters);
 		}
     }

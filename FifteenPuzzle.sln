@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FifteenPuzzle.Game", "Fifte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FifteenPuzzle.Solvers", "FifteenPuzzle.Solvers\FifteenPuzzle.Solvers.csproj", "{486D0311-ED8A-498A-8DE8-8BCF52E8CAF2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FifteenPuzzle.Brokers", "FifteenPuzzle.Brokers\FifteenPuzzle.Brokers.csproj", "{E82C746D-6E14-4718-B19E-F45D45C764A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{486D0311-ED8A-498A-8DE8-8BCF52E8CAF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{486D0311-ED8A-498A-8DE8-8BCF52E8CAF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{486D0311-ED8A-498A-8DE8-8BCF52E8CAF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E82C746D-6E14-4718-B19E-F45D45C764A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E82C746D-6E14-4718-B19E-F45D45C764A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E82C746D-6E14-4718-B19E-F45D45C764A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E82C746D-6E14-4718-B19E-F45D45C764A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

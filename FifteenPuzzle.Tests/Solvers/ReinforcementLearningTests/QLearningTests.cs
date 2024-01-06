@@ -11,13 +11,22 @@ public class QLearningTests
 {
 	[Test, AutoMoqData]
 	public async Task ShouldStopAfterNIterations(int numberOfIterationsExpected,
+		IEnumerable<BoardActionQValues> someBoardActionQValues,
 		[Frozen] [Mock] Mock<QLearningHyperparameters> learningParametersStub,
+		[Frozen] [Mock] Mock<QValueReader> qValueReaderStub,
+		[Frozen] [Mock] Mock<QValueWriter> qValueWriterDummy,
 		QLearning sut)
 	{
 		//Arrange
 		learningParametersStub
 			.SetupGet(stub => stub.NumberOfIterations)
 			.Returns(numberOfIterationsExpected);
+		qValueReaderStub
+			.Setup(stub => stub.Read())
+			.ReturnsAsync(someBoardActionQValues);
+		qValueWriterDummy
+			.Setup(dummy => dummy.Write(It.IsAny<QValueTable>()))
+			.Returns(Task.CompletedTask);
 		//Act
 		await sut.Learn();
 		//Assert
@@ -36,6 +45,9 @@ public class QLearningTests
 		qValueReaderStub
 			.Setup(stub => stub.Read())
 			.ReturnsAsync(initialBoardActionQValues);
+		qValueWriterSpy
+			.Setup(dummy => dummy.Write(It.IsAny<QValueTable>()))
+			.Returns(Task.CompletedTask);
 		//Act
 		await sut.Learn();
 		//Assert
