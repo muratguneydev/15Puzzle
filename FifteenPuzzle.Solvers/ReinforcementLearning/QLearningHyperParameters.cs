@@ -16,7 +16,7 @@ public class QLearningHyperparameters
 
     public double LearningRateAlpha { get; }
     public double DiscountFactorGamma { get; }
-    public double ExplorationProbabilityEpsilon { get; }
+    public virtual double ExplorationProbabilityEpsilon { get; }
     public virtual int NumberOfIterations { get; }
 }
 

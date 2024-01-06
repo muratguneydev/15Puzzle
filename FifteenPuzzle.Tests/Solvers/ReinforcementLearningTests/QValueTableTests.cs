@@ -4,7 +4,6 @@ using FifteenPuzzle.Game;
 using FifteenPuzzle.Solvers.ReinforcementLearning;
 using FifteenPuzzle.Tests.AutoFixture;
 using global::AutoFixture;
-using global::AutoFixture.NUnit3;
 using NUnit.Framework;
 using Shouldly;
 
@@ -52,7 +51,8 @@ public class QValueTableTests
 		var expectedQValue = GetExpectedCalculatedQValue(nextBoardActionQValuesForSelected, selectedActionQValue,
 			qLearningHyperparameters, reward);
 		//Act
-		sut.UpdateQValues(selectedBoard, selectedActionQValue, reward);
+		var boardAction = new BoardAction(selectedBoard, selectedActionQValue, board => new Board(board));
+		sut.UpdateQValues(boardAction, reward);
 		//Assert
 		selectedActionQValue.QValue.ShouldBe(expectedQValue);
 	}

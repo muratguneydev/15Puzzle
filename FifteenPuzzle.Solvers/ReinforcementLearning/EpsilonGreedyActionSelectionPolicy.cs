@@ -1,16 +1,21 @@
 namespace FifteenPuzzle.Solvers.ReinforcementLearning;
 
-public class EpsilonGreedyActionSelectionPolicy
+public class EpsilonGreedyActionSelectionPolicy : IActionSelectionPolicy
 {
+    private readonly QLearningHyperparameters _qLearningHyperparameters;
     private readonly Random _random;
 
-    public EpsilonGreedyActionSelectionPolicy(Random random) => _random = random;
+    public EpsilonGreedyActionSelectionPolicy(QLearningHyperparameters qLearningHyperparameters, Random random)
+    {
+        _qLearningHyperparameters = qLearningHyperparameters;
+        _random = random;
+    }
 
-    public virtual ActionQValue PickAction(BoardActionQValues boardActionQValues, double explorationProbabilityEpsilon)
+    public ActionQValue PickAction(BoardActionQValues boardActionQValues)
 	{
 		var actionQValues = boardActionQValues.ActionQValues.ToArray();
 
-		if (ShouldPickExploration(explorationProbabilityEpsilon))
+		if (ShouldPickExploration())
 		{
 			var randomActionIndex = _random.Next(0, actionQValues.Length-1);
 			return actionQValues[randomActionIndex];
@@ -19,9 +24,9 @@ public class EpsilonGreedyActionSelectionPolicy
 		return actionQValues.MaxBy(actionQValue => actionQValue.QValue)!;
 	}
 
-	private bool ShouldPickExploration(double explorationProbabilityEpsilon)
+	private bool ShouldPickExploration()
 	{
 		var randomProbability = _random.NextDouble();
-		return randomProbability < explorationProbabilityEpsilon;
+		return randomProbability < _qLearningHyperparameters.ExplorationProbabilityEpsilon;
 	}
 }

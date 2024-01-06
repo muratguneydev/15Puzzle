@@ -93,7 +93,6 @@ public class BoardTests
 		board.Move("2");
 		//Assert
 		BoardAsserter.ShouldBeEquivalent(expectedBoard, board);
-
 	}
 
 	[Test]

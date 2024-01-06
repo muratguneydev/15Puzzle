@@ -13,13 +13,19 @@ public class EpsilonGreedyActionSelectionPolicyTests
 	public void ShouldExplore_WhenRandomIsLessThan_ExplorationProbabilityEpsilon(
 		BoardActionQValues boardActionQValues,
 		[Frozen] [Mock] Mock<Random> randomStub,
+		[Frozen] [Mock] Mock<QLearningHyperparameters> learningParametersStub,
 		EpsilonGreedyActionSelectionPolicy sut
 	)
 	{
 		//Arrange
 		var explorationProbabilityEpsilon = 0.9;
 		var randomLessThanExplorationProbability = 0.3;
-        randomStub.Setup(r => r.NextDouble()).Returns(randomLessThanExplorationProbability);
+        randomStub
+			.Setup(r => r.NextDouble())
+			.Returns(randomLessThanExplorationProbability);
+		learningParametersStub
+			.SetupGet(stub => stub.ExplorationProbabilityEpsilon)
+			.Returns(explorationProbabilityEpsilon);
 
 		var actionQValues = boardActionQValues.ActionQValues.ToArray();
 		const int indexToPick = 1;
@@ -27,7 +33,7 @@ public class EpsilonGreedyActionSelectionPolicyTests
 
 		var expectedRandomExploreActionQValue = actionQValues[indexToPick];
 		//Act
-		var result = sut.PickAction(boardActionQValues, explorationProbabilityEpsilon);
+		var result = sut.PickAction(boardActionQValues);
         //Assert
 		result.ShouldBe(expectedRandomExploreActionQValue);
 	}
@@ -36,18 +42,23 @@ public class EpsilonGreedyActionSelectionPolicyTests
 	public void ShouldExploit_WhenRandomIsGreaterThan_ExplorationProbabilityEpsilon(
 		BoardActionQValues boardActionQValues,
 		[Frozen] [Mock] Mock<Random> randomStub,
-		EpsilonGreedyActionSelectionPolicy sut
-	)
+		[Frozen] [Mock] Mock<QLearningHyperparameters> learningParametersStub,
+		EpsilonGreedyActionSelectionPolicy sut)
 	{
 		//Arrange
 		var explorationProbabilityEpsilon = 0.6;
 		var randomGreaterThanExplorationProbability = 0.8;
-        randomStub.Setup(r => r.NextDouble()).Returns(randomGreaterThanExplorationProbability);
+        randomStub
+			.Setup(r => r.NextDouble())
+			.Returns(randomGreaterThanExplorationProbability);
+		learningParametersStub
+			.SetupGet(stub => stub.ExplorationProbabilityEpsilon)
+			.Returns(explorationProbabilityEpsilon);
 
 		var actionQValues = boardActionQValues.ActionQValues.ToArray();
 		var expectedExploitActionWithMaxQValue = actionQValues.MaxBy(a => a.QValue);
 		//Act
-		var result = sut.PickAction(boardActionQValues, explorationProbabilityEpsilon);
+		var result = sut.PickAction(boardActionQValues);
         //Assert
 		result.ShouldBe(expectedExploitActionWithMaxQValue);
 	}
@@ -56,18 +67,23 @@ public class EpsilonGreedyActionSelectionPolicyTests
 	public void ShouldExploit_WhenRandomEquals_ExplorationProbabilityEpsilon(
 		BoardActionQValues boardActionQValues,
 		[Frozen] [Mock] Mock<Random> randomStub,
-		EpsilonGreedyActionSelectionPolicy sut
-	)
+		[Frozen] [Mock] Mock<QLearningHyperparameters> learningParametersStub,
+		EpsilonGreedyActionSelectionPolicy sut)
 	{
 		//Arrange
 		var explorationProbabilityEpsilon = 0.6;
 		var randomSameAsExplorationProbability = explorationProbabilityEpsilon;
-        randomStub.Setup(r => r.NextDouble()).Returns(randomSameAsExplorationProbability);
+        randomStub
+			.Setup(r => r.NextDouble())
+			.Returns(randomSameAsExplorationProbability);
+		learningParametersStub
+			.SetupGet(stub => stub.ExplorationProbabilityEpsilon)
+			.Returns(explorationProbabilityEpsilon);
 
 		var actionQValues = boardActionQValues.ActionQValues.ToArray();
 		var expectedExploitActionWithMaxQValue = actionQValues.MaxBy(a => a.QValue);
 		//Act
-		var result = sut.PickAction(boardActionQValues, explorationProbabilityEpsilon);
+		var result = sut.PickAction(boardActionQValues);
         //Assert
 		result.ShouldBe(expectedExploitActionWithMaxQValue);
 	}

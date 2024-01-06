@@ -25,19 +25,19 @@ public record QValueTable : IEnumerable<BoardActionQValues>
 		return ActionQValues.Empty;
 	}
 
-	public void UpdateQValues(Board board, ActionQValue action, double reward)
+	public void UpdateQValues(BoardAction boardAction, double reward)
 	{
-		var nextBoard = new Board(board);
-		nextBoard.Move(action.Move.Number.ToString());
-		var nextActionQValues = Get(nextBoard);
+		// var nextBoard = new Board(board);
+		// nextBoard.Move(action.Move.Number.ToString());
+		var nextActionQValues = Get(boardAction.NextBoard);
 
-		var maxNextQValue = nextBoard.IsSolved ? 0 : nextActionQValues.MaxQValue;
-		var currentQValue = action.QValue;
+		var maxNextQValue = boardAction.NextBoard.IsSolved ? 0 : nextActionQValues.MaxQValue;
+		var currentQValue = boardAction.ActionQValue.QValue;
 		var learningRateMultiplier = reward + _qLearningHyperparameters.DiscountFactorGamma * maxNextQValue - currentQValue;
 		var newCurrentQValue = currentQValue
 			+ _qLearningHyperparameters.LearningRateAlpha * learningRateMultiplier;
 
-		action.UpdateQValue(newCurrentQValue);
+		boardAction.ActionQValue.UpdateQValue(newCurrentQValue);
 	}
 
 	public static QValueTable Empty(QLearningHyperparameters qLearningHyperparameters) =>
