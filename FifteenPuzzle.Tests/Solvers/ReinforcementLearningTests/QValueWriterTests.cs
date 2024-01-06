@@ -5,6 +5,8 @@ using FifteenPuzzle.Game;
 using FifteenPuzzle.Solvers.ReinforcementLearning;
 using FifteenPuzzle.Tests.AutoFixture;
 using FluentAssertions;
+using global::AutoFixture.NUnit3;
+using Moq;
 using NUnit.Framework;
 
 public class QValueWriterTests
@@ -12,10 +14,13 @@ public class QValueWriterTests
 	private const char Separator = ',';
 	private const char ActionQValueSeparator = '/';
 
-	[Test, DomainAutoData]
-	public async Task ShouldWriteQValues(ActionQValues[] expectedActionQValues,
-		BoardActionQValuesStringConverter boardActionQValuesStringConverter,
-		QLearningHyperparameters qLearningHyperparameters)
+	[Test, AutoMoqData]
+	public async Task ShouldWriteQValues(string storageFilePath,
+		QLearningHyperparameters qLearningHyperparameters,
+		ActionQValues[] expectedActionQValues,
+		[Frozen] [Mock] Mock<FileSystem> fileSystemStub,
+		[Frozen] [Mock] Mock<QLearningSystemConfiguration> qLearningSystemConfigurationStub,
+		QValueWriter sut)
 	{
 		//Arrange
 		var expectedBoards = new[] {
@@ -53,15 +58,20 @@ public class QValueWriterTests
 		}, qLearningHyperparameters);
 
 		using var stream = new MemoryStream();
-		var sut = new QValueWriter(boardActionQValuesStringConverter);
+		fileSystemStub
+			.Setup(stub => stub.GetFileStreamToWrite(storageFilePath))
+			.Returns(stream);
+		qLearningSystemConfigurationStub
+			.SetupGet(stub => stub.QValueStorageFilePath)
+			.Returns(storageFilePath);
 		//Act
-		await sut.Write(qValueTable, stream);
+		await sut.Write(qValueTable);
 		//Assert
 		stream.Seek(0, SeekOrigin.Begin);
 		using var reader = new StreamReader(stream, Encoding.UTF8);
 		var writtenText = await reader.ReadToEndAsync();
 		
-		//sut.Dispose();//we need the stream until this point. Disposing the StreamWriter will also dispose the stream.
+		sut.Dispose();//we need the stream until this point. Disposing the StreamWriter will also dispose the stream.
 		writtenText.Should().Be(expectedQValueCsv);
 	}
 

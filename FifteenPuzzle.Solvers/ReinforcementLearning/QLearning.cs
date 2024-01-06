@@ -5,14 +5,13 @@ public class QLearning
     private readonly QLearningHyperparameters _parameters;
     private readonly QValueReader _qValueReader;
     private readonly QValueWriter _qValueWriter;
-    private readonly string _qValueFilePath;
 
-    public QLearning(QLearningHyperparameters parameters, QValueReader qValueReader, QValueWriter qValueWriter, string qValueFilePath)
+	//TODO: Dispose QValueWriter by the caller.
+    public QLearning(QLearningHyperparameters parameters, QValueReader qValueReader, QValueWriter qValueWriter)
 	{
         _parameters = parameters;
         _qValueReader = qValueReader;
         _qValueWriter = qValueWriter;
-        _qValueFilePath = qValueFilePath;
     }
 
     public int NumberOfIterations { get; private set; }
@@ -33,8 +32,7 @@ public class QLearning
     {
 		try
 		{
-        	using var fileStream = new FileStream(_qValueFilePath, FileMode.Open, FileAccess.Write);
-			await _qValueWriter.Write(qValueTable, fileStream);
+			await _qValueWriter.Write(qValueTable);
 		}
 		catch//(Exception e)
 		{
@@ -44,16 +42,9 @@ public class QLearning
 
     private async ValueTask<QValueTable> LoadPreviousLearningResults()
     {
-		if (!File.Exists(_qValueFilePath))
-		{
-			return QValueTable.Empty(_parameters);
-		}
-
   		try
 		{
-        	using var fileStream = new FileStream(_qValueFilePath, FileMode.Open, FileAccess.Read);
-
-			var boardActionQValuesCollection = await _qValueReader.Read(fileStream);
+			var boardActionQValuesCollection = await _qValueReader.Read();
 			return new QValueTable(boardActionQValuesCollection, _parameters);
 		}
 		catch//(Exception e)

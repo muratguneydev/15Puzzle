@@ -3,7 +3,6 @@ namespace FifteenPuzzle.Solvers.ReinforcementLearning;
 //Hyperparameters are external configuration variables that data scientists use to manage machine learning model training.
 public class QLearningHyperparameters
 {
-
     public QLearningHyperparameters(double learningRateAlpha,
 		double discountFactorGamma,
 		double explorationProbabilityEpsilon,

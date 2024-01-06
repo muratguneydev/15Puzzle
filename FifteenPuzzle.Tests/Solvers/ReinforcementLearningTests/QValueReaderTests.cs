@@ -5,6 +5,8 @@ using FifteenPuzzle.Game;
 using FifteenPuzzle.Solvers.ReinforcementLearning;
 using FifteenPuzzle.Tests.AutoFixture;
 using FluentAssertions;
+using global::AutoFixture.NUnit3;
+using Moq;
 using NUnit.Framework;
 using Shouldly;
 
@@ -13,17 +15,29 @@ public class QValueReaderTests
 	private const char Separator = ',';
 	private const char ActionQValueSeparator = '/';
 
-	[Test, DomainAutoData]
-	public async Task ShouldReadQValuesWith1BoardState(ActionQValues expectedActionQValues,
-		BoardActionQValuesStringConverter boardActionQValuesStringConverter)
+	[Test, AutoMoqData]
+	public async Task ShouldReadQValuesWith1BoardState(string storageFilePath,
+		ActionQValues expectedActionQValues,
+		[Frozen] [Mock] Mock<FileSystem> fileSystemStub,
+		[Frozen] [Mock] Mock<QLearningSystemConfiguration> qLearningSystemConfigurationStub,
+		QValueReader sut)
 	{
 		//Arrange
 		var existingQValueCsv = @$"1,2,3,4,5,,7,8,9,6,11,12,13,14,15,10,{GetActionQValuesString(expectedActionQValues)}";
 		var byteArray = Encoding.UTF8.GetBytes(existingQValueCsv);
-		var stream = new MemoryStream(byteArray);
-		var sut = new QValueReader(boardActionQValuesStringConverter);
+		using var stream = new MemoryStream(byteArray);
+		fileSystemStub
+			.Setup(stub => stub.FileExists(storageFilePath))
+			.Returns(true);
+		fileSystemStub
+			.Setup(stub => stub.GetFileStreamToRead(storageFilePath))
+			.Returns(stream);
+
+		qLearningSystemConfigurationStub
+			.SetupGet(stub => stub.QValueStorageFilePath)
+			.Returns(storageFilePath);
 		//Act
-		var qValueTable = await sut.Read(stream);
+		var qValueTable = await sut.Read();
 		//Assert
 		var expectedBoard = new Board(new[,]
 			{
@@ -41,20 +55,31 @@ public class QValueReaderTests
 		actualActionQValues.Should().BeEquivalentTo(expectedActionQValues);
 	}
 
-	[Test, DomainAutoData]
-	public async Task ShouldReadQValuesWithMultipleBoardStates(ActionQValues[] expectedActionQValues,
-		BoardActionQValuesStringConverter boardActionQValuesStringConverter)
+	[Test, AutoMoqData]
+	public async Task ShouldReadQValuesWithMultipleBoardStates(string storageFilePath,
+		ActionQValues[] expectedActionQValues,
+		[Frozen] [Mock] Mock<FileSystem> fileSystemStub,
+		[Frozen] [Mock] Mock<QLearningSystemConfiguration> qLearningSystemConfigurationStub,
+		QValueReader sut)
 	{
 		//Arrange
 		var existingQValueCsv = @$"1,2,3,4,5,,7,8,9,6,11,12,13,14,15,10,{GetActionQValuesString(expectedActionQValues[0])}
 1,2,3,,5,4,7,8,9,6,11,12,13,14,15,10,{GetActionQValuesString(expectedActionQValues[1])}
 1,2,3,4,5,8,7,,9,6,11,12,13,14,15,10,{GetActionQValuesString(expectedActionQValues[2])}";
-		
 		var byteArray = Encoding.UTF8.GetBytes(existingQValueCsv);
 		var stream = new MemoryStream(byteArray);
-		var sut = new QValueReader(boardActionQValuesStringConverter);
+		fileSystemStub
+			.Setup(stub => stub.FileExists(storageFilePath))
+			.Returns(true);
+		fileSystemStub
+			.Setup(stub => stub.GetFileStreamToRead(storageFilePath))
+			.Returns(stream);
+			
+		qLearningSystemConfigurationStub
+			.SetupGet(stub => stub.QValueStorageFilePath)
+			.Returns(storageFilePath);
 		//Act
-		var qValueTable = await sut.Read(stream);
+		var qValueTable = await sut.Read();
 		//Assert
 		qValueTable.Should().HaveCount(3);
 
@@ -87,15 +112,23 @@ public class QValueReaderTests
 		actualActionQValues.Should().BeEquivalentTo(expectedActionQValues);
 	}
 
-	[Test, DomainAutoData]
-	public async Task ShouldReturnEmptyTableWhenFileDoesntExist(
-		BoardActionQValuesStringConverter boardActionQValuesStringConverter)
+	[Test, AutoMoqData]
+	public async Task ShouldReturnEmptyTable_WhenFileDoesntExist(string storageFilePath,
+		[Frozen] [Mock] Mock<FileSystem> fileSystemStub,
+		[Frozen] [Mock] Mock<QLearningSystemConfiguration> qLearningSystemConfigurationStub,
+		QValueReader sut)
 	{
 		//Arrange
-		var stream = new MemoryStream();
-		var sut = new QValueReader(boardActionQValuesStringConverter);
+		using var stream = new MemoryStream();
+		fileSystemStub
+			.Setup(stub => stub.FileExists(storageFilePath))
+			.Returns(false);
+			
+		qLearningSystemConfigurationStub
+			.SetupGet(stub => stub.QValueStorageFilePath)
+			.Returns(storageFilePath);
 		//Act
-		var qValueTable = await sut.Read(stream);
+		var qValueTable = await sut.Read();
 		//Assert
 		qValueTable.ShouldBeEmpty();
 	}

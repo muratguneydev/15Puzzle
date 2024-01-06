@@ -25,18 +25,21 @@ public class QLearningTests
 	}
 
 	[Test, AutoMoqData]
-	public async Task ShouldInitializeQValuesBeforeStart(int numberOfIterationsExpected,
+	public async Task ShouldInitializeQValuesBeforeStart(
 		IEnumerable<BoardActionQValues> initialBoardActionQValues,
+		[Frozen] [Mock] Mock<QLearningHyperparameters> learningParametersMock,
 		[Frozen] [Mock] Mock<QValueReader> qValueReaderStub,
+		[Frozen] [Mock] Mock<QValueWriter> qValueWriterSpy,
 		QLearning sut)
 	{
 		//Arrange
 		qValueReaderStub
-			.Setup(stub => stub.Read(It.IsAny<Stream>()))
+			.Setup(stub => stub.Read())
 			.ReturnsAsync(initialBoardActionQValues);
 		//Act
 		await sut.Learn();
 		//Assert
-		//sut.NumberOfIterations.Should().Be(numberOfIterationsExpected);
+		var expectedQValueTable = new QValueTable(initialBoardActionQValues, learningParametersMock.Object);
+		qValueWriterSpy.Verify(spy => spy.Write(expectedQValueTable));
 	}
 }
