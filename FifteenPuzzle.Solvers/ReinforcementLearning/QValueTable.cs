@@ -16,19 +16,17 @@ public record QValueTable : IEnumerable<BoardActionQValues>
     }
 
     public ActionQValues Get(Board board)
-	{
-		if (_boardActionQValues.TryGetValue(_boardComparer.GetHashCode(board), out var boardActionQValues))
-		{
-			return boardActionQValues.ActionQValues;
-		}
+    {
+        if (_boardActionQValues.TryGetValue(_boardComparer.GetHashCode(board), out var boardActionQValues))
+        {
+            return boardActionQValues.ActionQValues;
+        }
 
-		return ActionQValues.Empty;
-	}
+        return GetDefaultActionQValues(board);
+    }
 
-	public void UpdateQValues(BoardAction boardAction, double reward)
+    public void UpdateQValues(BoardAction boardAction, double reward)
 	{
-		// var nextBoard = new Board(board);
-		// nextBoard.Move(action.Move.Number.ToString());
 		var nextActionQValues = Get(boardAction.NextBoard);
 
 		var maxNextQValue = boardAction.NextBoard.IsSolved ? 0 : nextActionQValues.MaxQValue;
@@ -46,4 +44,11 @@ public record QValueTable : IEnumerable<BoardActionQValues>
     public IEnumerator<BoardActionQValues> GetEnumerator() => _boardActionQValues.Values.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+	private static ActionQValues GetDefaultActionQValues(Board board)
+    {
+        var movableCells = board.GetMovableCells();
+        var actionQValues = movableCells.Select(cell => new ActionQValue(new Move(int.Parse(cell.Value)), 0));
+        return new ActionQValues(actionQValues);
+    }
 }

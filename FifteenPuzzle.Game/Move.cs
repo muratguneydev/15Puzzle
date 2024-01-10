@@ -13,5 +13,11 @@ public record Move
 		Number = number;
     }
 
+	public Move(string number)
+		: this(int.Parse(number))
+	{
+		
+	}
+
 	public int Number { get; }
 }

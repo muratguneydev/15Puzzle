@@ -82,7 +82,7 @@ public record Board : IEnumerable<Row>
 			{ "13", "14", "15", "" }
 		});
 
-	public virtual bool IsSolved => new BoardComparer().Equals(this, Solved);
+	public bool IsSolved => new BoardComparer().Equals(this, Solved);
 
 	public IEnumerable<Row> Rows =>
 		Enumerable

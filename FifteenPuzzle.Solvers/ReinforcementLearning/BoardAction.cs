@@ -2,18 +2,20 @@ namespace FifteenPuzzle.Solvers.ReinforcementLearning;
 
 using FifteenPuzzle.Game;
 
-public class BoardAction
+public record BoardAction
 {
+    private readonly Board _nextBoard;
+
 	public BoardAction(Board board, ActionQValue actionQValue, Func<Board,Board> cloneFactory)
 	{
         Board = board;
         ActionQValue = actionQValue;
 		
-		NextBoard = cloneFactory(board);
-		NextBoard.Move(actionQValue.Move.Number.ToString());
+		_nextBoard = cloneFactory(board);
+		_nextBoard.Move(actionQValue.Move.Number.ToString());
     }
 
     public Board Board { get; }
-    public Board NextBoard { get; }
+    public virtual Board NextBoard => _nextBoard;
     public ActionQValue ActionQValue { get; }
 }

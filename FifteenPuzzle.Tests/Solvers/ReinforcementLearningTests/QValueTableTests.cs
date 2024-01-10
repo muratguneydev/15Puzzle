@@ -10,13 +10,13 @@ using Shouldly;
 public class QValueTableTests
 {
 	[Test, DomainAutoData]
-	public void Should_ProvideEmptyActionQValues_WhenBoardNotFound(Board board,
+	public void Should_ProvideAll0ActionQValues_WhenBoardNotFound(Board board,
 		QValueTable sut)
 	{
 		//Act
 		var result = sut.Get(board);
 		//Assert
-		result.ShouldBeEmpty();
+		result.All(actionQValue => actionQValue.QValue == 0).ShouldBeTrue();
 	}
 
 	[Test, DomainAutoData]

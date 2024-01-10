@@ -1,54 +1,56 @@
+namespace FifteenPuzzle.Solvers.ReinforcementLearning;
+
 using FifteenPuzzle.Brokers;
 using FifteenPuzzle.Game;
-
-namespace FifteenPuzzle.Solvers.ReinforcementLearning;
+using FifteenPuzzle.Solvers.ReinforcementLearning.ActionSelection;
 
 public class QLearning
 {
     private readonly QLearningHyperparameters _parameters;
     private readonly QValueReader _qValueReader;
     private readonly QValueWriter _qValueWriter;
+    private readonly NonRepeatingActionSelectionPolicy _nonRepeatingActionSelectionPolicy;
     private readonly BoardFactory _boardFactory;
-    private readonly IActionSelectionPolicy _actionSelectionPolicy;
     private readonly IRewardStrategy _rewardStrategy;
     private readonly PuzzleLogger _logger;
 
+	public Action<BoardAction> OnBoardActionQValueCalculated = _ => {};
+	public Action<int> OnIterationCompleted = _ => {};
+
     //TODO: Dispose QValueWriter by the caller.
     public QLearning(QLearningHyperparameters parameters, QValueReader qValueReader, QValueWriter qValueWriter,
-		BoardFactory boardFactory, IActionSelectionPolicy actionSelectionPolicy, IRewardStrategy rewardStrategy, PuzzleLogger logger)
+		NonRepeatingActionSelectionPolicy nonRepeatingActionSelectionPolicy, BoardFactory boardFactory,
+		IRewardStrategy rewardStrategy, PuzzleLogger logger)
 	{
         _parameters = parameters;
         _qValueReader = qValueReader;
         _qValueWriter = qValueWriter;
+        _nonRepeatingActionSelectionPolicy = nonRepeatingActionSelectionPolicy;
         _boardFactory = boardFactory;
-        _actionSelectionPolicy = actionSelectionPolicy;
         _rewardStrategy = rewardStrategy;
         _logger = logger;
     }
 
-    public int NumberOfIterations { get; private set; }
-
     public async Task Learn()
     {
         var qValueTable = await LoadPreviousLearningResults();
-        for (var iteration = 0;iteration < _parameters.NumberOfIterations;iteration++)
+        for (var iteration = 1;iteration <= _parameters.NumberOfIterations;iteration++)
         {
 			var board = _boardFactory.GetRandom();
-			// while (!board.IsSolved)
-			// {
+			var boardTracker = new HashSet<Board>(new BoardComparer());
+			while (!board.IsSolved)
+			{
+				boardTracker.Add(board);
+				
 				var actionQValues = qValueTable.Get(board);
-				var boardActionQValues = new BoardActionQValues(board, actionQValues);
-				var selectedAction = _actionSelectionPolicy.PickAction(boardActionQValues);
-
-				var boardAction = new BoardAction(board, selectedAction, _boardFactory.Clone);
-				//var nextBoard = _boardFactory.Clone(board);
-				//nextBoard.Move(selectedAction.Move.Number.ToString());
+				var boardAction = _nonRepeatingActionSelectionPolicy.PickAction(actionQValues, board, boardTracker);
 				var reward = _rewardStrategy.Calculate(boardAction.NextBoard);
 				qValueTable.UpdateQValues(boardAction, reward);
-
+				
+				OnBoardActionQValueCalculated(boardAction);
 				board = boardAction.NextBoard;
-			// }
-            NumberOfIterations++;
+			}
+			OnIterationCompleted(iteration);
         }
 
         await SaveLearningResults(qValueTable);
