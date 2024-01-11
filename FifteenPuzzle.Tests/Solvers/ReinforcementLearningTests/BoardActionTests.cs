@@ -11,6 +11,7 @@ public class BoardActionTests
 	public void ShouldPopulateNextBoard(BoardActionQValues boardActions, BoardFactory boardFactory)
 	{
 		var boardAction = new BoardAction(boardActions.Board, boardActions.ActionQValues.First(), boardFactory.Clone);
+		
 		boardAction.Board.ShouldBe(boardActions.Board);
 		boardAction.ActionQValue.ShouldBe(boardActions.ActionQValues.First());
 
