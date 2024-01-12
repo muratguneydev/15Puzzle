@@ -1,25 +1,48 @@
-﻿using Spectre.Console;
-using FifteenPuzzle.Game;
-using FifteenPuzzle.CLI;
+﻿namespace FifteenPuzzle.CLI;
+
+using Spectre.Console;
 using FifteenPuzzle.Solvers;
+using Microsoft.Extensions.DependencyInjection;
 
-var solver = new DepthFirstSolver(Render);
+using System.CommandLine;
+using FifteenPuzzle.CLI.Commands;
 
-var board = new Board(new[,]
-	{
-		{ 1, 2, 3, 4 },
-		{ 5, 6, 7, 8 },
-		{ 9, 10, 0, 11 },
-		{ 13, 14, 15, 12 }
-	});
-		
-solver.Solve(board);
-Console.WriteLine("Complete.");
-//Console.ReadLine();
-
-void Render(Board board)
+public class Program
 {
-    new TableBoardRenderer(AnsiConsole.Console, board).Render();
-	new FlatBoardRenderer(AnsiConsole.Console, board).Render();
-	Thread.Sleep(1000);
+	static async Task Main(string[] args)
+	{
+		// create service collection
+		var services = new ServiceCollection();
+		ConfigureServices(services);
+
+		// create service provider
+		using var serviceProvider = services.BuildServiceProvider();
+
+		// entry to run app
+		var commands = serviceProvider.GetServices<Command>();
+		var rootCommand = new RootCommand("15-puzzle reinforcement learning and solving utility.");
+		commands.ToList().ForEach(rootCommand.AddCommand);
+
+		await rootCommand.InvokeAsync(args);
+	}
+
+	private static void ConfigureServices(IServiceCollection services)
+	{
+		// build config
+		// var configuration = new ConfigurationBuilder()
+		//     .AddEnvironmentVariables()
+		//     .Build();
+
+		// settings
+		//services.Configure<FakeWeatherServiceSettings>(configuration.GetSection("Weather"));
+
+		// add commands:
+		//services.AddTransient<Command, CurrentCommand>();
+		services.AddTransient<Command, DepthFirstCommand>();
+
+		// add services:
+		services.AddTransient<DepthFirstSolver>();
+		services.AddTransient<Renderer>();
+		services.AddTransient(_ => AnsiConsole.Console);
+	}
 }

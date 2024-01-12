@@ -6,13 +6,15 @@ public class DepthFirstSolver
 {
 	private readonly Stack<Board> _stack = new();
 	private readonly HashSet<Board> _history = new();
-    private readonly Action<Board> _onNewItemTested;
+    private Action<Board> _onNewItemTested = _ => {};
 	private readonly BoardComparer _boardComparer = new();
     private bool _solved;
 
-    public DepthFirstSolver(Action<Board> onNewItemTested) => _onNewItemTested = onNewItemTested;
+    //public DepthFirstSolver(Action<Board> onNewItemTested) => _onNewItemTested = onNewItemTested;
 
     public IReadOnlyList<Board> History => _history.ToList();
+
+	public void AddOnNewItemTested(Action<Board> onNewItemTested) => _onNewItemTested += onNewItemTested;
 
 	public void Solve(Board currentBoard)
     {
@@ -20,8 +22,7 @@ public class DepthFirstSolver
             return;
 
         _onNewItemTested(currentBoard);
-
-        _history.Add(currentBoard);
+        MarkAsTested(currentBoard);
 
         if (currentBoard.IsSolved)
         {
@@ -46,6 +47,8 @@ public class DepthFirstSolver
                 _stack.Push(nextPossibleBoard);
         }
     }
+
+    private void MarkAsTested(Board currentBoard) => _history.Add(currentBoard);
 
     private bool HasBeenTested(Board board) => _history.Contains(board, _boardComparer);
 }
