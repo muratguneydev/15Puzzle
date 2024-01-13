@@ -19,4 +19,3 @@ public class QLearningHyperparameters
     public virtual double ExplorationProbabilityEpsilon { get; }
     public virtual int NumberOfIterations { get; }
 }
-

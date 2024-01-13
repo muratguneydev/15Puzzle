@@ -40,6 +40,4 @@ public class QValueReader
 
         return boardActionQValues;
     }
-
-    
 }

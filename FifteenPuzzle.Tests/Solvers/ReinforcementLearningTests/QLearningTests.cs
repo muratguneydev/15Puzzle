@@ -14,7 +14,6 @@ using Shouldly;
 public class QLearningTests
 {
 	private static readonly Random Random = new();
-	private static readonly BoardComparer BoardComparer = new();
 
 	[Test, AutoMoqData]
 	public async Task ShouldStopAfterNIterations(
@@ -114,18 +113,6 @@ public class QLearningTests
         boardFactoryStub
 			.Setup(stub => stub.GetRandom())
 			.Returns(randomBoard);
-        // boardFactoryStub
-        //     .Setup(stub => stub.Clone(It.IsAny<Board>()))
-        //     .Returns((Board b) =>
-        //     {
-        //         for (var i = 0;i < numberOfMovesTillResolved;i++)
-        //         {
-        //             if (BoardComparer.Equals(b, nextBoardActions[i].Board))
-        //                 return new Board(b);// nextBoardActions[i].Board;
-        //         }
-        //         //throw new Exception("Couldn't find the next board.");
-		// 		return nextBoardActions[numberOfMovesTillResolved].Board;
-        //     });
     }
 
 	private static void SetUpActionSelectionPolicy(Mock<NonRepeatingActionSelectionPolicy> actionSelectionPolicyStub,
@@ -154,9 +141,7 @@ public class QLearningTests
 			.SetupGet(stub => stub.NumberOfIterations)
 			.Returns(GetNumberOfIterations());
 
-    /// <summary>
-    /// Limit the iterations to a reasonable short number
-    /// </summary>
+    /// <summary>Limit the iterations to a reasonable small number.</summary>
     private static int GetNumberOfIterations() => Random.Next(1, 10);
 
     private static BoardAction[] GetNextBoardActions(BoardActionQValues initialBoardActionQValues, int numberOfMovesTillResolved)
@@ -208,17 +193,4 @@ public class QLearningTests
 		var nextActionQValues = nextMovableCells.Select(cell => new ActionQValue(new Move(int.Parse(cell.Value)), fixture.Create<double>()));
 		return new BoardActionQValues(nextBoard, new ActionQValues(nextActionQValues));
 	}
-}
-
-public record BoardActionStub : BoardAction
-{
-    private readonly Board _nextBoard;
-
-    public BoardActionStub(Board board, Board nextBoard)
-		: base(board, new ActionQValue(new Move(1), 0), board => new Board(board))
-    {
-        _nextBoard = nextBoard;
-    }
-
-    public override Board NextBoard => _nextBoard;
 }
