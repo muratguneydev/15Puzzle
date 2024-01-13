@@ -11,7 +11,8 @@
 			"preLaunchTask": "build",
 			// If you have changed target frameworks, make sure to update the program path.
 			"program": "${workspaceFolder}/FifteenPuzzle.CLI/bin/Debug/net7.0/FifteenPuzzle.CLI.dll",
-			"args": ["depthfirst", "--useEasyBoard"],
+			//"args": ["depthfirst", "--useEasyBoard"],
+			"args": ["qlearning"],
 			"cwd": "${workspaceFolder}/FifteenPuzzle.CLI",
 			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
 			"console": "internalConsole",

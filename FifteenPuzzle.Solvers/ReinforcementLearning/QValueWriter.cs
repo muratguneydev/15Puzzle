@@ -1,12 +1,10 @@
 namespace FifteenPuzzle.Solvers.ReinforcementLearning;
 
-public class QValueWriter : IDisposable
+public class QValueWriter
 {
     private readonly BoardActionQValuesStringConverter _boardActionQValuesStringConverter;
     private readonly QLearningSystemConfiguration _qLearningSystemConfiguration;
     private readonly FileSystem _fileSystem;
-    private bool _isDisposed;
-    private StreamWriter _streamWriter = GetDefaultStreamWriter();
 
     public QValueWriter(BoardActionQValuesStringConverter boardActionQValuesStringConverter,
 		QLearningSystemConfiguration qLearningSystemConfiguration, FileSystem fileSystem)
@@ -16,29 +14,15 @@ public class QValueWriter : IDisposable
         _fileSystem = fileSystem;
     }
 
-    public virtual async Task Write(QValueTable qValueTable)
+    public virtual async Task<IDisposable> Write(QValueTable qValueTable)
     {
 		var stream = _fileSystem.GetFileStreamToWrite(_qLearningSystemConfiguration.QValueStorageFilePath);
-        _streamWriter = new StreamWriter(stream);//don't dispose as it will dispose the stream too.
+        var streamWriter = new StreamWriter(stream);//don't dispose as it will dispose the stream too.
 
         var lines = string.Join(Environment.NewLine, qValueTable.Select(_boardActionQValuesStringConverter.GetLine));
 
-        await _streamWriter.WriteAsync(lines);
-        await _streamWriter.FlushAsync();
+        await streamWriter.WriteAsync(lines);
+        await streamWriter.FlushAsync();
+		return streamWriter;
     }
-
-    public void Dispose()
-    {
-        if (_isDisposed)
-        {
-            return;
-        }
-
-        _streamWriter.Dispose();
-        GC.SuppressFinalize(this);//still needed to avoid finalizer queue.
-        _isDisposed = true;
-    }
-
-    private static StreamWriter GetDefaultStreamWriter() => new (new MemoryStream());
-
 }

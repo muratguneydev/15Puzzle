@@ -1,11 +1,6 @@
 namespace FifteenPuzzle.Solvers.ReinforcementLearning;
 
-public class QLearningSystemConfiguration
+public record QLearningSystemConfiguration
 {
-	public QLearningSystemConfiguration(string qValueStorageFilePath)
-	{
-        QValueStorageFilePath = qValueStorageFilePath;
-    }
-
-    public virtual string QValueStorageFilePath { get; }
+	public virtual string QValueStorageFilePath { get; set; } = string.Empty;
 }

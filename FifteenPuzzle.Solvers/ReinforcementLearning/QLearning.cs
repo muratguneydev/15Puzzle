@@ -17,7 +17,6 @@ public class QLearning
 	public Action<BoardAction> OnBoardActionQValueCalculated = _ => {};
 	public Action<int> OnIterationCompleted = _ => {};
 
-    //TODO: Dispose QValueWriter by the caller.
     public QLearning(QLearningHyperparameters parameters, QValueReader qValueReader, QValueWriter qValueWriter,
 		NonRepeatingActionSelectionPolicy nonRepeatingActionSelectionPolicy, BoardFactory boardFactory,
 		IRewardStrategy rewardStrategy, PuzzleLogger logger)
@@ -60,7 +59,8 @@ public class QLearning
     {
 		try
 		{
-			await _qValueWriter.Write(qValueTable);
+			var toDispose = await _qValueWriter.Write(qValueTable);
+			toDispose.Dispose();
 		}
 		catch(Exception e)
 		{

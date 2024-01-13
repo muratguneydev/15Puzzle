@@ -65,13 +65,14 @@ public class QValueWriterTests
 			.SetupGet(stub => stub.QValueStorageFilePath)
 			.Returns(storageFilePath);
 		//Act
-		await sut.Write(qValueTable);
+		var toDispose = await sut.Write(qValueTable);
 		//Assert
 		stream.Seek(0, SeekOrigin.Begin);
 		using var reader = new StreamReader(stream, Encoding.UTF8);
 		var writtenText = await reader.ReadToEndAsync();
+		toDispose.Dispose();
 		
-		sut.Dispose();//we need the stream until this point. Disposing the StreamWriter will also dispose the stream.
+		//sut.Dispose();//we need the stream until this point. Disposing the StreamWriter will also dispose the stream.
 		writtenText.Should().Be(expectedQValueCsv);
 	}
 

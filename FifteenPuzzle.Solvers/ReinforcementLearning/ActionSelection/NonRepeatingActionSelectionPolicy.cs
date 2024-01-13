@@ -18,17 +18,23 @@ public class NonRepeatingActionSelectionPolicy
     {
 		var remainingActions = actionQValues;
 		var actionSelectionPolicy = _actionSelectionPolicyFactory.Get();
-        var action = actionSelectionPolicy.PickAction(actionQValues);
-		var boardAction = _boardActionFactory.Get(currentBoard, action);
+		var boardAction = PickBoardActionFromRemainingActions(actionSelectionPolicy, currentBoard, remainingActions);
+		remainingActions = remainingActions.Remove(boardAction.ActionQValue);
 		while (boardTracker.Contains(boardAction.NextBoard) && remainingActions.Any())
 		{
-			remainingActions = remainingActions.Remove(action);
-			action = actionSelectionPolicy.PickAction(remainingActions);
-			boardAction = _boardActionFactory.Get(currentBoard, action);;
+			boardAction = PickBoardActionFromRemainingActions(actionSelectionPolicy, currentBoard, remainingActions);
+			remainingActions = remainingActions.Remove(boardAction.ActionQValue);
 		}
 
 		if (!boardTracker.Contains(boardAction.NextBoard))
 			return boardAction;
-		throw new Exception("Couldn't find an action leading to a board which hasn't been processed yet.");
+		throw new Exception("Couldn't find an action leading to a board which hasn't been processed yet.");//TODO:create a test
     }
+
+	private BoardAction PickBoardActionFromRemainingActions(IActionSelectionPolicy actionSelectionPolicy, Board currentBoard,
+		ActionQValues remainingActions)
+	{
+		var action = actionSelectionPolicy.PickAction(remainingActions);
+		return _boardActionFactory.Get(currentBoard, action);
+	}
 }

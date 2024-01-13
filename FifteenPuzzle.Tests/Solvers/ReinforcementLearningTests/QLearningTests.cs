@@ -129,7 +129,7 @@ public class QLearningTests
     private static void SetUpQValueWriter(Mock<QValueWriter> qValueWriterSpy) =>
 		qValueWriterSpy
 			.Setup(dummy => dummy.Write(It.IsAny<QValueTable>()))
-			.Returns(Task.CompletedTask);
+			.ReturnsAsync(Task.CompletedTask);
 
     private static void SetUpQValueReader(Mock<QValueReader> qValueReaderStub, IEnumerable<BoardActionQValues> boardActionQValues) =>
 		qValueReaderStub
