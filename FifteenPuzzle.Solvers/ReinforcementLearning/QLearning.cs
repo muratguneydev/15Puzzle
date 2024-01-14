@@ -1,7 +1,6 @@
 namespace FifteenPuzzle.Solvers.ReinforcementLearning;
 
 using FifteenPuzzle.Brokers;
-using FifteenPuzzle.Game;
 using FifteenPuzzle.Solvers.ReinforcementLearning.ActionSelection;
 
 public class QLearning
@@ -10,6 +9,7 @@ public class QLearning
     private readonly QValueReader _qValueReader;
     private readonly QValueWriter _qValueWriter;
     private readonly NonRepeatingActionSelectionPolicy _nonRepeatingActionSelectionPolicy;
+    private readonly BoardTracker _boardTracker;
     private readonly BoardFactory _boardFactory;
     private readonly IRewardStrategy _rewardStrategy;
     private readonly PuzzleLogger _logger;
@@ -18,13 +18,14 @@ public class QLearning
 	public Action<int> OnIterationCompleted = _ => {};
 
     public QLearning(QLearningHyperparameters parameters, QValueReader qValueReader, QValueWriter qValueWriter,
-		NonRepeatingActionSelectionPolicy nonRepeatingActionSelectionPolicy, BoardFactory boardFactory,
-		IRewardStrategy rewardStrategy, PuzzleLogger logger)
+		NonRepeatingActionSelectionPolicy nonRepeatingActionSelectionPolicy, BoardTracker boardTracker,
+		BoardFactory boardFactory, IRewardStrategy rewardStrategy, PuzzleLogger logger)
 	{
         _parameters = parameters;
         _qValueReader = qValueReader;
         _qValueWriter = qValueWriter;
         _nonRepeatingActionSelectionPolicy = nonRepeatingActionSelectionPolicy;
+        _boardTracker = boardTracker;
         _boardFactory = boardFactory;
         _rewardStrategy = rewardStrategy;
         _logger = logger;
@@ -36,13 +37,12 @@ public class QLearning
         for (var iteration = 1;iteration <= _parameters.NumberOfIterations;iteration++)
         {
 			var board = _boardFactory.GetRandom();
-			var boardTracker = new HashSet<Board>(new BoardComparer());
 			while (!board.IsSolved)
 			{
-				boardTracker.Add(board);
+				_boardTracker.Add(board);
 				
 				var actionQValues = qValueTable.Get(board);
-				var boardAction = _nonRepeatingActionSelectionPolicy.PickAction(actionQValues, board, boardTracker);
+				var boardAction = _nonRepeatingActionSelectionPolicy.PickAction(actionQValues, board);
 				var reward = _rewardStrategy.Calculate(boardAction.NextBoard);
 				qValueTable.UpdateQValues(boardAction, reward);
 				

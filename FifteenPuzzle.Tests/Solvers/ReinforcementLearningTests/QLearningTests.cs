@@ -122,7 +122,7 @@ public class QLearningTests
 		var boardActionsForEveryIteration = Enumerable.Repeat(boardActions, numberOfIterations).SelectMany(x => x);
 		var queue = new Queue<BoardAction>(boardActionsForEveryIteration);
 		actionSelectionPolicyStub
-			.Setup(stub => stub.PickAction(It.IsAny<ActionQValues>(), It.IsAny<Board>(), It.IsAny<HashSet<Board>>()))
+			.Setup(stub => stub.PickAction(It.IsAny<ActionQValues>(), It.IsAny<Board>()))
 			.Returns(queue.Dequeue);
     }
 
@@ -147,7 +147,8 @@ public class QLearningTests
     private static BoardAction[] GetNextBoardActions(BoardActionQValues initialBoardActionQValues, int numberOfMovesTillResolved)
 	{
 		var result = new BoardAction[numberOfMovesTillResolved];
-		var boardTracker = new HashSet<Board>(new BoardComparer()) { initialBoardActionQValues.Board };
+		var boardTracker = new BoardTracker();
+		boardTracker.Add(initialBoardActionQValues.Board);
 		var currentBoardActionQValues = initialBoardActionQValues;
 		for (var i=0;i < numberOfMovesTillResolved-1;i++)
         {
@@ -163,18 +164,18 @@ public class QLearningTests
 		return result;
 	}
 
-    private static BoardAction GetNonRepeatingBoardAction(HashSet<Board> boardTracker, BoardActionQValues currentBoardActionQValues)
+    private static BoardAction GetNonRepeatingBoardAction(BoardTracker boardTracker, BoardActionQValues currentBoardActionQValues)
     {
         var boardAction = GetBoardAction(currentBoardActionQValues, currentBoardActionQValues.ActionQValues);
         var remainingActions = currentBoardActionQValues.ActionQValues.Remove(boardAction.ActionQValue);
 
-        while (boardTracker.Contains(boardAction.NextBoard) && remainingActions.Any())
+        while (boardTracker.WasProcessedBefore(boardAction.NextBoard) && remainingActions.Any())
         {
             boardAction = GetBoardAction(currentBoardActionQValues, remainingActions);
             remainingActions = remainingActions.Remove(boardAction.ActionQValue);
         }
 
-        if (boardTracker.Contains(boardAction.NextBoard))
+        if (boardTracker.WasProcessedBefore(boardAction.NextBoard))
             throw new Exception("Couldn't find an action leading to a board which hasn't been processed yet.");
         return boardAction;
     }
