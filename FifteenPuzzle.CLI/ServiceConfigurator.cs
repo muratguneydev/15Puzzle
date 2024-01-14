@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Spectre.Console;
 using System.CommandLine;
+using FifteenPuzzle.Game;
 
 public class ServiceConfigurator
 {

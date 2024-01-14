@@ -175,4 +175,53 @@ public class BoardTests
 		sut.GetCell("10").ShouldBe(new Cell(3, 3, "10"));
 		sut.GetCell("").ShouldBe(new Cell(1, 1, ""));
 	}
+
+	[Test]
+	public void ShouldIdentify_WhenSolvable()
+	{
+		//Arrange
+		var boards = new []
+		{
+			new Board(new[,]
+			{
+				{ 1, 2, 3, 4 },
+				{ 5, 6, 7, 8 },
+				{ 0, 9, 11, 12 },
+				{ 13, 14, 15, 10 }
+			}),new Board(new[,]
+			{
+				{ 1, 2, 3, 4 },
+				{ 5, 6, 7, 8 },
+				{ 9, 11, 0, 12 },
+				{ 13, 14, 15, 10 }
+			})
+		};
+		//Act & Assert
+		boards.All(board => board.IsSolvable).ShouldBeTrue();
+	}
+
+	[Test]
+	public void ShouldIdentify_WhenNotSolvable()
+	{
+		//Arrange
+		var boards = new []
+		{
+			new Board(new[,]
+			{
+				{ 1, 2, 3, 4 },
+				{ 5, 0, 7, 8 },
+				{ 9, 6, 11, 12 },
+				{ 13, 14, 15, 10 }
+			}),
+			new Board(new[,]
+			{
+				{ 1, 2, 3, 4 },
+				{ 5, 6, 7, 8 },
+				{ 9, 14, 11, 12 },
+				{ 13, 0, 15, 10 }
+			})
+		};
+		//Act & Assert
+		boards.All(board => board.IsSolvable).ShouldBeFalse();
+	}
 }

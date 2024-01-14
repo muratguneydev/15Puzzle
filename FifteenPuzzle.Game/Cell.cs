@@ -18,6 +18,7 @@ public record Cell
     public int Row { get; }
     public int Column { get; }
     public string Value { get; private set; }
+    public int NumberValue => string.IsNullOrEmpty(Value) ? 0 : int.Parse(Value);
 
     public bool IsOnSameRow(Cell other) => Column == other.Column;
 	public bool IsOnSameColumn(Cell other) => Row == other.Row;

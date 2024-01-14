@@ -83,6 +83,20 @@ public record Board : IEnumerable<Row>
 		});
 
 	public bool IsSolved => new BoardComparer().Equals(this, Solved);
+	public virtual bool IsSolvable
+	{
+		get
+		{
+			var numberOfInversions = 0;
+			for (var i=0;i < _cells.Length-1;i++)
+			{
+				if (Flattened[i+1].NumberValue < Flattened[i].NumberValue)
+					numberOfInversions++;
+			}
+			var isNumberOfInversionsEven = numberOfInversions % 2 == 0;
+			return isNumberOfInversionsEven;
+		}
+	}
 
 	public IEnumerable<Row> Rows =>
 		Enumerable

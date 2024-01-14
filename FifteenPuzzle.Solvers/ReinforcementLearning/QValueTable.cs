@@ -48,7 +48,7 @@ public record QValueTable : IEnumerable<BoardActionQValues>
 	private static ActionQValues GetDefaultActionQValues(Board board)
     {
         var movableCells = board.GetMovableCells();
-        var actionQValues = movableCells.Select(cell => new ActionQValue(new Move(int.Parse(cell.Value)), 0));
+        var actionQValues = movableCells.Select(cell => new ActionQValue(new Move(cell.NumberValue), 0));
         return new ActionQValues(actionQValues);
     }
 }

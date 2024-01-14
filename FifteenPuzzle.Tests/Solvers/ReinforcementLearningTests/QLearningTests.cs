@@ -191,7 +191,7 @@ public class QLearningTests
 	{
 		var fixture = new Fixture();
 		var nextMovableCells = nextBoard.GetMovableCells();
-		var nextActionQValues = nextMovableCells.Select(cell => new ActionQValue(new Move(int.Parse(cell.Value)), fixture.Create<double>()));
+		var nextActionQValues = nextMovableCells.Select(cell => new ActionQValue(new Move(cell.NumberValue), fixture.Create<double>()));
 		return new BoardActionQValues(nextBoard, new ActionQValues(nextActionQValues));
 	}
 }

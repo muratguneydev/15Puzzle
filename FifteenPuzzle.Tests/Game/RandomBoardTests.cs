@@ -1,9 +1,9 @@
-using AutoFixture.NUnit3;
+namespace FifteenPuzzle.Tests.Game;
+
 using FifteenPuzzle.Game;
+using global::AutoFixture.NUnit3;
 using NUnit.Framework;
 using Shouldly;
-
-namespace FifteenPuzzle.Tests.Game;
 
 public class RandomBoardTests
 {

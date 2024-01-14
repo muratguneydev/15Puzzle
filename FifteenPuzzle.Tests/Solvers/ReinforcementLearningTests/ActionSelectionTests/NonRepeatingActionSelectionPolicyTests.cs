@@ -23,7 +23,7 @@ public class NonRepeatingActionSelectionPolicyTests
 		var fixture = AutoFixtureFactory.Create();
 		var actions = currentBoard
 			.GetMovableCells()
-			.Select(cell => new ActionQValue(new Move(int.Parse(cell.Value)), fixture.Create<double>()));
+			.Select(cell => new ActionQValue(new Move(cell.NumberValue), fixture.Create<double>()));
 		
 		var actionQValues = new ActionQValues(actions);
 		var selectedActionLeadingToDupeBoard = actionQValues.First();

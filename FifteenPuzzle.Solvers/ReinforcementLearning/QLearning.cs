@@ -1,6 +1,7 @@
 namespace FifteenPuzzle.Solvers.ReinforcementLearning;
 
 using FifteenPuzzle.Brokers;
+using FifteenPuzzle.Game;
 using FifteenPuzzle.Solvers.ReinforcementLearning.ActionSelection;
 
 public class QLearning
@@ -33,10 +34,13 @@ public class QLearning
 
     public async Task Learn()
     {
+		_logger.LogInformation("Starting learning.");
+
         var qValueTable = await LoadPreviousLearningResults();
         for (var iteration = 1;iteration <= _parameters.NumberOfIterations;iteration++)
         {
 			var board = _boardFactory.GetRandom();
+			_logger.LogInformation($"Iteration {iteration} starting.");
 			while (!board.IsSolved)
 			{
 				_boardTracker.Add(board);
@@ -49,6 +53,7 @@ public class QLearning
 				OnBoardActionQValueCalculated(boardAction);
 				board = boardAction.NextBoard;
 			}
+			_logger.LogInformation($"Iteration {iteration} completed.");
 			OnIterationCompleted(iteration);
         }
 
