@@ -1,4 +1,5 @@
 namespace FifteenPuzzle.CLI;
+
 using Microsoft.Extensions.Configuration;
 
 public class ConfigurationProvider

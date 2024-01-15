@@ -34,12 +34,12 @@ public class QLearning
 
     public async Task Learn()
     {
-		_logger.LogInformation("Starting learning.");
+		_logger.LogInformation("Starting q-learning.");
 
         var qValueTable = await LoadPreviousLearningResults();
         for (var iteration = 1;iteration <= _parameters.NumberOfIterations;iteration++)
         {
-			var board = _boardFactory.GetRandom();
+			var board = _boardFactory.GetSolvable();
 			_logger.LogInformation($"Iteration {iteration} starting.");
 			while (!board.IsSolved)
 			{

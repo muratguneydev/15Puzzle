@@ -17,7 +17,7 @@ public class QLearningCommand : Command
         _renderer = renderer;
 
         var renderActionsOption = new Option<bool>(new[] { "--renderActions", "-r" }, () => false, "Show the board after each action for 1 second.");
-
+        AddOption(renderActionsOption);
 		this.SetHandler(Execute, renderActionsOption);
     }
 

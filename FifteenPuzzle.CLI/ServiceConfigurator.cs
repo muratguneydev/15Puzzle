@@ -38,7 +38,7 @@ public class ServiceConfigurator
         services.AddTransient<Renderer>();
 
         services.AddTransient<Random>();
-        services.AddTransient<PuzzleLogger>();
+        services.AddSingleton<PuzzleLogger>();
 
         services.AddTransient<QLearning>();
         services.AddSingleton<BoardTracker>();

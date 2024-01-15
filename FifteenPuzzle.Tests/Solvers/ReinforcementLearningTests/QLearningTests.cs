@@ -111,7 +111,7 @@ public class QLearningTests
     private static void SetUpBoardFactory(Mock<BoardFactory> boardFactoryStub, Board randomBoard)
     {
         boardFactoryStub
-			.Setup(stub => stub.GetRandom())
+			.Setup(stub => stub.GetSolvable())
 			.Returns(randomBoard);
     }
 

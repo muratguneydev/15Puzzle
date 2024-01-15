@@ -11,6 +11,8 @@ public class PuzzleLogger
 	{
 		_logger = new LoggerConfiguration()
             .WriteTo.File(loggingConfiguration.LogFilePath)
+			.Enrich.FromLogContext()
+			//.WriteTo.ColoredConsole()
             .CreateLogger();
 	}
 
