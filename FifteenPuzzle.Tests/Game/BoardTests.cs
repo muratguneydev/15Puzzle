@@ -182,18 +182,26 @@ public class BoardTests
 		//Arrange
 		var boards = new []
 		{
+			//N:4 (even)
+			//Position of empty from bottom: 2 (even)
+			//Inversion count: 41(odd)
+			//=>solvable
 			new Board(new[,]
 			{
-				{ 1, 2, 3, 4 },
-				{ 5, 6, 7, 8 },
-				{ 0, 9, 11, 12 },
-				{ 13, 14, 15, 10 }
+				{ 13, 2, 10, 3 },
+				{ 1, 12, 8, 4 },
+				{ 5, 0, 9, 6 },
+				{ 15, 14, 11, 7 }
+			//N:4
+			//Position of empty from bottom: 3 (odd)
+			//Inversion count: 62(even)
+			//=>solvable
 			}),new Board(new[,]
 			{
-				{ 1, 2, 3, 4 },
-				{ 5, 6, 7, 8 },
-				{ 9, 11, 0, 12 },
-				{ 13, 14, 15, 10 }
+				{ 6, 13, 7, 10 },
+				{ 8, 9, 11, 0 },
+				{ 15, 2, 12, 5 },
+				{ 14, 3, 1, 4 }
 			})
 		};
 		//Act & Assert
@@ -206,19 +214,27 @@ public class BoardTests
 		//Arrange
 		var boards = new []
 		{
+			//N:4
+			//Position of empty from bottom: 2 (even)
+			//Inversion count: 56(even)
+			//=>not solvable
 			new Board(new[,]
 			{
-				{ 1, 2, 3, 4 },
-				{ 5, 0, 7, 8 },
-				{ 9, 6, 11, 12 },
-				{ 13, 14, 15, 10 }
+				{ 3, 9, 1, 15 },
+				{ 14, 11, 4, 6 },
+				{ 13, 0, 10, 12 },
+				{ 2, 7, 8, 5 }
 			}),
+			//N:4
+			//Position of empty from bottom: 2 (even)
+			//Inversion count: 56(even)
+			//=>not solvable
 			new Board(new[,]
 			{
-				{ 1, 2, 3, 4 },
-				{ 5, 6, 7, 8 },
-				{ 9, 14, 11, 12 },
-				{ 13, 0, 15, 10 }
+				{ 3, 9, 1, 15 },
+				{ 14, 11, 4, 6 },
+				{ 13, 0, 12, 10 },
+				{ 2, 7, 5, 8 }
 			})
 		};
 		//Act & Assert

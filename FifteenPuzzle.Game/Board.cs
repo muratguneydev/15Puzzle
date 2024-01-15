@@ -85,18 +85,61 @@ public record Board : IEnumerable<Row>
 	public bool IsSolved => new BoardComparer().Equals(this, Solved);
 	public virtual bool IsSolvable
 	{
+		/*
+If N is odd, then puzzle instance is solvable if number of inversions is even in the input state.
+If N is even, puzzle instance is solvable if 
+the blank is on an even row counting from the bottom (second-last, fourth-last, etc.) and number of inversions is odd.
+the blank is on an odd row counting from the bottom (last, third-last, fifth-last, etc.) and number of inversions is even.
+For all other cases, the puzzle instance is not solvable.
+		*/
 		get
 		{
-			var numberOfInversions = 0;
-			for (var i=0;i < _cells.Length-1;i++)
-			{
-				if (Flattened[i+1].NumberValue < Flattened[i].NumberValue)
-					numberOfInversions++;
-			}
-			var isNumberOfInversionsEven = numberOfInversions % 2 == 0;
-			return isNumberOfInversionsEven;
+			// var numberOfInversions = 0;
+			// for (var i=0;i < _cells.Length-1;i++)
+			// {
+			// 	if (Flattened[i+1].NumberValue < Flattened[i].NumberValue)
+			// 		numberOfInversions++;
+			// }
+			// var isNumberOfInversionsEven = numberOfInversions % 2 == 0;
+			// return isNumberOfInversionsEven;
+			return IsSolvable2(Flattened.Select(cell => cell.NumberValue).ToArray());
 		}
 	}
+
+	public bool IsSolvable2(int[] puzzle)
+	{
+		int parity = 0;
+		int gridWidth = (int) Math.Sqrt(puzzle.Length);
+		int row = 0; // the current row we are on
+		int blankRow = 0; // the row with the blank tile
+		for (int i = 0; i < puzzle.Length; i++)
+		{
+			if (i % gridWidth == 0) { // advance to next row
+				row++;
+			}
+			if (puzzle[i] == 0) { // the blank tile
+				blankRow = row; // save the row on which encountered
+				continue;
+			}
+			for (int j = i + 1; j < puzzle.Length; j++)
+			{
+				if (puzzle[i] > puzzle[j] && puzzle[j] != 0)
+				{
+					parity++;
+				}
+			}
+		}
+		if (gridWidth % 2 == 0) { // even grid
+			if (blankRow % 2 == 0) { // blank on odd row; counting from bottom
+				return parity % 2 == 0;
+			} else { // blank on even row; counting from bottom
+				return parity % 2 != 0;
+			}
+		} else { // odd grid
+			return parity % 2 == 0;
+		}
+	}
+
 
 	public IEnumerable<Row> Rows =>
 		Enumerable

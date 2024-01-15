@@ -35,7 +35,7 @@ public class ServiceConfigurator
     private static void RegisterServices(IServiceCollection services)
     {
         services.AddTransient<DepthFirstSolver>();
-        services.AddTransient<Renderer>();
+        services.AddTransient<ConsoleBoardRenderer>();
 
         services.AddTransient<Random>();
         services.AddSingleton<PuzzleLogger>();

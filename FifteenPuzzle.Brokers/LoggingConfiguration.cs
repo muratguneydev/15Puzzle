@@ -2,7 +2,5 @@ namespace FifteenPuzzle.Brokers;
 
 public class LoggingConfiguration
 {
-    //public LoggingConfiguration(string logFilePath) => LogFilePath = logFilePath;
-
-    public string LogFilePath { get; set; } = string.Empty;
+    public string LogDirectoryPath { get; set; } = string.Empty;
 }

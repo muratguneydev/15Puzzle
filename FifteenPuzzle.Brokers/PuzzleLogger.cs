@@ -9,8 +9,9 @@ public class PuzzleLogger
 
     public PuzzleLogger(LoggingConfiguration loggingConfiguration)
 	{
+		string now = DateTime.Now.ToString("yyyyMMdd_HHmm");
 		_logger = new LoggerConfiguration()
-            .WriteTo.File(loggingConfiguration.LogFilePath)
+            .WriteTo.File($"{loggingConfiguration.LogDirectoryPath}/FifteenPuzzle.{now}.log")
 			.Enrich.FromLogContext()
 			//.WriteTo.ColoredConsole()
             .CreateLogger();

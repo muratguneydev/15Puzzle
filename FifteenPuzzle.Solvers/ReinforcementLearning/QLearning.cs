@@ -32,7 +32,7 @@ public class QLearning
         _logger = logger;
     }
 
-    public async Task Learn()
+	public async Task Learn()
     {
 		_logger.LogInformation("Starting q-learning.");
 

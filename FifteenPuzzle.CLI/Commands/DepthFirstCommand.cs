@@ -14,7 +14,7 @@ public class DepthFirstCommand : Command
 	//https://nikiforovall.github.io/dotnet/2022/08/26/persisted-parameters-in-dotnet-cli.html
 
     private readonly DepthFirstSolver _solver;
-    private readonly Renderer _renderer;
+    private readonly ConsoleBoardRenderer _renderer;
     private static readonly Board EasyBoard = new (new[,]
 		{
 			{ 1, 2, 3, 4 },
@@ -23,7 +23,7 @@ public class DepthFirstCommand : Command
 			{ 13, 14, 15, 12 }
 		});
 
-    public DepthFirstCommand(DepthFirstSolver solver, Renderer renderer)
+    public DepthFirstCommand(DepthFirstSolver solver, ConsoleBoardRenderer renderer)
 		: base("depthfirst", "Solves the 15 puzzle using depth first search.")
     {
         _solver = solver;
