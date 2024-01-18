@@ -10,6 +10,7 @@ public class BoardFactoryTests
 {
     [Test, AutoData]
     public void ShouldGetRandomBoard(BoardFactory sut) => sut.GetRandom().IsSolved.ShouldBeFalse();
+    public void ShouldGetSolvedBoard(BoardFactory sut) => sut.GetSolved().IsSolved.ShouldBeTrue();
 
 	[Test, AutoData]
     public void ShouldGetSolvableBoard(Mock<BoardFactory> sutMock)

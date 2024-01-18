@@ -3,6 +3,7 @@ namespace FifteenPuzzle.Game;
 public class BoardFactory
 {
 	public virtual Board GetRandom() => new RandomBoard();
+	public virtual Board GetSolved() => Board.Solved;
 	public virtual Board Clone(Board board) => new(board);
 
 	/// <summary>

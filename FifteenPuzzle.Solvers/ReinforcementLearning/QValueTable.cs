@@ -45,10 +45,6 @@ public record QValueTable : IEnumerable<BoardActionQValues>
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-	private static ActionQValues GetDefaultActionQValues(Board board)
-    {
-        var movableCells = board.GetMovableCells();
-        var actionQValues = movableCells.Select(cell => new ActionQValue(new Move(cell.NumberValue), 0));
-        return new ActionQValues(actionQValues);
-    }
+    private static ActionQValues GetDefaultActionQValues(Board board) =>
+		new ActionQValues(board.GetMoves().Select(move => new ActionQValue(move, 0)));
 }

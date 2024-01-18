@@ -10,6 +10,7 @@
 		}
 	},
 	"mounts": [
-        "source=${localEnv:HOME}/FifteenPuzzle/Logs,target=/workspaces/Logs,type=bind"
+        "source=${localEnv:HOME}/FifteenPuzzle/Logs,target=/workspaces/Logs,type=bind",
+        "source=${localEnv:HOME}/FifteenPuzzle/Data,target=/workspaces/Data,type=bind",
     ]
 }

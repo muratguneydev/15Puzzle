@@ -18,4 +18,6 @@ public record BoardAction
     public Board Board { get; }
     public virtual Board NextBoard => _nextBoard;
     public ActionQValue ActionQValue { get; }
+
+	public BoardMove BoardMove => new(Board, ActionQValue.Move);
 }

@@ -29,9 +29,6 @@ public class QLearningCommand : Command
 	private Task Execute(bool renderActions)
     {
 		_renderActionsOnConsoleEverySecond = renderActions;
-		//if (renderActions)
-		//	_qLearning.OnBoardActionQValueCalculated += OnBoardActionQValueCalculated;
-
     	return _qLearning.Learn();
     }
 

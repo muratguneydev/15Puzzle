@@ -122,8 +122,8 @@ public class QLearningTests
 		var boardActionsForEveryIteration = Enumerable.Repeat(boardActions, numberOfIterations).SelectMany(x => x);
 		var queue = new Queue<BoardAction>(boardActionsForEveryIteration);
 		actionSelectionPolicyStub
-			.Setup(stub => stub.PickAction(It.IsAny<ActionQValues>(), It.IsAny<Board>()))
-			.Returns(queue.Dequeue);
+			.Setup(stub => stub.TryPickAction(It.IsAny<ActionQValues>(), It.IsAny<Board>()))
+			.Returns((ActionQValues _, Board _) => (true, queue.Dequeue()));
     }
 
     private static void SetUpQValueWriter(Mock<QValueWriter> qValueWriterSpy) =>
@@ -147,15 +147,14 @@ public class QLearningTests
     private static BoardAction[] GetNextBoardActions(BoardActionQValues initialBoardActionQValues, int numberOfMovesTillResolved)
 	{
 		var result = new BoardAction[numberOfMovesTillResolved];
-		var boardTracker = new BoardTracker();
-		boardTracker.Add(initialBoardActionQValues.Board);
+		var boardMoveTracker = new BoardMoveTracker();
 		var currentBoardActionQValues = initialBoardActionQValues;
 		for (var i=0;i < numberOfMovesTillResolved-1;i++)
         {
-            var boardAction = GetNonRepeatingBoardAction(boardTracker, currentBoardActionQValues);
+            var boardAction = GetNonRepeatingBoardAction(boardMoveTracker, currentBoardActionQValues);
             result[i] = boardAction;
             currentBoardActionQValues = GetNextBoardActionQValues(boardAction.NextBoard);
-            boardTracker.Add(boardAction.NextBoard);
+            boardMoveTracker.Add(boardAction.BoardMove);
         }
 
         var lastBoardAction = new BoardActionStub(currentBoardActionQValues.Board, Board.Solved);
@@ -164,18 +163,18 @@ public class QLearningTests
 		return result;
 	}
 
-    private static BoardAction GetNonRepeatingBoardAction(BoardTracker boardTracker, BoardActionQValues currentBoardActionQValues)
+    private static BoardAction GetNonRepeatingBoardAction(BoardMoveTracker boardMoveTracker, BoardActionQValues currentBoardActionQValues)
     {
         var boardAction = GetBoardAction(currentBoardActionQValues, currentBoardActionQValues.ActionQValues);
         var remainingActions = currentBoardActionQValues.ActionQValues.Remove(boardAction.ActionQValue);
 
-        while (boardTracker.WasProcessedBefore(boardAction.NextBoard) && remainingActions.Any())
+        while (boardMoveTracker.WasProcessedBefore(boardAction.BoardMove) && remainingActions.Any())
         {
             boardAction = GetBoardAction(currentBoardActionQValues, remainingActions);
             remainingActions = remainingActions.Remove(boardAction.ActionQValue);
         }
 
-        if (boardTracker.WasProcessedBefore(boardAction.NextBoard))
+        if (boardMoveTracker.WasProcessedBefore(boardAction.BoardMove))
             throw new Exception("Couldn't find an action leading to a board which hasn't been processed yet.");
         return boardAction;
     }
@@ -190,8 +189,7 @@ public class QLearningTests
     private static BoardActionQValues GetNextBoardActionQValues(Board nextBoard)
 	{
 		var fixture = new Fixture();
-		var nextMovableCells = nextBoard.GetMovableCells();
-		var nextActionQValues = nextMovableCells.Select(cell => new ActionQValue(new Move(cell.NumberValue), fixture.Create<double>()));
+		var nextActionQValues = nextBoard.GetMoves().Select(move => new ActionQValue(move, fixture.Create<double>()));
 		return new BoardActionQValues(nextBoard, new ActionQValues(nextActionQValues));
 	}
 }

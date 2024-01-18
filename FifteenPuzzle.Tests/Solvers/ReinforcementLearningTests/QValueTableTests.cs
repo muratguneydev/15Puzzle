@@ -32,6 +32,9 @@ public class QValueTableTests
 		result.ShouldBe(expectedBoardActionQValues.ActionQValues);
 	}
 
+	//TODO: Fix this to test the QValueTable not the passed in items by reference.
+	//TODO: Fix Update method to actually update the QValueTable not just the passed in item.
+	//TODO: Test BoardMoveTracker
 	[Test, DomainAutoData]
 	public void Should_UpdateActionQueueValues(BoardActionQValues[] boardActionQValues,
 		QLearningHyperparameters qLearningHyperparameters,
@@ -81,8 +84,7 @@ public class QValueTableTests
 		nextBoard.Move(selectedActionQValue.Move.Number.ToString());
 		
 		var fixture = new Fixture();
-		var nextMovableCells = nextBoard.GetMovableCells();
-		var nextActionQValues = nextMovableCells.Select(cell => new ActionQValue(new Move(int.Parse(cell.Value)), fixture.Create<double>()));
+		var nextActionQValues = nextBoard.GetMoves().Select(move => new ActionQValue(move, fixture.Create<double>()));
 		return new BoardActionQValues(nextBoard, new ActionQValues(nextActionQValues));
 	}
 }

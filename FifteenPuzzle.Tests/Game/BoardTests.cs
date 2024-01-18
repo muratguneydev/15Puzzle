@@ -96,6 +96,120 @@ public class BoardTests
 	}
 
 	[Test]
+	public void ShouldProvideMovableCells_WhenEmptyCellIsInTheMiddle()
+	{
+		//Arrange
+		var board = new Board(new[,]
+		{
+			{ 1, 2, 3, 4 },
+			{ 5, 6, 7, 8 },
+			{ 9, 0, 11, 12 },
+			{ 13, 14, 15, 10 }
+		});
+		//Act && Assert
+		board.GetMovableCells().Should().BeEquivalentTo(new[] {
+			new Cell(1, 1, "6"),
+			new Cell(2, 2, "11"),
+			new Cell(2, 0, "9"),
+			new Cell(3, 1, "14"),
+		});
+	}
+
+	[Test]
+	public void ShouldProvideMovableCells_WhenEmptyCellIsOnTheSide()
+	{
+		//Arrange
+		var board = new Board(new[,]
+		{
+			{ 1, 2, 3, 4 },
+			{ 5, 6, 7, 8 },
+			{ 0, 9, 11, 12 },
+			{ 13, 14, 15, 10 }
+		});
+		//Act && Assert
+		board.GetMovableCells().Should().BeEquivalentTo(new[] {
+			new Cell(1, 0, "5"),
+			new Cell(2, 1, "9"),
+			new Cell(3, 0, "13"),
+		});
+	}
+
+	[Test]
+	public void ShouldProvideMovableCells_WhenEmptyCellIsInTheCorner()
+	{
+		//Arrange
+		var board = new Board(new[,]
+		{
+			{ 1, 2, 3, 4 },
+			{ 5, 6, 7, 8 },
+			{ 13, 9, 11, 12 },
+			{ 0, 14, 15, 10 }
+		});
+		//Act && Assert
+		board.GetMovableCells().Should().BeEquivalentTo(new[] {
+			new Cell(2, 0, "13"),
+			new Cell(3, 1, "14")
+		});
+	}
+
+	[Test]
+	public void ShouldProvideMoves_WhenEmptyCellIsInTheMiddle()
+	{
+		//Arrange
+		var board = new Board(new[,]
+		{
+			{ 1, 2, 3, 4 },
+			{ 5, 6, 7, 8 },
+			{ 9, 0, 11, 12 },
+			{ 13, 14, 15, 10 }
+		});
+		//Act && Assert
+		board.GetMoves().Should().BeEquivalentTo(new[] {
+			new Move(6),
+			new Move(11),
+			new Move(9),
+			new Move(14)
+		});
+	}
+
+	[Test]
+	public void ShouldProvideMoves_WhenEmptyCellIsOnTheSide()
+	{
+		//Arrange
+		var board = new Board(new[,]
+		{
+			{ 1, 2, 3, 4 },
+			{ 5, 6, 7, 8 },
+			{ 0, 9, 11, 12 },
+			{ 13, 14, 15, 10 }
+		});
+		//Act && Assert
+		board.GetMoves().Should().BeEquivalentTo(new[] {
+			new Move(5),
+			new Move(9),
+			new Move(13)
+		});
+	}
+
+	[Test]
+	public void ShouldProvideMoves_WhenEmptyCellIsInTheCorner()
+	{
+		//Arrange
+		var board = new Board(new[,]
+		{
+			{ 1, 2, 3, 4 },
+			{ 5, 6, 7, 8 },
+			{ 13, 9, 11, 12 },
+			{ 0, 14, 15, 10 }
+		});
+		//Act && Assert
+		board.GetMoves().Should().BeEquivalentTo(new[] {
+			new Move(13),
+			new Move(14)
+		});
+	}
+
+	[Test]
 	public void ShouldProvideFrontierBoards_ForEachPossibleNextMove()
 	{
 		//Arrange

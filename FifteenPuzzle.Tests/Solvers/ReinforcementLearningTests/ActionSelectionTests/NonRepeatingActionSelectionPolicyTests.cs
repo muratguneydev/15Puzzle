@@ -16,14 +16,14 @@ public class NonRepeatingActionSelectionPolicyTests
 	public void ShouldNotRepeatTheSameBoard(Board currentBoard,
 		Mock<IActionSelectionPolicy> actionSelectionPolicyStub,
 		[Frozen] Mock<IActionSelectionPolicyFactory> actionSelectionPolicyFactoryStub,
-		[Frozen] [Mock] Mock<BoardTracker> boardTrackerStub,
+		[Frozen] [Mock] Mock<BoardMoveTracker> boardMoveTrackerStub,
 		NonRepeatingActionSelectionPolicy sut)
 	{
 		//Arrange
 		var fixture = AutoFixtureFactory.Create();
 		var actions = currentBoard
-			.GetMovableCells()
-			.Select(cell => new ActionQValue(new Move(cell.NumberValue), fixture.Create<double>()));
+			.GetMoves()
+			.Select(move => new ActionQValue(move, fixture.Create<double>()));
 		
 		var actionQValues = new ActionQValues(actions);
 		var selectedActionLeadingToDupeBoard = actionQValues.First();
@@ -32,9 +32,9 @@ public class NonRepeatingActionSelectionPolicyTests
 		var actionLeadingToNonDupeBoard = actionsWithoutActionLeadingToDupeBoard.First();
 
 		var dupeBoard = new BoardAction(currentBoard, selectedActionLeadingToDupeBoard, board => new Board(board));
-		boardTrackerStub
-			.Setup(stub => stub.WasProcessedBefore(It.IsAny<Board>()))
-			.Returns((Board board) => new BoardComparer().Equals(board, dupeBoard.NextBoard));
+		boardMoveTrackerStub
+			.Setup(stub => stub.WasProcessedBefore(It.IsAny<BoardMove>()))
+			.Returns((BoardMove boardMove) => new BoardMoveComparer().Equals(boardMove, dupeBoard.BoardMove));
 
 		var expectedBoardAction = new BoardAction(currentBoard, actionLeadingToNonDupeBoard, board => new Board(board));
 		
@@ -47,38 +47,42 @@ public class NonRepeatingActionSelectionPolicyTests
 		actionSelectionPolicyFactoryStub
 			.Setup(stub => stub.Get())
 			.Returns(actionSelectionPolicyStub.Object);
-		//Act
-		var result = sut.PickAction(actionQValues, currentBoard);
-		//Assert
-		BoardActionAsserter.ShouldBeEquivalent(expectedBoardAction, result);
+        //Act
+        var (isSuccessful, boardAction) = sut.TryPickAction(actionQValues, currentBoard);
+        //Assert
+		isSuccessful.ShouldBeTrue();
+        BoardActionAsserter.ShouldBeEquivalent(expectedBoardAction, boardAction);
 	}
 
 	[Test, AutoMoqData]
-	public void ShouldThrow_WhenCantFindAnyActionsLeadingToANewBoard(BoardActionQValues boardActionQValues,
+	public void ShouldIndicateNotFound_WhenCantFindAnyNewBoardActionPair(BoardActionQValues boardActionQValues,
 		Mock<IActionSelectionPolicy> actionSelectionPolicyStubAlwaysPickingTheFirst,
 		[Frozen] Mock<IActionSelectionPolicyFactory> actionSelectionPolicyFactoryStub,
-		[Frozen] [Mock] Mock<BoardTracker> boardTrackerStubAllBoardsProcessed,
+		[Frozen] [Mock] Mock<BoardMoveTracker> boardMoveTrackerStubAllBoardsProcessed,
 		NonRepeatingActionSelectionPolicy sut)
 	{
 		//Arrange
 		var currentBoard = boardActionQValues.Board;
 		var actionQValues = boardActionQValues.ActionQValues;
 		
-		var allPossibleNextBoards = actionQValues
+		var allPossibleNextBoardMoves = actionQValues
 			.Select(action => new BoardAction(currentBoard, action, board => new Board(board)))
-			.Select(boardAction => boardAction.NextBoard)
-			.ToHashSet(new BoardComparer());
-		boardTrackerStubAllBoardsProcessed
-			.Setup(stub => stub.WasProcessedBefore(It.IsAny<Board>()))
-			.Returns((Board board) => allPossibleNextBoards.Contains(board));
+			.Select(boardAction => boardAction.BoardMove)
+			.ToHashSet(new BoardMoveComparer());
+		//Note: We could return "true" for any input but wanted to make sure that the stub method is called with the correct parmaeters.
+		boardMoveTrackerStubAllBoardsProcessed
+			.Setup(stub => stub.WasProcessedBefore(It.IsAny<BoardMove>()))
+			.Returns((BoardMove boardMove) => allPossibleNextBoardMoves.Contains(boardMove));
 		
 		actionSelectionPolicyStubAlwaysPickingTheFirst
-			.Setup(stub => stub.PickAction(actionQValues))
-			.Returns((ActionQValues actionQValues) => actionQValues.First());
+			.Setup(stub => stub.PickAction(It.IsAny<ActionQValues>()))
+			.Returns((ActionQValues actions) => actions.First());
 		actionSelectionPolicyFactoryStub
 			.Setup(stub => stub.Get())
 			.Returns(actionSelectionPolicyStubAlwaysPickingTheFirst.Object);
-		//Act & Assert
-		Should.Throw<Exception>(() => sut.PickAction(actionQValues, currentBoard));
+		//Act
+        var (isSuccessful, boardAction) = sut.TryPickAction(actionQValues, currentBoard);
+        //Assert
+		isSuccessful.ShouldBeFalse();
 	}
 }

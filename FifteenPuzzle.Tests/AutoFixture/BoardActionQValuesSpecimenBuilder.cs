@@ -13,8 +13,7 @@ public class BoardActionQValuesSpecimenBuilder : ISpecimenBuilder
         if (request is Type type && type == typeof(BoardActionQValues))
         {
 			var board = new RandomBoard();
-            var nextMovableCells = board.GetMovableCells();
-			var nextActionQValues = nextMovableCells.Select(cell => new ActionQValue(new Move(int.Parse(cell.Value)), Random.NextDouble()));
+			var nextActionQValues = board.GetMoves().Select(move => new ActionQValue(move, Random.NextDouble()));
 			return new BoardActionQValues(board, new ActionQValues(nextActionQValues));
         }
 

@@ -83,6 +83,8 @@ public record Board : IEnumerable<Row>
 		});
 
 	public bool IsSolved => new BoardComparer().Equals(this, Solved);
+
+	//TODO: Decide on the approach.
 	public virtual bool IsSolvable
 	{
 		/*
@@ -179,6 +181,8 @@ For all other cases, the puzzle instance is not solvable.
     }
 
     public IEnumerable<Cell> GetMovableCells() => GetAdjacentCells(GetEmptyCell());
+
+	public IEnumerable<Move> GetMoves() => GetMovableCells().Select(cell => new Move(cell.NumberValue));
 
 	public Cell GetCell(string value)
     {
