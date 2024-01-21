@@ -41,7 +41,8 @@ public class ServiceConfigurator
         services.AddSingleton<PuzzleLogger>();
 
         services.AddTransient<QLearning>();
-        services.AddSingleton<BoardMoveTracker>();
+        services.AddTransient<QValueCalculator>();
+        services.AddSingleton<BoardTracker>();
 
         services.AddTransient<QValueReader>();
         services.AddTransient<QValueWriter>();

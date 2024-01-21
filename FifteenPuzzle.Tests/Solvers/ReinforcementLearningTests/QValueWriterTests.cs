@@ -16,7 +16,6 @@ public class QValueWriterTests
 
 	[Test, AutoMoqData]
 	public async Task ShouldWriteQValues(string storageFilePath,
-		QLearningHyperparameters qLearningHyperparameters,
 		ActionQValues[] expectedActionQValues,
 		[Frozen] [Mock] Mock<FileSystem> fileSystemStub,
 		[Frozen] [Mock] Mock<QLearningSystemConfiguration> qLearningSystemConfigurationStub,
@@ -55,7 +54,7 @@ public class QValueWriterTests
 			new BoardActionQValues(expectedBoards[0], expectedActionQValues[0]),
 			new BoardActionQValues(expectedBoards[1], expectedActionQValues[1]),
 			new BoardActionQValues(expectedBoards[2], expectedActionQValues[2])
-		}, qLearningHyperparameters);
+		});
 
 		using var stream = new MemoryStream();
 		fileSystemStub

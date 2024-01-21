@@ -14,31 +14,41 @@ public class QValueTableTests
 		QValueTable sut)
 	{
 		//Act
-		var result = sut.Get(board);
+		var result = sut.GetOrAddDefaultActions(board);
 		//Assert
 		result.All(actionQValue => actionQValue.QValue == 0).ShouldBeTrue();
 	}
 
 	[Test, DomainAutoData]
-	public void Should_FindActionQValues_WhenBoardExists(BoardActionQValues[] boardActionQValues,
-		QLearningHyperparameters qLearningHyperparameters)
+	public void Should_CreateAndStoreAll0ActionQValues_WhenBoardNotFound(Board board,
+		double reward,
+		QValueTable sut)
 	{
 		//Arrange
-		var sut = new QValueTable(boardActionQValues, qLearningHyperparameters);
+		var actions = sut.GetOrAddDefaultActions(board);
+		var selectedAction = actions.First();
+		var boardAction = new BoardAction(board, selectedAction, brd => new Board(brd));
+		sut.UpdateQValues(boardAction, reward);
+		//Act
+		var result = sut.GetOrAddDefaultActions(board);
+		//Assert
+		result.Get(selectedAction).QValue.ShouldBe(reward);
+	}
+
+	[Test, DomainAutoData]
+	public void Should_FindActionQValues_WhenBoardExists(BoardActionQValues[] boardActionQValues)
+	{
+		//Arrange
+		var sut = new QValueTable(boardActionQValues);
 		var expectedBoardActionQValues = boardActionQValues.Last();
 		//Act
-		var result = sut.Get(expectedBoardActionQValues.Board);
+		var result = sut.GetOrAddDefaultActions(expectedBoardActionQValues.Board);
 		//Assert
 		result.ShouldBe(expectedBoardActionQValues.ActionQValues);
 	}
 
-	//TODO: Fix this to test the QValueTable not the passed in items by reference.
-	//TODO: Fix Update method to actually update the QValueTable not just the passed in item.
-	//TODO: Test BoardMoveTracker
 	[Test, DomainAutoData]
-	public void Should_UpdateActionQueueValues(BoardActionQValues[] boardActionQValues,
-		QLearningHyperparameters qLearningHyperparameters,
-		double reward)
+	public void Should_UpdateActionQueueValues(BoardActionQValues[] boardActionQValues, double reward)
 	{
 		//Arrange
 		var selectedBoardActionQValues = boardActionQValues.First();
@@ -48,34 +58,22 @@ public class QValueTableTests
 
 		var nextBoardActionQValuesForSelected = GetNextBoardActionQValues(selectedBoardActionQValues, selectedActionQValue);
 		var boardActionQValuesWithNext = boardActionQValues.Append(nextBoardActionQValuesForSelected);
-		var sut = new QValueTable(boardActionQValuesWithNext, qLearningHyperparameters);
-		
-		//this has to be done before Act
-		var expectedQValue = GetExpectedCalculatedQValue(nextBoardActionQValuesForSelected, selectedActionQValue,
-			qLearningHyperparameters, reward);
+		var sut = new QValueTable(boardActionQValuesWithNext);		
 		//Act
 		var boardAction = new BoardAction(selectedBoard, selectedActionQValue, board => new Board(board));
 		sut.UpdateQValues(boardAction, reward);
+		var actions = sut.GetOrAddDefaultActions(selectedBoard);
 		//Assert
-		selectedActionQValue.QValue.ShouldBe(expectedQValue);
+		selectedActionQValue.QValue.ShouldBe(reward);
+
+		var actualActionQValueFromBoard = actions.Single(action => action.Move == selectedActionQValue.Move);
+		actualActionQValueFromBoard.QValue.ShouldBe(reward);
 	}
 
 	[Test, DomainAutoData]
 	public void ShouldProvideEmptyQValueTable(QLearningHyperparameters qLearningHyperparameters)
 	{
 		QValueTable.Empty(qLearningHyperparameters).ShouldBeEmpty();
-	}
-
-	private double GetExpectedCalculatedQValue(BoardActionQValues next, ActionQValue selectedAction,
-		QLearningHyperparameters qLearningHyperparameters, double reward)
-	{
-		var maxNextQValue = next.Board.IsSolved ? 0 : next.ActionQValues.MaxQValue;
-		var currentQValue = selectedAction.QValue;
-		var learningRateMultiplier = reward + qLearningHyperparameters.DiscountFactorGamma * maxNextQValue - currentQValue;
-		var newCurrentQValue = currentQValue
-			+ qLearningHyperparameters.LearningRateAlpha * learningRateMultiplier;
-
-		return newCurrentQValue;
 	}
 
 	private static BoardActionQValues GetNextBoardActionQValues(BoardActionQValues selectedBoardActionQValues, ActionQValue selectedActionQValue)

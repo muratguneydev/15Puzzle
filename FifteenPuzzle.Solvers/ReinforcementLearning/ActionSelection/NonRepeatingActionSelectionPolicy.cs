@@ -6,14 +6,14 @@ public class NonRepeatingActionSelectionPolicy
 {
     private readonly IActionSelectionPolicyFactory _actionSelectionPolicyFactory;
     private readonly BoardActionFactory _boardActionFactory;
-    private readonly BoardMoveTracker _boardMoveTracker;
+    private readonly BoardTracker _boardTracker;
 
     public NonRepeatingActionSelectionPolicy(IActionSelectionPolicyFactory actionSelectionPolicyFactory,
-		BoardActionFactory boardActionFactory, BoardMoveTracker boardMoveTracker)
+		BoardActionFactory boardActionFactory, BoardTracker boardTracker)
 	{
         _actionSelectionPolicyFactory = actionSelectionPolicyFactory;
         _boardActionFactory = boardActionFactory;
-        _boardMoveTracker = boardMoveTracker;
+        _boardTracker = boardTracker;
     }
 
     public virtual (bool, BoardAction) TryPickAction(ActionQValues actionQValues, Board currentBoard)
@@ -22,13 +22,13 @@ public class NonRepeatingActionSelectionPolicy
 		var actionSelectionPolicy = _actionSelectionPolicyFactory.Get();
 		var boardAction = PickBoardActionFromRemainingActions(actionSelectionPolicy, currentBoard, remainingActions);
 		remainingActions = remainingActions.Remove(boardAction.ActionQValue);
-		while (_boardMoveTracker.WasProcessedBefore(boardAction.BoardMove) && remainingActions.Any())
+		while (_boardTracker.WasProcessedBefore(boardAction.NextBoard) && remainingActions.Any())
 		{
 			boardAction = PickBoardActionFromRemainingActions(actionSelectionPolicy, currentBoard, remainingActions);
 			remainingActions = remainingActions.Remove(boardAction.ActionQValue);
 		}
 
-		if (!_boardMoveTracker.WasProcessedBefore(boardAction.BoardMove))
+		if (!_boardTracker.WasProcessedBefore(boardAction.NextBoard))
 			return (true, boardAction);
 		
 		return (false, _boardActionFactory.GetDefault());

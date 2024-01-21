@@ -10,25 +10,27 @@ public class QLearning
     private readonly QValueReader _qValueReader;
     private readonly QValueWriter _qValueWriter;
     private readonly NonRepeatingActionSelectionPolicy _nonRepeatingActionSelectionPolicy;
-    private readonly BoardMoveTracker _boardMoveTracker;
+    private readonly BoardTracker _boardTracker;
     private readonly BoardFactory _boardFactory;
     private readonly IRewardStrategy _rewardStrategy;
+    private readonly QValueCalculator _qValueCalculator;
     private readonly PuzzleLogger _logger;
 
 	public Action<BoardAction> OnBoardActionQValueCalculated = _ => {};
 	public Action<int> OnIterationCompleted = _ => {};
 
     public QLearning(QLearningHyperparameters parameters, QValueReader qValueReader, QValueWriter qValueWriter,
-		NonRepeatingActionSelectionPolicy nonRepeatingActionSelectionPolicy, BoardMoveTracker boardMoveTracker,
-		BoardFactory boardFactory, IRewardStrategy rewardStrategy, PuzzleLogger logger)
+		NonRepeatingActionSelectionPolicy nonRepeatingActionSelectionPolicy, BoardTracker boardTracker,
+		BoardFactory boardFactory, IRewardStrategy rewardStrategy, QValueCalculator qValueCalculator, PuzzleLogger logger)
 	{
         _parameters = parameters;
         _qValueReader = qValueReader;
         _qValueWriter = qValueWriter;
         _nonRepeatingActionSelectionPolicy = nonRepeatingActionSelectionPolicy;
-        _boardMoveTracker = boardMoveTracker;
+        _boardTracker = boardTracker;
         _boardFactory = boardFactory;
         _rewardStrategy = rewardStrategy;
+        _qValueCalculator = qValueCalculator;
         _logger = logger;
     }
 
@@ -41,7 +43,7 @@ public class QLearning
         {
             _logger.LogInformation($"Iteration {iteration} starting.");
 
-            _boardMoveTracker.Clear();
+            _boardTracker.Clear();
             var board = _boardFactory.GetSolvable();
             var isSolved = FollowActionAndLearn(board, qValueTable);
             _logger.LogInformation($@"Iteration {iteration} completed. Board {GetSolvedText(isSolved)}.");
@@ -75,7 +77,7 @@ public class QLearning
         // 	var actionQValues = qValueTable.Get(board);
         // 	var (isActionFound, boardAction) = _nonRepeatingActionSelectionPolicy.TryPickAction(actionQValues, board);
 
-        // 	_boardMoveTracker.Add(boardAction.BoardMove);
+        // 	_boardTracker.Add(boardAction.BoardMove);
         // 	var reward = _rewardStrategy.Calculate(boardAction.NextBoard);
         // 	qValueTable.UpdateQValues(boardAction, reward);
 
@@ -87,10 +89,12 @@ public class QLearning
 
     private bool FollowActionAndLearn(Board board, QValueTable qValueTable)
     {
+		_boardTracker.Add(board);
+
 		var i = 1;
 		while (!board.IsSolved)
 		{
-			var actionQValues = qValueTable.Get(board);
+			var actionQValues = qValueTable.GetOrAddDefaultActions(board);
 			var (isActionFound, boardAction) = _nonRepeatingActionSelectionPolicy.TryPickAction(actionQValues, board);
 			
 			if (!isActionFound)
@@ -98,9 +102,12 @@ public class QLearning
 				return false;
 			}
 
-			_boardMoveTracker.Add(boardAction.BoardMove);
+			_boardTracker.Add(boardAction.Board);
+
 			var reward = _rewardStrategy.Calculate(boardAction.NextBoard);
-			qValueTable.UpdateQValues(boardAction, reward);
+			var nextActionQValues = qValueTable.GetOrAddDefaultActions(boardAction.NextBoard);
+			var qValue = _qValueCalculator.Calculate(boardAction, nextActionQValues, reward);
+			qValueTable.UpdateQValues(boardAction, qValue);
 			
 			OnBoardActionQValueCalculated(boardAction);
 			board = boardAction.NextBoard;
@@ -130,7 +137,7 @@ public class QLearning
   		try
 		{
 			var boardActionQValuesCollection = await _qValueReader.Read();
-			return new QValueTable(boardActionQValuesCollection, _parameters);
+			return new QValueTable(boardActionQValuesCollection);
 		}
 		catch(Exception e)
 		{

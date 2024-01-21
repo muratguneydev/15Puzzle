@@ -7,44 +7,57 @@ public record QValueTable : IEnumerable<BoardActionQValues>
 {
 	private readonly Dictionary<int,BoardActionQValues> _boardActionQValues;
 	private static readonly BoardComparer _boardComparer = new();
-    private readonly QLearningHyperparameters _qLearningHyperparameters;
 
-    public QValueTable(IEnumerable<BoardActionQValues> boardActionQValues, QLearningHyperparameters qLearningHyperparameters)
-    {
-        _boardActionQValues = boardActionQValues.ToDictionary(b => _boardComparer.GetHashCode(b.Board));
-        _qLearningHyperparameters = qLearningHyperparameters;
-    }
+    public QValueTable(IEnumerable<BoardActionQValues> boardActionQValues) =>
+		_boardActionQValues = boardActionQValues.ToDictionary(b => _boardComparer.GetHashCode(b.Board));
 
-    public ActionQValues Get(Board board)
+    public ActionQValues GetOrAddDefaultActions(Board board)
     {
         if (_boardActionQValues.TryGetValue(_boardComparer.GetHashCode(board), out var boardActionQValues))
         {
             return boardActionQValues.ActionQValues;
         }
 
-        return GetDefaultActionQValues(board);
+        var defaultActions = GetDefaultActionQValues(board);
+		_boardActionQValues.Add(_boardComparer.GetHashCode(board), new BoardActionQValues(board, defaultActions));
+		return defaultActions;
     }
 
-    public void UpdateQValues(BoardAction boardAction, double reward)
+	public void UpdateQValues(BoardAction boardAction, double reward)
 	{
-		var nextActionQValues = Get(boardAction.NextBoard);
+		// var nextActionQValues = GetOrAddDefaultActions(boardAction.NextBoard);
 
-		var maxNextQValue = boardAction.NextBoard.IsSolved ? 0 : nextActionQValues.MaxQValue;
-		var currentQValue = boardAction.ActionQValue.QValue;
-		var learningRateMultiplier = reward + _qLearningHyperparameters.DiscountFactorGamma * maxNextQValue - currentQValue;
-		var newCurrentQValue = currentQValue
-			+ _qLearningHyperparameters.LearningRateAlpha * learningRateMultiplier;
+		// var maxNextQValue = boardAction.NextBoard.IsSolved ? 0 : nextActionQValues.MaxQValue;
+		// var currentQValue = boardAction.ActionQValue.QValue;
+		// var learningRateMultiplier = reward + _qLearningHyperparameters.DiscountFactorGamma * maxNextQValue - currentQValue;
+		// var newCurrentQValue = currentQValue
+		// 	+ _qLearningHyperparameters.LearningRateAlpha * learningRateMultiplier;
 
-		boardAction.ActionQValue.UpdateQValue(newCurrentQValue);
+		var actionToUpdate = GetOrAddDefaultActions(boardAction.Board).Get(boardAction.ActionQValue);
+		actionToUpdate.UpdateQValue(reward);
 	}
 
+    // public void UpdateQValues(BoardAction boardAction, double reward)
+	// {
+	// 	var nextActionQValues = GetOrAddDefaultActions(boardAction.NextBoard);
+
+	// 	var maxNextQValue = boardAction.NextBoard.IsSolved ? 0 : nextActionQValues.MaxQValue;
+	// 	var currentQValue = boardAction.ActionQValue.QValue;
+	// 	var learningRateMultiplier = reward + _qLearningHyperparameters.DiscountFactorGamma * maxNextQValue - currentQValue;
+	// 	var newCurrentQValue = currentQValue
+	// 		+ _qLearningHyperparameters.LearningRateAlpha * learningRateMultiplier;
+
+	// 	var actionToUpdate = GetOrAddDefaultActions(boardAction.Board).Get(boardAction.ActionQValue);
+	// 	actionToUpdate.UpdateQValue(newCurrentQValue);
+	// }
+
 	public static QValueTable Empty(QLearningHyperparameters qLearningHyperparameters) =>
-		new QValueTable(Enumerable.Empty<BoardActionQValues>(), qLearningHyperparameters);
+		new (Enumerable.Empty<BoardActionQValues>());
 
     public IEnumerator<BoardActionQValues> GetEnumerator() => _boardActionQValues.Values.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     private static ActionQValues GetDefaultActionQValues(Board board) =>
-		new ActionQValues(board.GetMoves().Select(move => new ActionQValue(move, 0)));
+		new (board.GetMoves().Select(move => new ActionQValue(move, 0)));
 }

@@ -1,5 +1,6 @@
 namespace FifteenPuzzle.Tests.SolverTests.ReinforcementLearningTests;
 
+using FifteenPuzzle.Game;
 using FifteenPuzzle.Solvers.ReinforcementLearning;
 using FifteenPuzzle.Tests.AutoFixture;
 using FluentAssertions;
@@ -24,5 +25,17 @@ public class ActionQValuesTests
 		//Assert
 		sut.Should().BeEquivalentTo(snapshot);
 		result.Should().BeEquivalentTo(snapshot.Skip(1));
+	}
+
+	[Test, DomainAutoData]
+	public void ShouldFindByMove(ActionQValues sut)
+	{
+		//Arrange
+		var actionToMatch = sut.First();
+		var actionToFind = new ActionQValue(new Move(actionToMatch.Move.Number), default);
+		//Act
+		var result = sut.Get(actionToFind);
+		//Assert
+		result.ShouldBe(actionToMatch);
 	}
 }

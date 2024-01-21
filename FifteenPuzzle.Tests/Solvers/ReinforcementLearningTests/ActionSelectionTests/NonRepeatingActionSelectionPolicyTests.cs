@@ -16,7 +16,7 @@ public class NonRepeatingActionSelectionPolicyTests
 	public void ShouldNotRepeatTheSameBoard(Board currentBoard,
 		Mock<IActionSelectionPolicy> actionSelectionPolicyStub,
 		[Frozen] Mock<IActionSelectionPolicyFactory> actionSelectionPolicyFactoryStub,
-		[Frozen] [Mock] Mock<BoardMoveTracker> boardMoveTrackerStub,
+		[Frozen] [Mock] Mock<BoardTracker> boardTrackerStub,
 		NonRepeatingActionSelectionPolicy sut)
 	{
 		//Arrange
@@ -32,9 +32,9 @@ public class NonRepeatingActionSelectionPolicyTests
 		var actionLeadingToNonDupeBoard = actionsWithoutActionLeadingToDupeBoard.First();
 
 		var dupeBoard = new BoardAction(currentBoard, selectedActionLeadingToDupeBoard, board => new Board(board));
-		boardMoveTrackerStub
-			.Setup(stub => stub.WasProcessedBefore(It.IsAny<BoardMove>()))
-			.Returns((BoardMove boardMove) => new BoardMoveComparer().Equals(boardMove, dupeBoard.BoardMove));
+		boardTrackerStub
+			.Setup(stub => stub.WasProcessedBefore(It.IsAny<Board>()))
+			.Returns((Board board) => new BoardComparer().Equals(board, dupeBoard.NextBoard));
 
 		var expectedBoardAction = new BoardAction(currentBoard, actionLeadingToNonDupeBoard, board => new Board(board));
 		
@@ -58,21 +58,21 @@ public class NonRepeatingActionSelectionPolicyTests
 	public void ShouldIndicateNotFound_WhenCantFindAnyNewBoardActionPair(BoardActionQValues boardActionQValues,
 		Mock<IActionSelectionPolicy> actionSelectionPolicyStubAlwaysPickingTheFirst,
 		[Frozen] Mock<IActionSelectionPolicyFactory> actionSelectionPolicyFactoryStub,
-		[Frozen] [Mock] Mock<BoardMoveTracker> boardMoveTrackerStubAllBoardsProcessed,
+		[Frozen] [Mock] Mock<BoardTracker> boardTrackerStubAllBoardsProcessed,
 		NonRepeatingActionSelectionPolicy sut)
 	{
 		//Arrange
 		var currentBoard = boardActionQValues.Board;
 		var actionQValues = boardActionQValues.ActionQValues;
 		
-		var allPossibleNextBoardMoves = actionQValues
+		var allPossibleNextBoards = actionQValues
 			.Select(action => new BoardAction(currentBoard, action, board => new Board(board)))
-			.Select(boardAction => boardAction.BoardMove)
-			.ToHashSet(new BoardMoveComparer());
+			.Select(boardAction => boardAction.NextBoard)
+			.ToHashSet(new BoardComparer());
 		//Note: We could return "true" for any input but wanted to make sure that the stub method is called with the correct parmaeters.
-		boardMoveTrackerStubAllBoardsProcessed
-			.Setup(stub => stub.WasProcessedBefore(It.IsAny<BoardMove>()))
-			.Returns((BoardMove boardMove) => allPossibleNextBoardMoves.Contains(boardMove));
+		boardTrackerStubAllBoardsProcessed
+			.Setup(stub => stub.WasProcessedBefore(It.IsAny<Board>()))
+			.Returns((Board board) => allPossibleNextBoards.Contains(board));
 		
 		actionSelectionPolicyStubAlwaysPickingTheFirst
 			.Setup(stub => stub.PickAction(It.IsAny<ActionQValues>()))
