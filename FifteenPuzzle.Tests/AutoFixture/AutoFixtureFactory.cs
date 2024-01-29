@@ -10,6 +10,7 @@ public class AutoFixtureFactory
 		fixture.Customizations.Add(new MoveSpecimenBuilder());
 		fixture.Customizations.Add(new BoardSpecimenBuilder());
 		fixture.Customizations.Add(new BoardActionQValuesSpecimenBuilder());
+		fixture.Customizations.Add(new ActionQValuesSpecimenBuilder());
 		return fixture;
     }
 }

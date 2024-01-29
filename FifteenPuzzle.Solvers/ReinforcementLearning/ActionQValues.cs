@@ -35,6 +35,5 @@ public class ActionQValues : IEnumerable<ActionQValue>
 		=> string.Join(',', this.Select(a => Padded(a.Move.Number) + "-" + a.QValue.ToString()));
 
 	private string Padded(int number) => Padded(number.ToString());
-	//private string Padded(double number) => Padded(number.ToString().);
 	private string Padded(string value) => value.PadLeft(2, ' ');
 }
