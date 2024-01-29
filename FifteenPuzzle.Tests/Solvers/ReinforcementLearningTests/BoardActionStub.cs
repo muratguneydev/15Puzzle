@@ -8,7 +8,7 @@ public record BoardActionStub : BoardAction
     private readonly Board _nextBoard;
 
     public BoardActionStub(Board board, Board nextBoard)
-		: base(board, new ActionQValue(new Move(1), 0), board => new Board(board))
+		: base(board, new ActionQValue(board.GetMoves().First(), 0), board => new Board(board))
     {
         _nextBoard = nextBoard;
     }

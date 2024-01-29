@@ -30,4 +30,11 @@ public class ActionQValues : IEnumerable<ActionQValue>
     public IEnumerator<ActionQValue> GetEnumerator() => _actionQValues.Values.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    public sealed override string ToString()
+		=> string.Join(',', this.Select(a => Padded(a.Move.Number) + "-" + a.QValue.ToString()));
+
+	private string Padded(int number) => Padded(number.ToString());
+	//private string Padded(double number) => Padded(number.ToString().);
+	private string Padded(string value) => value.PadLeft(2, ' ');
 }

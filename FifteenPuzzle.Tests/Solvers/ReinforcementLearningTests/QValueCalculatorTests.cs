@@ -26,11 +26,12 @@ public class QValueCalculatorTests
         var selectedActionQValue = selectedBoardActionQValues.ActionQValues.First();
 
         var nextBoardActionQValuesForSelected = GetNextBoardActionQValues(selectedBoardActionQValues, selectedActionQValue);
+		var qValueTable = new QValueTable(boardActionQValues.Append(nextBoardActionQValuesForSelected));
         var expectedQValue = GetExpectedCalculatedQValue(nextBoardActionQValuesForSelected, selectedActionQValue,
             qLearningHyperparametersToMimickInStub, reward);
         var boardAction = new BoardAction(selectedBoard, selectedActionQValue, board => new Board(board));
         //Act
-        var result = sut.Calculate(boardAction, nextBoardActionQValuesForSelected.ActionQValues, reward);
+        var result = sut.Calculate(boardAction, qValueTable, reward);
         //Assert
         result.ShouldBe(expectedQValue);
     }

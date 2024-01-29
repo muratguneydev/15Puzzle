@@ -1,8 +1,10 @@
 namespace FifteenPuzzle.Game;
 
 using System.Collections;
+using System.Diagnostics;
 using System.Text;
 
+[DebuggerDisplay("{ToString()}")]
 public record Board : IEnumerable<Row>
 {
 	public const int SideLength = 4;
@@ -204,18 +206,22 @@ For all other cases, the puzzle instance is not solvable.
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    public override string ToString()
+    public sealed override string ToString()
     {
         var stringBuilder = new StringBuilder(_cells.Length);
 		for (var row = 0; row < RowLength; row++)
 		{
 			for (var column = 0; column < ColumnLength; column++)
 			{
-				stringBuilder.Append($"{_cells[row,column]}-");
+				stringBuilder.Append($"{Padded(_cells[row,column].Value)} ");
 			}
 		}
 		return stringBuilder.ToString();
     }
+
+	private string Padded(int number) => Padded(number.ToString());
+	private string Padded(string value) => value.PadLeft(2, ' ');
+
 
     private IEnumerable<Cell> GetAdjacentCells(Cell cell)
 	{

@@ -1,10 +1,14 @@
 namespace FifteenPuzzle.Solvers.ReinforcementLearning;
 
 using System.Collections;
+using System.Diagnostics;
 using FifteenPuzzle.Game;
 
 public record QValueTable : IEnumerable<BoardActionQValues>
 {
+	public const double DefaultQValue = 0;
+
+	[DebuggerDisplay("{ToString()}")]
 	private readonly Dictionary<int,BoardActionQValues> _boardActionQValues;
 	private static readonly BoardComparer _boardComparer = new();
 
@@ -58,6 +62,9 @@ public record QValueTable : IEnumerable<BoardActionQValues>
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+    public sealed override string ToString()
+		=> string.Join(Environment.NewLine, this.Select(actions => actions.ToString()));
+
     private static ActionQValues GetDefaultActionQValues(Board board) =>
-		new (board.GetMoves().Select(move => new ActionQValue(move, 0)));
+		new (board.GetMoves().Select(move => new ActionQValue(move, DefaultQValue)));
 }
