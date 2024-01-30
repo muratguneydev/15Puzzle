@@ -174,8 +174,8 @@ public class QLearningTests
     private static void SetUpActionSelectionPolicy(Mock<NonRepeatingActionSelectionPolicy> actionSelectionPolicyStub,
         int numberOfIterations)
     {
-		var boardActions = InitialBoardActionsInSelectedPath;
-        var boardActionsForEveryIteration = Enumerable.Repeat(boardActions, numberOfIterations).SelectMany(x => x);
+        var boardActionsForEveryIteration = Enumerable.Repeat(InitialBoardActionsInSelectedPath, numberOfIterations)
+			.SelectMany(x => x);
         var queue = new Queue<BoardAction>(boardActionsForEveryIteration);
         actionSelectionPolicyStub
             .Setup(stub => stub.TryPickAction(It.IsAny<ActionQValues>(), It.IsAny<Board>()))
@@ -228,8 +228,8 @@ public class QLearningTests
     {
         var calculatedBoardActionQValues = GetCalculatedBoardActionQValues(calculatedQValue);
         return new QValueTable(calculatedBoardActionQValues
-								//Note:Below union excludes the initial selected board as it is already in the above list.
-                                .UnionBy(InitialBoardActionQValues, b => b.Board, BoardComparer));
+					//Note:Below union excludes the initial selected board as it is already in the above list.
+					.UnionBy(InitialBoardActionQValues, b => b.Board, BoardComparer));
     }
 
     private static IEnumerable<BoardActionQValues> GetCalculatedBoardActionQValues(double calculatedQValue) =>
