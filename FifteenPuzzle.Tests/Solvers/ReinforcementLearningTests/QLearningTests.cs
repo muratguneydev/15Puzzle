@@ -5,7 +5,6 @@ using FifteenPuzzle.Solvers.ReinforcementLearning;
 using FifteenPuzzle.Solvers.ReinforcementLearning.ActionSelection;
 using FifteenPuzzle.Tests.AutoFixture;
 using FluentAssertions;
-using global::AutoFixture;
 using global::AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
@@ -41,8 +40,6 @@ public class QLearningTests
         })
     };
 
-	private static readonly Board[] InitialBoards = OtherBoardsNotChosen.Append(SelectedInitialBoard).ToArray();
-
 	private static readonly Board[] BoardsInSelectedPath = new[] {
 		SelectedInitialBoard,//initial board
 		new Board(new[,]//next move, 3 moves down
@@ -73,25 +70,12 @@ public class QLearningTests
 		.Append(InitialSelectedBoardActionQValues)
 		.ToArray();
 
-	// private static readonly BoardActionQValues[] ResultingBoardActionQValuesInSelectedPath = BoardsInSelectedPath
-	// 	.Select(board => new BoardActionQValues(board, GetActionQValues(board)))
-	// 	.ToArray();
-
 	private static readonly BoardAction[] InitialBoardActionsInSelectedPath = 
-		// .Select(boardActionQValues => new BoardAction(boardActionQValues.Board, new ActionQValue(new Move(3), 50), Clone))
-		// .ToArray();
-	
-	new[] {
-		new BoardAction(BoardsInSelectedPath[0], new ActionQValue(new Move(3), InitialSelectedBoardActionQValues.ActionQValues.Single(aqv => aqv.Move.Number == 3).QValue), Clone),
-		new BoardAction(BoardsInSelectedPath[1], new ActionQValue(new Move(1), QValueTable.DefaultQValue), Clone),
-		new BoardActionStub(BoardsInSelectedPath[2], Board.Solved)//leading to a mocked solved state
-	};
-
-	private static readonly BoardAction[] OtherBoardActions = OtherBoardsNotChosen
-		.Select(board => new BoardAction(board, new ActionQValue(board.GetMoves().First(), 50), Clone))
-		.ToArray();
-
-	private static readonly BoardAction[] AllBoardActions = InitialBoardActionsInSelectedPath.Union(OtherBoardActions).ToArray();
+		new[] {
+			new BoardAction(BoardsInSelectedPath[0], new ActionQValue(new Move(3), InitialSelectedBoardActionQValues.ActionQValues.Single(aqv => aqv.Move.Number == 3).QValue), Clone),
+			new BoardAction(BoardsInSelectedPath[1], new ActionQValue(new Move(1), QValueTable.DefaultQValue), Clone),
+			new BoardActionStub(BoardsInSelectedPath[2], Board.Solved)//leading to a mocked solved state
+		};
 
     [Test, AutoMoqData]
     public async Task ShouldStopAfterNIterations(
@@ -111,12 +95,12 @@ public class QLearningTests
         SetUpActionSelectionPolicy(actionSelectionPolicyStub, numberOfIterations);
         SetUpBoardFactory(boardFactoryStub);
 
-        var iterationCount = 0;
-        sut.OnIterationCompleted += numberOfIterations => iterationCount = numberOfIterations;
+        var iterationCounter = 0;
+        sut.OnIterationCompleted += numberOfIterations => iterationCounter = numberOfIterations;
         //Act
         await sut.Learn();
         //Assert
-        iterationCount.Should().Be(numberOfIterations);
+        iterationCounter.Should().Be(numberOfIterations);
     }
 
     [Test, AutoMoqData]
@@ -136,10 +120,7 @@ public class QLearningTests
         SetUpQLearningHyperparameters(learningParametersStub);
         SetUpQValueReader(qValueReaderStub);
         SetUpQValueWriter(qValueWriterSpy);
-
-        rewardStrategyStub
-            .Setup(stub => stub.Calculate(It.Is<Board>(board => BoardsInSelectedPath.Contains(board, BoardComparer))))
-            .Returns(reward);//TODO: different reward for different boards?
+        SetUpRewardStrategy(rewardStrategyStub, reward);
 
         var numberOfIterations = learningParametersStub.Object.NumberOfIterations;
         SetUpActionSelectionPolicy(actionSelectionPolicyStub, numberOfIterations);
@@ -162,7 +143,7 @@ public class QLearningTests
         qValueWriterSpy.Verify(spy => spy.Write(It.Is<QValueTable>(qvt => VerifyQValueTable(qvt, expectedQValueTable))));
     }
 
-	[Test, AutoMoqData]
+    [Test, AutoMoqData]
     public async Task Should_UpdateQValuesUntilBoardIsResolved(
         [Frozen][Mock] Mock<QLearningHyperparameters> learningParametersStub,
         [Frozen][Mock] Mock<BoardFactory> boardFactoryStub,
@@ -185,12 +166,10 @@ public class QLearningTests
         currentBoardAction.NextBoard.IsSolved.ShouldBeTrue();
     }
 
-    private static void SetUpBoardFactory(Mock<BoardFactory> boardFactoryStub)//, Board randomBoard)
-    {
-        boardFactoryStub
+    private static void SetUpBoardFactory(Mock<BoardFactory> boardFactoryStub) =>
+		boardFactoryStub
             .Setup(stub => stub.GetSolvable())
             .Returns(SelectedInitialBoard);
-    }
 
     private static void SetUpActionSelectionPolicy(Mock<NonRepeatingActionSelectionPolicy> actionSelectionPolicyStub,
         int numberOfIterations)
@@ -213,6 +192,11 @@ public class QLearningTests
             .Setup(stub => stub.Read())
             .ReturnsAsync(InitialBoardActionQValues);
 
+	private static void SetUpRewardStrategy(Mock<IRewardStrategy> rewardStrategyStub, double reward) =>
+		rewardStrategyStub
+			.Setup(stub => stub.Calculate(It.Is<Board>(board => BoardsInSelectedPath.Contains(board, BoardComparer))))
+			.Returns(reward);//TODO: different reward for different boards?
+
     private static void SetUpQLearningHyperparameters(Mock<QLearningHyperparameters> learningParametersStub) =>
         learningParametersStub
             .SetupGet(stub => stub.NumberOfIterations)
@@ -220,13 +204,6 @@ public class QLearningTests
 
     /// <summary>Limit the iterations to a reasonable small number.</summary>
     private static int GetNumberOfIterations() => Random.Next(1, 10);
-
-    private static BoardAction GetBoardAction(BoardActionQValues currentBoardActionQValues, ActionQValues allPossibleActions)
-    {
-        var possibleActions = allPossibleActions.ToArray();
-        var nextAction = possibleActions[Random.Next(0, possibleActions.Length - 1)];
-        return new BoardAction(currentBoardActionQValues.Board, nextAction, board => new Board(board));
-    }
 
     private static ActionQValues GetActionWithRandomQValues(Board board) =>
 		new (board.GetMoves()
