@@ -1,6 +1,5 @@
 namespace FifteenPuzzle.Solvers.ReinforcementLearning;
 
-using System.Data;
 using FifteenPuzzle.Brokers;
 using FifteenPuzzle.Game;
 using FifteenPuzzle.Solvers.ReinforcementLearning.ActionSelection;
@@ -51,71 +50,10 @@ public class QLearning
             OnIterationCompleted(iteration);
         }
 
-		// var brd = qValueTable.First().Board;
-		// DataTable dt = new DataTable();
-		// for (int i = 0; i < Board.SideLength; i++)
-		// {
-		// 	dt.Columns.Add("Column" + (i + 1));
-		// }
-		// foreach (var row in brd)
-		// {
-		// 	DataRow dataRow = dt.NewRow();
-		// 	var column = 0;
-		// 	foreach (var cell in row)
-		// 	{
-		// 		dataRow[column++] = cell.Value;
-		// 	}
-		// 	dt.Rows.Add(dataRow);
-		// }
-		// var dt2 = dt;
-
-		// for (var i = 0; i < numbers.GetLength(0); ++i)
-		// {
-		// 	DataRow row = dt.NewRow();
-		// 	for (var j = 0; j < numbers.GetLength(1); ++j)
-		// 	{
-		// 		row[j] = numbers[i, j];
-		// 	}
-		// 	dt.Rows.Add(row);
-		// }
-		//var dt = qValueTable.Select(t => t.Board.Cells)
-
-        await SaveLearningResults(qValueTable);
+		await SaveLearningResults(qValueTable);
     }
 
-    private static string GetSolvedText(bool isSolved)
-    {
-
-        // var remainingPossibleInitialMoves = board.GetMoves().ToHashSet();
-        // while (remainingPossibleInitialMoves.Any())
-        // {
-        // 	var remainingActions = qValueTable.Get(board).Where(action => remainingPossibleInitialMoves.Contains(action.Move));
-        // 	var actionQValues = new ActionQValues(remainingActions);
-        // 	var (isActionFound, boardAction) = _nonRepeatingActionSelectionPolicy.TryPickAction(actionQValues, board);
-        // 	if (!isActionFound)
-        // 	{
-        // 		throw new Exception("Initial action has already been tested.");
-        // 	}
-
-        // 	//if the board cannot be solved following this action, what to do? Make the reward 0?
-        // 	FollowActionAndLearn(boardAction.Board, qValueTable);
-        // 	remainingPossibleInitialMoves.Remove(boardAction.ActionQValue.Move);
-        // }
-
-        // while (!board.IsSolved)
-        // {
-        // 	var actionQValues = qValueTable.Get(board);
-        // 	var (isActionFound, boardAction) = _nonRepeatingActionSelectionPolicy.TryPickAction(actionQValues, board);
-
-        // 	_boardTracker.Add(boardAction.BoardMove);
-        // 	var reward = _rewardStrategy.Calculate(boardAction.NextBoard);
-        // 	qValueTable.UpdateQValues(boardAction, reward);
-
-        // 	OnBoardActionQValueCalculated(boardAction);
-        // 	board = boardAction.NextBoard;
-        // }
-        return isSolved ? "solved" : "not solved";
-    }
+    private static string GetSolvedText(bool isSolved) => isSolved ? "solved" : "not solved";
 
     private bool FollowActionAndLearn(Board board, QValueTable qValueTable)
     {
@@ -135,14 +73,13 @@ public class QLearning
 			_boardTracker.Add(boardAction.Board);
 
 			var reward = _rewardStrategy.Calculate(boardAction.NextBoard);
-			//var nextActionQValues = qValueTable.GetOrAddDefaultActions(boardAction.NextBoard);
 			var qValue = _qValueCalculator.Calculate(boardAction, qValueTable, reward);
 			qValueTable.UpdateQValues(boardAction, qValue);
 			
 			OnBoardActionQValueCalculated(boardAction);
 			board = boardAction.NextBoard;
 			i++;
-			if (i >= 1000)
+			if (i >= 10000)
 				return false;
 		}
 		return true;

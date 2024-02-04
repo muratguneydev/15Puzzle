@@ -1,2 +1,5 @@
 If docker desktop is reset or reinstalled, the Code directory needs to be shared so that docker can have access it to copy, mount etc.
 Docker desktop / Preferences / Resources / File Sharing
+
+
+After adding a new project, for the intellisense to work add the project to the solution for C# Dev Kit to be able to load it.

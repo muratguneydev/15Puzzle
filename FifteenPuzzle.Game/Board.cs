@@ -10,6 +10,11 @@ public record Board : IEnumerable<Row>
 	public const int SideLength = 4;
 	private readonly Cell[,] _cells = new Cell[SideLength,SideLength];
 
+	// public Board()
+	// {
+		
+	// }
+
 	public Board(string[,] cells)
     {
         AssertBoardBoundaries(cells);
@@ -21,6 +26,11 @@ public record Board : IEnumerable<Row>
                 _cells[row, column] = new Cell(row, column, cells[row,column]);
             }
         }
+    }
+
+	public Board(Cell[,] cells)
+    {
+        _cells = cells;
     }
 
 	public Board(int[,] cellValues)
@@ -299,4 +309,17 @@ For all other cases, the puzzle instance is not solvable.
         }
 		return stringCellValues;
 	}
+
+	// private static Cell[,] InitializeCells()
+    // {
+	// 	var cells = new Cell[SideLength,SideLength];
+    //     for (var row = 0; row < SideLength; row++)
+    //     {
+    //         for (var column = 0; column <  SideLength; column++)
+    //         {
+    //             cells[row, column] = new Cell(row, column, "1");
+    //         }
+    //     }
+	// 	return cells;
+    // }
 }

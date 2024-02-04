@@ -10,6 +10,8 @@ public class QLearningCommand : Command
     private readonly ConsoleBoardRenderer _renderer;
     private readonly PuzzleLogger _logger;
     private bool _renderActionsOnConsoleEverySecond;
+	private int _iterationCounter = 1;
+	private int _actionCounter = 1;
 
     //dotnet run qlearning -r
 
@@ -19,14 +21,20 @@ public class QLearningCommand : Command
         _qLearning = qLearning;
         _renderer = renderer;
         _logger = logger;
-        _qLearning.OnBoardActionQValueCalculated += OnBoardActionQValueCalculated;
+        SetUpIterationEvents();
 
         var renderActionsOption = new Option<bool>(new[] { "--renderActions", "-r" }, () => false, "Show the board after each action for 1 second.");
         AddOption(renderActionsOption);
-		this.SetHandler(Execute, renderActionsOption);
+        this.SetHandler(Execute, renderActionsOption);
     }
 
-	private Task Execute(bool renderActions)
+    private void SetUpIterationEvents()
+    {
+        _qLearning.OnBoardActionQValueCalculated += OnBoardActionQValueCalculated;
+        _qLearning.OnIterationCompleted += OnIterationCompleted;
+    }
+
+    private Task Execute(bool renderActions)
     {
 		_renderActionsOnConsoleEverySecond = renderActions;
     	return _qLearning.Learn();
@@ -38,5 +46,16 @@ public class QLearningCommand : Command
         	_renderer.Render(boardAction.Board);
 		
 		_logger.LogInformation(new BoardText(boardAction.Board).Text);
+
+		_actionCounter++;
+		_logger.LogInformation($"Iteration:{_iterationCounter} Action:{_actionCounter}");
+    }
+
+	private void OnIterationCompleted(int obj)
+    {
+		_logger.LogInformation($"Iteration:{_iterationCounter} completed with Number Of Actions:{_actionCounter}");
+		_iterationCounter++;
+		_actionCounter = 1;
+
     }
 }
