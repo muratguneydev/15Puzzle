@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.Tests.API;
+namespace FifteenPuzzle.API.Tests;
 
 using System.Text;
 using AutoFixture.NUnit3;

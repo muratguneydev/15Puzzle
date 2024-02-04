@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.Tests.API;
+namespace FifteenPuzzle.API.Tests;
 
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Caching.Distributed;

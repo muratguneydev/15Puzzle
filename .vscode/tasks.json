@@ -28,6 +28,16 @@
 		  "kind": "build"
 		}
 	  },
+
+	  {
+		"label": "Build FifteenPuzzle.API.Tests",
+		"type": "shell",
+		"command": "dotnet",
+		"args": ["build", "FifteenPuzzle.API.Tests"],
+		"group": {
+		  "kind": "build"
+		}
+	  },
 	  {
 		"label": "Build FifteenPuzzle.Game",
 		"type": "shell",
