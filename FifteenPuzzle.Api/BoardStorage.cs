@@ -24,8 +24,11 @@ public class BoardStorage
 		return board;
 	}
 
-	// public async Task Update(Board board, CancellationToken cancellationToken)
-	// {
+	public async Task Update(Board board, CancellationToken cancellationToken)
+	{
+		var serializedBoardJson = JsonConvert.SerializeObject(board, Formatting.Indented);
+		var serializedBoardJsonBytes = Encoding.UTF8.GetBytes(serializedBoardJson);
+		await _distributedCache.SetAsync(BoardStorageKey, serializedBoardJsonBytes, new DistributedCacheEntryOptions(), cancellationToken);
 
-	// }
+	}
 }
