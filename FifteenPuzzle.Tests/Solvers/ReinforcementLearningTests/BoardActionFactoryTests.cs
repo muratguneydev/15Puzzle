@@ -1,11 +1,10 @@
 namespace FifteenPuzzle.Tests.SolverTests.ReinforcementLearningTests;
 
+using AutoFixture.NUnit3;
 using FifteenPuzzle.Game;
 using FifteenPuzzle.Solvers.ReinforcementLearning;
-using FifteenPuzzle.Tests.AutoFixture;
-using global::AutoFixture.NUnit3;
+using FifteenPuzzle.Tests.Common.AutoFixture;
 using NUnit.Framework;
-using Shouldly;
 
 public class BoardActionFactoryTests
 {

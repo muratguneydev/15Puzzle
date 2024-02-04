@@ -1,5 +1,7 @@
 namespace FifteenPuzzle.Api.Controllers;
 
+using System;
+using FifteenPuzzle.Api.Contracts;
 using FifteenPuzzle.Game;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,26 +9,31 @@ using Microsoft.AspNetCore.Mvc;
 [Route("[controller]")]
 public class GameController : ControllerBase
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly BoardStorage _boardStorage;
 
-    public GameController(IHttpContextAccessor httpContextAccessor)
+    public GameController(BoardStorage boardStorage)
 	{
-        _httpContextAccessor = httpContextAccessor;
+        _boardStorage = boardStorage;
     }
 
 	[HttpGet]
-    public IActionResult GetGameState()
+    public async Task<IActionResult> GetGameState(CancellationToken cancellationToken)
     {
-        var gameState = _httpContextAccessor.HttpContext.Session.GetString("GameSession");
-        // Process and return the game state
+        var board = await _boardStorage.Get(cancellationToken);
+		var boardDto = GetBoardDto(board);
+		var gameState = new GameStateDto(boardDto);
         return Ok(gameState);
+    }
+
+    private BoardDto GetBoardDto(Board board)
+    {
+        throw new NotImplementedException();
     }
 
     [HttpPost]
     public IActionResult UpdateGameState([FromBody] string newGameState)
     {
-        HttpContext.Session.SetString("GameSession", newGameState);
-        // Process the updated game state
+        
         return Ok();
     }
 

@@ -1,9 +1,9 @@
 namespace FifteenPuzzle.Tests.SolverTests.ReinforcementLearningTests;
 
+using AutoFixture;
 using FifteenPuzzle.Game;
 using FifteenPuzzle.Solvers.ReinforcementLearning;
-using FifteenPuzzle.Tests.AutoFixture;
-using global::AutoFixture;
+using FifteenPuzzle.Tests.Common.AutoFixture;
 using NUnit.Framework;
 using Shouldly;
 

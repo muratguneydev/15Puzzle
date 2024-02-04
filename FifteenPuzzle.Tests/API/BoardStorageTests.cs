@@ -1,10 +1,10 @@
 namespace FifteenPuzzle.Tests.API;
 
 using System.Text;
+using AutoFixture.NUnit3;
 using FifteenPuzzle.Api;
 using FifteenPuzzle.Game;
-using FifteenPuzzle.Tests.AutoFixture;
-using global::AutoFixture.NUnit3;
+using FifteenPuzzle.Tests.Common.AutoFixture;
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
 using Newtonsoft.Json;

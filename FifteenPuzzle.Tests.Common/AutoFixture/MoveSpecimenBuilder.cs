@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.Tests.AutoFixture;
+namespace FifteenPuzzle.Tests.Common.AutoFixture;
 
 using FifteenPuzzle.Game;
 using global::AutoFixture.Kernel;

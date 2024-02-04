@@ -1,11 +1,11 @@
 namespace FifteenPuzzle.Tests.SolverTests.ReinforcementLearningTests;
 
 using System.Text;
+using AutoFixture.NUnit3;
 using FifteenPuzzle.Game;
 using FifteenPuzzle.Solvers.ReinforcementLearning;
-using FifteenPuzzle.Tests.AutoFixture;
+using FifteenPuzzle.Tests.Common.AutoFixture;
 using FluentAssertions;
-using global::AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
 

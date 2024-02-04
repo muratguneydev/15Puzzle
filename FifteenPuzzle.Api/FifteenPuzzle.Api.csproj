@@ -13,8 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FifteenPuzzle.Game\FifteenPuzzle.Game.csproj" />
+    <ProjectReference Include="..\FifteenPuzzle.Api.Contracts\FifteenPuzzle.Api.Contracts.csproj" />
     <ProjectReference Include="..\FifteenPuzzle.Brokers\FifteenPuzzle.Brokers.csproj" />
+    <ProjectReference Include="..\FifteenPuzzle.Game\FifteenPuzzle.Game.csproj" />
   </ItemGroup>
 
 </Project>

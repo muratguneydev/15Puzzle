@@ -20,6 +20,15 @@
 		}
 	  },
 	  {
+		"label": "Build FifteenPuzzle.API.Contracts",
+		"type": "shell",
+		"command": "dotnet",
+		"args": ["build", "FifteenPuzzle.API.Contracts"],
+		"group": {
+		  "kind": "build"
+		}
+	  },
+	  {
 		"label": "Build FifteenPuzzle.Game",
 		"type": "shell",
 		"command": "dotnet",

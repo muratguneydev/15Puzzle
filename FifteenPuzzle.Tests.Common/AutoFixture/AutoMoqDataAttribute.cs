@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.Tests.AutoFixture;
+namespace FifteenPuzzle.Tests.Common.AutoFixture;
 
 using global::AutoFixture.AutoMoq;
 using global::AutoFixture.NUnit3;
