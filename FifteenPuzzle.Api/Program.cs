@@ -1,3 +1,5 @@
+using FifteenPuzzle.Api;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,6 +10,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSingleton<BoardStorage>();
 
 var app = builder.Build();
 
@@ -20,10 +24,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
-app.UseSession();
+//app.UseAuthorization();
+//app.UseDeveloperExceptionPage();
 
 app.MapControllers();
 
 app.Run();
+
+//Make the Program class public using a partial class declaration:
+public partial class Program { }

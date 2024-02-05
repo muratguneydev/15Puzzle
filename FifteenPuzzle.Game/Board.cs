@@ -10,11 +10,6 @@ public record Board : IEnumerable<Row>
 	public const int SideLength = 4;
 	private readonly Cell[,] _cells = new Cell[SideLength,SideLength];
 
-	// public Board()
-	// {
-		
-	// }
-
 	public Board(string[,] cells)
     {
         AssertBoardBoundaries(cells);

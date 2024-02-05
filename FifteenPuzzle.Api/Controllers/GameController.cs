@@ -22,12 +22,8 @@ public class GameController : ControllerBase
         var board = await _boardStorage.Get(cancellationToken);
 		var boardDto = GetBoardDto(board);
 		var gameState = new GameStateDto(boardDto);
-        return Ok(gameState);
-    }
-
-    private BoardDto GetBoardDto(Board board)
-    {
-        throw new NotImplementedException();
+        //return Ok(gameState);
+        return Ok();
     }
 
     [HttpPost]
@@ -57,27 +53,17 @@ public class GameController : ControllerBase
 		return Ok("Game data loaded from session.");
 	}
 
-	// private static readonly string[] Summaries = new[]
-	// {
-	//     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-	// };
-
-	// private readonly ILogger<GameController> _logger;
-
-	// public GameController(ILogger<GameController> logger)
-	// {
-	//     _logger = logger;
-	// }
-
-	// [HttpGet(Name = "GetWeatherForecast")]
-	// public IEnumerable<WeatherForecast> Get()
-	// {
-	//     return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-	//     {
-	//         Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-	//         TemperatureC = Random.Shared.Next(-20, 55),
-	//         Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-	//     })
-	//     .ToArray();
-	// }
+	private BoardDto GetBoardDto(Board board)
+    {
+		var boardCells = board.Cells;
+        var cellDtos = new CellDto[Board.SideLength,Board.SideLength];
+		for (var row = 0; row < Board.SideLength; row++)
+        {
+            for (var column = 0; column < Board.SideLength; column++)
+            {
+                cellDtos[row, column] = new CellDto(row, column, boardCells[row,column].Value);
+            }
+        }
+		return new (cellDtos);
+    }
 }
