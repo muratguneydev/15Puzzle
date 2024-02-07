@@ -68,12 +68,12 @@ public record Board : IEnumerable<Row>
 		{
 			var result = new Cell[_cells.Length];
 
-			int write = 0;
+			int flatIndex = 0;
 			for (int y = 0; y < RowLength; y++)
 			{
 				for (int x = 0; x < ColumnLength; x++)
 				{
-					result[write++] = _cells[y, x];
+					result[flatIndex++] = _cells[y, x];
 				}
 			}
 			return result;

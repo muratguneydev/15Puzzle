@@ -22,8 +22,8 @@ public class GameController : ControllerBase
         var board = await _boardStorage.Get(cancellationToken);
 		var boardDto = GetBoardDto(board);
 		var gameState = new GameStateDto(boardDto);
-        //return Ok(gameState);
-        return Ok();
+        return Ok(gameState);
+        //return Ok();
     }
 
     [HttpPost]
