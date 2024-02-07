@@ -23,34 +23,18 @@ public class GameController : ControllerBase
 		var boardDto = GetBoardDto(board);
 		var gameState = new GameStateDto(boardDto);
         return Ok(gameState);
-        //return Ok();
     }
 
-    [HttpPost]
-    public IActionResult UpdateGameState([FromBody] string newGameState)
-    {
-        
-        return Ok();
-    }
-
-	[HttpPut]
-	public async Task<IActionResult> Move(int number)
+    [HttpPut]
+    //[HttpPut("{number}")]
+	public async Task<IActionResult> Move([FromBody] int number, CancellationToken cancellationToken)
 	{
-		var jsonData = HttpContext.Session.GetString("Board");
+		var board = await _boardStorage.Get(cancellationToken);
+		board.Move(number.ToString());
 
-		if (jsonData == null)
-		{
-			return NotFound("No existing game session found.");
-		}
-
-		var board = await new StringContent(jsonData).ReadFromJsonAsync<Board>();
-
-		//await JsonContent.ReadFromJsonAsync<Board>(jsonData);
-
-		//JsonConvert.DeserializeObject<YourComplexObject>(jsonData);
-
-
-		return Ok("Game data loaded from session.");
+		var boardDto = GetBoardDto(board);
+		var gameState = new GameStateDto(boardDto);
+        return Ok(gameState);
 	}
 
 	private BoardDto GetBoardDto(Board board)

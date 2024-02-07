@@ -7,7 +7,6 @@ public class BoardDtoComparer : IEqualityComparer<BoardDto>
     public bool Equals(BoardDto? x, BoardDto? y) =>
 		x == null || y == null ? false : Flattened(x.Cells).SequenceEqual(Flattened(y.Cells));
     
-
     public int GetHashCode(BoardDto board)
 	{
 		int value=0;
