@@ -34,26 +34,38 @@ public class ServiceConfigurator
 
     private static void RegisterServices(IServiceCollection services)
     {
-        services.AddTransient<DepthFirstSolver>();
         services.AddTransient<ConsoleBoardRenderer>();
-
         services.AddTransient<Random>();
         services.AddSingleton<PuzzleLogger>();
+		services.AddHttpClient("ApiHttpClient", client =>
+        {
+            client.BaseAddress = new Uri("http://localhost:5000/");
+        });
 
+        AddQValueStorageDependencies(services);
+        AddQLearningDependencies(services);
+
+        services.AddTransient<DepthFirstSolver>();
+    }
+
+    private static void AddQLearningDependencies(IServiceCollection services)
+    {
         services.AddTransient<QLearning>();
         services.AddTransient<QValueCalculator>();
         services.AddSingleton<BoardTracker>();
-
-        services.AddTransient<QValueReader>();
-        services.AddTransient<QValueWriter>();
-        services.AddTransient<BoardActionQValuesStringConverter>();
-        services.AddTransient<FileSystem>();
-
         services.AddTransient<IRewardStrategy, GreedyManhattanDistanceRewardStrategy>();
         services.AddTransient<IActionSelectionPolicyFactory, EpsilonGreedyActionSelectionPolicyFactory>();
         services.AddTransient<NonRepeatingActionSelectionPolicy>();
         services.AddTransient<BoardFactory>();
         services.AddTransient<BoardActionFactory>();
+    }
+
+    private static void AddQValueStorageDependencies(IServiceCollection services)
+    {
+        services.AddTransient<QValueReader>();
+        services.AddTransient<QValueWriter>();
+        services.AddTransient<BoardActionQValuesStringConverter>();
+        services.AddTransient<FileSystem>();
     }
 
     private static void RegisterCommands(IServiceCollection services)
