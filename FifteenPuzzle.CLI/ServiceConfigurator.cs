@@ -72,6 +72,7 @@ public class ServiceConfigurator
     {
         services.AddTransient<Command, DepthFirstCommand>();
         services.AddTransient<Command, QLearningCommand>();
+        services.AddTransient<Command, PlayCommand>();
     }
 
     private static void RegisterSettings(IServiceCollection services, IConfigurationRoot configuration)

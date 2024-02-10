@@ -10,11 +10,9 @@ public class DepthFirstSolver
 	private readonly BoardComparer _boardComparer = new();
     private bool _solved;
 
-    //public DepthFirstSolver(Action<Board> onNewItemTested) => _onNewItemTested = onNewItemTested;
-
     public IReadOnlyList<Board> History => _history.ToList();
 
-	public void AddOnNewItemTested(Action<Board> onNewItemTested) => _onNewItemTested += onNewItemTested;
+	public void SubscribeToOnNewItemTested(Action<Board> onNewItemTested) => _onNewItemTested += onNewItemTested;
 
 	public void Solve(Board currentBoard)
     {

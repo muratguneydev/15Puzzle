@@ -29,7 +29,7 @@ public class DepthFirstCommand : Command
         _solver = solver;
         _renderer = renderer;
 
-		_solver.AddOnNewItemTested(_renderer.Render);
+		_solver.SubscribeToOnNewItemTested(_renderer.Render);
 
         var useEasyBoardOption = new Option<bool>(new[] { "--useEasyBoard", "-e" }, () => false, "Easy or random puzzle.");
         AddOption(useEasyBoardOption);

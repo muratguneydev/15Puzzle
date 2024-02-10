@@ -46,7 +46,7 @@ public class DepthFirstSolverTests
         //Arrange
         var solver = new DepthFirstSolver();
         var testedBoards = new List<Board>();
-        solver.AddOnNewItemTested(testedBoards.Add);
+        solver.SubscribeToOnNewItemTested(testedBoards.Add);
         var currentBoard = new Board(new[,]
         {
             { 1, 2, 3, 4 },
