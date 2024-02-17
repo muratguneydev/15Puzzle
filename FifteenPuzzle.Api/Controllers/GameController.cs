@@ -1,6 +1,5 @@
 namespace FifteenPuzzle.Api.Controllers;
 
-using System;
 using FifteenPuzzle.Api.Contracts;
 using FifteenPuzzle.Game;
 using Microsoft.AspNetCore.Mvc;
@@ -25,9 +24,20 @@ public class GameController : ControllerBase
         return Ok(gameState);
     }
 
-    [HttpPut]
-    //[HttpPut("{number}")]
-	public async Task<IActionResult> Move([FromBody] int number, CancellationToken cancellationToken)
+    // [HttpPut]
+    // //[HttpPut("{number}")]
+	// public async Task<IActionResult> Move([FromBody] int number, CancellationToken cancellationToken)
+	// {
+	// 	var board = await _boardStorage.Get(cancellationToken);
+	// 	board.Move(number.ToString());
+
+	// 	var boardDto = GetBoardDto(board);
+	// 	var gameState = new GameStateDto(boardDto);
+    //     return Ok(gameState);
+	// }
+
+    [HttpPut("{number}")]
+	public async Task<IActionResult> Move(int number, CancellationToken cancellationToken)
 	{
 		var board = await _boardStorage.Get(cancellationToken);
 		board.Move(number.ToString());

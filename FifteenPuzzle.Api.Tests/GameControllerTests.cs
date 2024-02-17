@@ -36,15 +36,16 @@ public class GameControllerTests
     }
 
 	[Test, DomainAutoData]
-	public async Task ShouldReturnCorrectState_WhenMoveIsMade(Board board)
+	public async Task ShouldReturnNewState_WhenMoveIsMade(Board board)
     {
         //Arrange
         await PutBoardInCache(board);
         var client = _factory.CreateClient();
 		var aMove = board.GetMoves().First();
-		var numberParameter = new StringContent(aMove.Number.ToString(), Encoding.UTF8, "application/json");
+		//var numberParameter = new StringContent(aMove.Number.ToString(), Encoding.UTF8, "application/json");
         //Act
-        var response = await client.PutAsync("/Game", numberParameter);
+        //var response = await client.PutAsync("/Game", numberParameter);
+        var response = await client.PutAsync($"/Game/{aMove.Number}", null);
         //Assert
         response.EnsureSuccessStatusCode();
 
