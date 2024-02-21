@@ -1,7 +1,6 @@
 namespace FifteenPuzzle.CLI;
 
 using FifteenPuzzle.Game;
-using Spectre.Console;
 
 public class FlatCellRenderer
 {
@@ -14,6 +13,5 @@ public class FlatCellRenderer
 		_isMovable = board.GetMovableCells().Contains(cell);
     }
 
-    //public IRenderable Render() => new Markup($"[blue]{_cell.Value}[/]");
     public string Render() => (_isMovable ? $"[blue]*{_cell.Value}*[/]" : _cell.Value) + ",";
 }

@@ -1,8 +1,8 @@
 namespace FifteenPuzzle.Api.Tests;
 
-using System.Text;
 using FifteenPuzzle.Api.Contracts;
 using FifteenPuzzle.Game;
+using FifteenPuzzle.Tests.Common;
 using FifteenPuzzle.Tests.Common.AutoFixture;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Caching.Distributed;
@@ -42,8 +42,8 @@ public class GameControllerTests
         await PutBoardInCache(board);
         var client = _factory.CreateClient();
 		var aMove = board.GetMoves().First();
-		//var numberParameter = new StringContent(aMove.Number.ToString(), Encoding.UTF8, "application/json");
         //Act
+		//var numberParameter = new StringContent(aMove.Number.ToString(), Encoding.UTF8, "application/json");
         //var response = await client.PutAsync("/Game", numberParameter);
         var response = await client.PutAsync($"/Game/{aMove.Number}", null);
         //Assert
@@ -67,22 +67,8 @@ public class GameControllerTests
 
     private GameStateDto GetExpected(Board board)
     {
-        var boardDto = GetBoardDto(board);
+        var boardDto = BoardDtoProvider.Get(board);
         var expected = new GameStateDto(boardDto);
         return expected;
-    }
-
-    private BoardDto GetBoardDto(Board board)
-    {
-		var boardCells = board.Cells;
-        var cellDtos = new CellDto[Board.SideLength,Board.SideLength];
-		for (var row = 0; row < Board.SideLength; row++)
-        {
-            for (var column = 0; column < Board.SideLength; column++)
-            {
-                cellDtos[row, column] = new CellDto(row, column, boardCells[row,column].Value);
-            }
-        }
-		return new (cellDtos);
     }
 }

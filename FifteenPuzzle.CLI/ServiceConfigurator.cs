@@ -37,7 +37,9 @@ public class ServiceConfigurator
         services.AddTransient<ConsoleBoardRenderer>();
         services.AddTransient<Random>();
         services.AddSingleton<PuzzleLogger>();
-		services.AddHttpClient("ApiHttpClient", client =>
+
+        services.AddTransient<ApiClient>();
+		services.AddHttpClient(ApiClient.Name, client =>
         {
             client.BaseAddress = new Uri("http://localhost:5000/");
         });
