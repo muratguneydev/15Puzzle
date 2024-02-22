@@ -2,7 +2,7 @@ namespace FifteenPuzzle.Solver.Cli.Commands;
 
 using System.CommandLine;
 using FifteenPuzzle.Brokers;
-using FifteenPuzzle.Cli.Tools.BoardRenering;
+using FifteenPuzzle.Cli.Tools.BoardRendering;
 using FifteenPuzzle.Solvers.ReinforcementLearning;
 
 public class QLearningCommand : Command
