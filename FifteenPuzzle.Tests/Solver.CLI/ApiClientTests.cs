@@ -2,7 +2,7 @@
 
 using AutoFixture.NUnit3;
 using FifteenPuzzle.Api.Contracts;
-using FifteenPuzzle.CLI;
+using FifteenPuzzle.Solver.Cli;
 using FifteenPuzzle.Game;
 using FifteenPuzzle.Tests.Common;
 using Moq;

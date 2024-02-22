@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.CLI;
+namespace FifteenPuzzle.Solver.Cli;
 
 using Microsoft.Extensions.Configuration;
 

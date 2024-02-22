@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.CLI.Commands;
+namespace FifteenPuzzle.Solver.Cli.Commands;
 
 using System.CommandLine;
 using FifteenPuzzle.Brokers;
@@ -11,6 +11,9 @@ public class PlayCommand : Command
     
     //dotnet run play
 
+
+	//TODO: FifteenPuzzle.Solver.Cli
+	//FifteenPuzzle.Play.CLI -> each command is a dedicated play command.
     public PlayCommand(QLearning qLearning, ConsoleBoardRenderer renderer, PuzzleLogger logger)
         : base("play", "Play 15 Puzzle with the help of previously learned data.")
     {

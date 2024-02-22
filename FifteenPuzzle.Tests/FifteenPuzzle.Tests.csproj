@@ -13,11 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../FifteenPuzzle.Solver.Cli/FifteenPuzzle.Solver.Cli.csproj" />
     <ProjectReference Include="..\FifteenPuzzle.API\FifteenPuzzle.API.csproj" />
     <ProjectReference Include="..\FifteenPuzzle.Api.Contracts\FifteenPuzzle.Api.Contracts.csproj" />
-    <ProjectReference Include="..\FifteenPuzzle.CLI\FifteenPuzzle.CLI.csproj" />
-    <!-- <ProjectReference Include="..\FifteenPuzzle.Game\FifteenPuzzle.Game.csproj" />
-    <ProjectReference Include="..\FifteenPuzzle.Solvers\FifteenPuzzle.Solvers.csproj" /> -->
     <ProjectReference Include="..\FifteenPuzzle.Tests.Common\FifteenPuzzle.Tests.Common.csproj" />
   </ItemGroup>
 

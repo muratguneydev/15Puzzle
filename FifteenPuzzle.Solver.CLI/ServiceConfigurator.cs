@@ -1,7 +1,7 @@
-namespace FifteenPuzzle.CLI;
+namespace FifteenPuzzle.Solver.Cli;
 
 using FifteenPuzzle.Brokers;
-using FifteenPuzzle.CLI.Commands;
+using FifteenPuzzle.Solver.Cli.Commands;
 using FifteenPuzzle.Solvers;
 using FifteenPuzzle.Solvers.ReinforcementLearning;
 using FifteenPuzzle.Solvers.ReinforcementLearning.ActionSelection;

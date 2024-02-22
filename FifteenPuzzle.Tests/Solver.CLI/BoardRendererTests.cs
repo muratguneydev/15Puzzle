@@ -1,6 +1,6 @@
 namespace FifteenPuzzle.Tests.CLI;
 
-using FifteenPuzzle.CLI;
+using FifteenPuzzle.Solver.Cli;
 using FifteenPuzzle.Game;
 using FluentAssertions;
 using Moq;
@@ -25,18 +25,25 @@ public class BoardRendererTests
     private static Table GetExpectedTable(Board board)
     {
         var expectedTable = new Table();
+        AddColumns(expectedTable);
+        AddRows(board, expectedTable);
+        return expectedTable;
+    }
+
+    private static void AddRows(Board board, Table expectedTable)
+    {
+        foreach (var row in board.Rows)
+        {
+            expectedTable.AddRow(row.Select(number => number.ToString()).ToArray());
+        }
+    }
+
+    private static void AddColumns(Table expectedTable)
+    {
         expectedTable.AddColumn(new TableColumn("[u]1[/]"));
         expectedTable.AddColumn(new TableColumn("[u]2[/]"));
         expectedTable.AddColumn(new TableColumn("[u]3[/]"));
         expectedTable.AddColumn(new TableColumn("[u]4[/]"));
-
-        foreach (var row in board.Rows)
-        {
-			expectedTable.AddRow(row.Select(number => number.ToString()).ToArray());
-
-        }
-
-        return expectedTable;
     }
 
     private static bool VerifyRenderedTable(Table table, Board board)

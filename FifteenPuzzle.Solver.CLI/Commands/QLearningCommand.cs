@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.CLI.Commands;
+namespace FifteenPuzzle.Solver.Cli.Commands;
 
 using System.CommandLine;
 using FifteenPuzzle.Brokers;

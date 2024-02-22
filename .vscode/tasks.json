@@ -2,10 +2,10 @@
 	"version": "2.0.0",
 	"tasks": [
 	  {
-		"label": "Build FifteenPuzzle.CLI",
+		"label": "Build FifteenPuzzle.Solver.Cli",
 		"type": "shell",
 		"command": "dotnet",
-		"args": ["build", "FifteenPuzzle.CLI"],
+		"args": ["build", "FifteenPuzzle.Solver.Cli"],
 		"group": {
 		  "kind": "build"
 		}
@@ -48,15 +48,6 @@
 		}
 	  },
 	  {
-		"label": "Build FifteenPuzzle.Solutions",
-		"type": "shell",
-		"command": "dotnet",
-		"args": ["build", "FifteenPuzzle.Solutions"],
-		"group": {
-		  "kind": "build"
-		}
-	  },
-	  {
 		"label": "Build FifteenPuzzle.Tests",
 		"type": "shell",
 		"command": "dotnet",
@@ -67,10 +58,10 @@
 		}
 	  },
 	  {
-		"label": "Run FifteenPuzzle.CLI",
+		"label": "Run FifteenPuzzle.Solver.Cli",
 		"type": "shell",
 		"command": "dotnet",
-		"args": ["run", "--project", "FifteenPuzzle.CLI"]
+		"args": ["run", "--project", "FifteenPuzzle.Solver.Cli"]
 	  },
 	  {
 		"label": "Test FifteenPuzzle.Tests",

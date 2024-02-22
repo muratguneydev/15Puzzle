@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.CLI;
+namespace FifteenPuzzle.Solver.Cli;
 
 using Spectre.Console;
 using FifteenPuzzle.Game;
