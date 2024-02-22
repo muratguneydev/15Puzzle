@@ -1,11 +1,11 @@
-namespace FifteenPuzzle.Tests.CLI;
+namespace FifteenPuzzle.Cli.Tools.Rendering.Tests;
 
-using FifteenPuzzle.Solver.Cli;
 using FifteenPuzzle.Game;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using Spectre.Console;
+using FifteenPuzzle.Cli.Tools.BoardRenering;
 
 public class BoardRendererTests
 {

@@ -2,6 +2,7 @@ namespace FifteenPuzzle.Solver.Cli.Commands;
 
 using System.CommandLine;
 using FifteenPuzzle.Brokers;
+using FifteenPuzzle.Cli.Tools.BoardRenering;
 using FifteenPuzzle.Solvers.ReinforcementLearning;
 
 public class PlayCommand : Command

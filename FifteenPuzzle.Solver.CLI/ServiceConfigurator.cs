@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Spectre.Console;
 using System.CommandLine;
 using FifteenPuzzle.Game;
+using FifteenPuzzle.Cli.Tools.BoardRenering;
 
 public class ServiceConfigurator
 {

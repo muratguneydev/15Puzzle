@@ -4,6 +4,7 @@ using FifteenPuzzle.Solver.Cli;
 using FifteenPuzzle.Game;
 using FifteenPuzzle.Solvers;
 using System.CommandLine;
+using FifteenPuzzle.Cli.Tools.BoardRenering;
 
 public class DepthFirstCommand : Command
 {

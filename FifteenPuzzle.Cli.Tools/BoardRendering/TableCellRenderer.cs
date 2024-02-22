@@ -1,7 +1,6 @@
-namespace FifteenPuzzle.Solver.Cli;
+namespace FifteenPuzzle.Cli.Tools.BoardRendering;
 
 using FifteenPuzzle.Game;
-using Spectre.Console;
 
 public class TableCellRenderer
 {
