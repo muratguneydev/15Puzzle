@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.Tests.CLI;
+namespace FifteenPuzzle.Play.Cli.Tests;
 
 using System.Text;
 using System.Threading;

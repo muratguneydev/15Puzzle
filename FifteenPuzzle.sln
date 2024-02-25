@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FifteenPuzzle.Solver.Cli", "FifteenPuzzle.Solver.Cli\FifteenPuzzle.Solver.Cli.csproj", "{8028636E-7F7D-430A-97B3-73A8BC553A9B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FifteenPuzzle.Tests", "FifteenPuzzle.Tests\FifteenPuzzle.Tests.csproj", "{30C14124-C8AA-4C77-B412-4B6E1906BAD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FifteenPuzzle.Solvers.Tests", "FifteenPuzzle.Solvers.Tests\FifteenPuzzle.Solvers.Tests.csproj", "{30C14124-C8AA-4C77-B412-4B6E1906BAD1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FifteenPuzzle.Game", "FifteenPuzzle.Game\FifteenPuzzle.Game.csproj", "{0282880F-9239-4CDE-83AB-0C054B012C18}"
 EndProject
@@ -24,6 +24,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FifteenPuzzle.Cli.Tools", "FifteenPuzzle.Cli.Tools\FifteenPuzzle.Cli.Tools.csproj", "{8B7A7E1C-B376-473B-9EDC-40186748D4F8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FifteenPuzzle.Cli.Tools.Tests", "FifteenPuzzle.Cli.Tools.Tests\FifteenPuzzle.Cli.Tools.Tests.csproj", "{F4CAAD42-218E-49D6-8D13-F11FF04CA954}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FifteenPuzzle.Play.Cli", "FifteenPuzzle.Play.Cli\FifteenPuzzle.Play.Cli.csproj", "{1EB0CA1C-1361-4E5D-B6F4-6E5478D5ADB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FifteenPuzzle.Play.Cli.Tests", "FifteenPuzzle.Play.Cli.Tests\FifteenPuzzle.Play.Cli.Tests.csproj", "{43718ED0-70FD-40C3-BF94-50571F795133}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +79,14 @@ Global
 		{F4CAAD42-218E-49D6-8D13-F11FF04CA954}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4CAAD42-218E-49D6-8D13-F11FF04CA954}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4CAAD42-218E-49D6-8D13-F11FF04CA954}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EB0CA1C-1361-4E5D-B6F4-6E5478D5ADB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EB0CA1C-1361-4E5D-B6F4-6E5478D5ADB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EB0CA1C-1361-4E5D-B6F4-6E5478D5ADB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EB0CA1C-1361-4E5D-B6F4-6E5478D5ADB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43718ED0-70FD-40C3-BF94-50571F795133}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43718ED0-70FD-40C3-BF94-50571F795133}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43718ED0-70FD-40C3-BF94-50571F795133}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43718ED0-70FD-40C3-BF94-50571F795133}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

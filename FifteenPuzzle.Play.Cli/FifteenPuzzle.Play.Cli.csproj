@@ -3,7 +3,6 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
-    <RootNamespace>FifteenPuzzle.Solver.Cli</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -12,23 +11,23 @@
     <ProjectReference Include="..\FifteenPuzzle.Api.Contracts\FifteenPuzzle.Api.Contracts.csproj" />
     <ProjectReference Include="..\FifteenPuzzle.Cli.Tools\FifteenPuzzle.Cli.Tools.csproj" />
     <ProjectReference Include="..\FifteenPuzzle.Game\FifteenPuzzle.Game.csproj" />
-    <ProjectReference Include="..\FifteenPuzzle.Solvers\FifteenPuzzle.Solvers.csproj" />
+    <ProjectReference Include="..\FifteenPuzzle.Brokers\FifteenPuzzle.Brokers.csproj" />
   </ItemGroup>
 
   <ItemGroup>
 	<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="8.0.0" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="8.0.0" />
 	<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.0" />
 	<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 	<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+	<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
 	<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	<PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
   </ItemGroup>
 
   <ItemGroup>
-        <None Update="appsettings.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-	</ItemGroup>
+    <Folder Include="Commands/" />
+  </ItemGroup>
 
 </Project>

@@ -1,16 +1,13 @@
-namespace FifteenPuzzle.Solver.Cli;
+namespace FifteenPuzzle.Play.Cli;
 
 using FifteenPuzzle.Brokers;
-using FifteenPuzzle.Solver.Cli.Commands;
-using FifteenPuzzle.Solvers;
-using FifteenPuzzle.Solvers.ReinforcementLearning;
-using FifteenPuzzle.Solvers.ReinforcementLearning.ActionSelection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Spectre.Console;
 using System.CommandLine;
-using FifteenPuzzle.Game;
 using FifteenPuzzle.Cli.Tools.BoardRendering;
+using FifteenPuzzle.Play.Cli.Commands;
+using Microsoft.Extensions.Options;
 
 public class ServiceConfigurator
 {
@@ -36,45 +33,24 @@ public class ServiceConfigurator
     private static void RegisterServices(IServiceCollection services)
     {
         services.AddTransient<ConsoleBoardRenderer>();
-        services.AddTransient<Random>();
+        //services.AddTransient<Random>();
         services.AddSingleton<PuzzleLogger>();
 
-        AddQValueStorageDependencies(services);
-        AddQLearningDependencies(services);
-
-        services.AddTransient<DepthFirstSolver>();
-    }
-
-    private static void AddQLearningDependencies(IServiceCollection services)
-    {
-        services.AddTransient<QLearning>();
-        services.AddTransient<QValueCalculator>();
-        services.AddSingleton<BoardTracker>();
-        services.AddTransient<IRewardStrategy, GreedyManhattanDistanceRewardStrategy>();
-        services.AddTransient<IActionSelectionPolicyFactory, EpsilonGreedyActionSelectionPolicyFactory>();
-        services.AddTransient<NonRepeatingActionSelectionPolicy>();
-        services.AddTransient<BoardFactory>();
-        services.AddTransient<BoardActionFactory>();
-    }
-
-    private static void AddQValueStorageDependencies(IServiceCollection services)
-    {
-        services.AddTransient<QValueReader>();
-        services.AddTransient<QValueWriter>();
-        services.AddTransient<BoardActionQValuesStringConverter>();
-        services.AddTransient<FileSystem>();
+        services.AddTransient<ApiClient>();
+		services.AddHttpClient(ApiClient.Name, (serviceProvider, httpClient) =>
+		{
+			var options = serviceProvider.GetRequiredService<IOptions<ApiSettings>>().Value;
+			httpClient.BaseAddress = new Uri(options.BaseUrl);
+		});
     }
 
     private static void RegisterCommands(IServiceCollection services)
     {
-        services.AddTransient<Command, DepthFirstCommand>();
-        services.AddTransient<Command, QLearningCommand>();
+        services.AddTransient<Command, PlayCommand>();
     }
 
     private static void RegisterSettings(IServiceCollection services, IConfigurationRoot configuration)
     {
-		ConfigurePOCO<QLearningHyperparameters>(services, configuration.GetSection(nameof(QLearningHyperparameters)));
-        ConfigurePOCO<QLearningSystemConfiguration>(services, configuration.GetSection(nameof(QLearningSystemConfiguration)));
         ConfigurePOCO<LoggingConfiguration>(services, configuration.GetSection(nameof(LoggingConfiguration)));
     }
 

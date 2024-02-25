@@ -5,7 +5,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using Spectre.Console;
-using FifteenPuzzle.Cli.Tools.BoardRenering;
+using FifteenPuzzle.Cli.Tools.BoardRendering;
 
 public class BoardRendererTests
 {

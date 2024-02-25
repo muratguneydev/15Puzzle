@@ -1,6 +1,5 @@
 namespace FifteenPuzzle.Solver.Cli.Commands;
 
-using FifteenPuzzle.Solver.Cli;
 using FifteenPuzzle.Game;
 using FifteenPuzzle.Solvers;
 using System.CommandLine;

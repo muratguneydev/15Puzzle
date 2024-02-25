@@ -1,4 +1,4 @@
-﻿namespace FifteenPuzzle.Solver.Cli;
+﻿namespace FifteenPuzzle.Play.Cli;
 
 using FifteenPuzzle.Api.Contracts;
 using FifteenPuzzle.Game;

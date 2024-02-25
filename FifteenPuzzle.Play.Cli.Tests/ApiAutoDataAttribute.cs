@@ -1,4 +1,4 @@
-﻿namespace FifteenPuzzle.Tests;
+﻿namespace FifteenPuzzle.Play.Cli.Tests;
 
 using AutoFixture;
 using AutoFixture.AutoMoq;

@@ -1,9 +1,8 @@
-namespace FifteenPuzzle.Solver.Cli.Commands;
+namespace FifteenPuzzle.Play.Cli.Commands;
 
 using System.CommandLine;
 using FifteenPuzzle.Brokers;
 using FifteenPuzzle.Cli.Tools.BoardRendering;
-using FifteenPuzzle.Solvers.ReinforcementLearning;
 
 public class PlayCommand : Command
 {
@@ -15,7 +14,7 @@ public class PlayCommand : Command
 
 	//TODO: FifteenPuzzle.Solver.Cli
 	//FifteenPuzzle.Play.CLI -> each command is a dedicated play command.
-    public PlayCommand(QLearning qLearning, ConsoleBoardRenderer renderer, PuzzleLogger logger)
+    public PlayCommand(ConsoleBoardRenderer renderer, PuzzleLogger logger)
         : base("play", "Play 15 Puzzle with the help of previously learned data.")
     {
         _renderer = renderer;
