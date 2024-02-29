@@ -18,16 +18,35 @@ public class ApiClientTests//Broker?
 		ApiClient sut)
 	{
 		//Arrange
-		var bardDto = BoardDtoProvider.Get(board);
-		var gameStateDto = new GameStateDto(bardDto);
-		var serializedGameStateJson = JsonConvert.SerializeObject(gameStateDto, Formatting.Indented);
-
-		var httpMessageHandlerStub = new HttpMessageHandlerStub(ApiClient.Name);
-		httpMessageHandlerStub.AddResponse("Game", serializedGameStateJson);
-		httpMessageHandlerStub.SetUpHttpClientFactory(httpClientFactoryStub);
+		SetUpToReturnBoard("Game", board, httpClientFactoryStub);
 		//Act
 		var result = await sut.GetCurrentBoard();
 		//Assert
 		result.ShouldBe(board, new BoardComparer());
 	}
+
+	[Test, ApiAutoMoqData]
+	public async Task ShouldReturnNewBoard(
+		Board board,
+		[Frozen] Mock<IHttpClientFactory> httpClientFactoryStub,
+		ApiClient sut)
+    {
+        //Arrange
+        SetUpToReturnBoard("Game/new", board, httpClientFactoryStub);
+        //Act
+        var result = await sut.GetNewBoard();
+        //Assert
+        result.ShouldBe(board, new BoardComparer());
+    }
+
+    private static void SetUpToReturnBoard(string url, Board board, Mock<IHttpClientFactory> httpClientFactoryStub)
+    {
+        var boardDto = BoardDtoProvider.Get(board);
+        var gameStateDto = new GameStateDto(boardDto);
+        var serializedGameStateJson = JsonConvert.SerializeObject(gameStateDto, Formatting.Indented);
+
+        var httpMessageHandlerStub = new HttpMessageHandlerStub(ApiClient.Name);
+        httpMessageHandlerStub.AddResponse(url, serializedGameStateJson);
+        httpMessageHandlerStub.SetUpHttpClientFactory(httpClientFactoryStub);
+    }
 }

@@ -15,6 +15,8 @@ public class GameController : ControllerBase
         _boardStorage = boardStorage;
     }
 
+	//TODO: Add start game method.
+
 	[HttpGet]
     public async Task<IActionResult> GetGameState(CancellationToken cancellationToken)
     {
@@ -23,6 +25,17 @@ public class GameController : ControllerBase
 		var gameState = new GameStateDto(boardDto);
         return Ok(gameState);
     }
+
+	[HttpPut("new")]
+	public async Task<IActionResult> NewGame(CancellationToken cancellationToken)
+	{
+		var board = new RandomBoard();
+		await _boardStorage.Update(board, cancellationToken);
+
+		var boardDto = GetBoardDto(board);
+		var gameState = new GameStateDto(boardDto);
+        return Ok(gameState);
+	}
 
     // [HttpPut]
     // //[HttpPut("{number}")]

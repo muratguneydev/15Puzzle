@@ -11,20 +11,25 @@ public class PlayCommand : Command
     
     //dotnet run play
 
-
-	//TODO: FifteenPuzzle.Solver.Cli
-	//FifteenPuzzle.Play.CLI -> each command is a dedicated play command.
     public PlayCommand(ConsoleBoardRenderer renderer, PuzzleLogger logger)
         : base("play", "Play 15 Puzzle with the help of previously learned data.")
     {
         _renderer = renderer;
         _logger = logger;
 
-        this.SetHandler(Execute);
+		var newGameOption = new Option<bool>(new[] { "--newGame", "-n" }, () => false, "Start a new game");
+        AddOption(newGameOption);
+        this.SetHandler(Execute, newGameOption);
+
+        //this.SetHandler(Execute);
     }
 
-    private Task Execute()
+    private Task Execute(bool newGame)
     {
+		if (newGame)
+		{
+			
+		}
     	return Task.CompletedTask;
     }
 }

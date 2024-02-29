@@ -14,6 +14,8 @@ builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSingleton<BoardStorage>();
 
+builder.WebHost.UseUrls("http://localhost:5057");
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

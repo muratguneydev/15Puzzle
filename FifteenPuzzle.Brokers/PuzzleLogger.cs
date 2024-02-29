@@ -1,5 +1,6 @@
 ﻿namespace FifteenPuzzle.Brokers;
 
+using System.Reflection;
 using Serilog;
 using Serilog.Core;
 
@@ -11,7 +12,7 @@ public class PuzzleLogger
 	{
 		string now = DateTime.Now.ToString("yyyyMMdd_HHmm");
 		_logger = new LoggerConfiguration()
-            .WriteTo.File($"{loggingConfiguration.LogDirectoryPath}/FifteenPuzzle.{now}.log")
+            .WriteTo.File($"{loggingConfiguration.LogDirectoryPath}/{Assembly.GetExecutingAssembly().GetName().Name}.{now}.log")
 			.Enrich.FromLogContext()
 			//.WriteTo.ColoredConsole()
             .CreateLogger();

@@ -16,7 +16,27 @@ public class GameControllerTests
 	//WebApplicationFactory<TEntryPoint> is used to create a TestServer for the integration tests. TEntryPoint is the entry point class of the SUT, usually Program.cs.
 	private readonly WebApplicationFactory<Program> _factory = new ();
 
-	[Test, DomainAutoData]
+	[Test]
+	public async Task ShouldStartNewGame()
+    {
+        //Arrange
+        var client = _factory.CreateClient();
+        //Act
+        var response = await client.PutAsync("/Game/new", null);
+        //Assert
+        response.EnsureSuccessStatusCode();
+
+        var firstBoard = await GetBoardFromResponse(response);
+        firstBoard.ShouldNotBeNull();
+
+        //Act2
+        response = await client.PutAsync("/Game/new", null);
+        //Assert2
+        var secondBoard = await GetBoardFromResponse(response);
+        secondBoard.ShouldNotBe(firstBoard, new BoardDtoComparer());
+    }
+
+    [Test, DomainAutoData]
 	public async Task ShouldGetGameState(Board board)
     {
         //Arrange
@@ -56,6 +76,15 @@ public class GameControllerTests
         var gameState = JsonConvert.DeserializeObject<GameStateDto>(responseString)
             ?? throw new Exception("Deserialized board is null.");
 		gameState.ShouldBe(expected, GameStateDtoComparer);
+    }
+
+	private static async Task<BoardDto> GetBoardFromResponse(HttpResponseMessage response)
+    {
+        var responseString = await response.Content.ReadAsStringAsync();
+        var gameState = JsonConvert.DeserializeObject<GameStateDto>(responseString)
+            ?? throw new Exception("Deserialized board is null.");
+        var firstBoard = gameState.Board;
+        return firstBoard;
     }
 
     private async Task PutBoardInCache(Board board)
