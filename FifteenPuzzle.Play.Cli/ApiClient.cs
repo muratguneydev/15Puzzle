@@ -27,8 +27,9 @@ public class ApiClient
 	public async Task<Board> GetNewBoard()
     {
         var httpClient = _httpClientFactory.CreateClient(Name);
-		var response = await httpClient.GetStringAsync("/Game/new");
-        var gameState = JsonConvert.DeserializeObject<GameStateDto>(response)
+		var response = await httpClient.PutAsync("/Game/new", null);
+		var responseString = await response.Content.ReadAsStringAsync();
+        var gameState = JsonConvert.DeserializeObject<GameStateDto>(responseString)
             ?? throw new Exception("Deserialized board is null.");
 		var board = GetBoard(gameState.Board);
 		return board;

@@ -33,25 +33,25 @@ public class ServiceConfigurator
     private static void RegisterServices(IServiceCollection services)
     {
         services.AddTransient<ConsoleBoardRenderer>();
-        //services.AddTransient<Random>();
         services.AddSingleton<PuzzleLogger>();
 
         services.AddTransient<ApiClient>();
 		services.AddHttpClient(ApiClient.Name, (serviceProvider, httpClient) =>
 		{
-			var options = serviceProvider.GetRequiredService<IOptions<ApiSettings>>().Value;
+			var options = serviceProvider.GetRequiredService<ApiSettings>();
 			httpClient.BaseAddress = new Uri(options.BaseUrl);
 		});
     }
 
     private static void RegisterCommands(IServiceCollection services)
     {
-        services.AddTransient<Command, PlayCommand>();
+        services.AddTransient<Command, NewGameCommand>();
     }
 
     private static void RegisterSettings(IServiceCollection services, IConfigurationRoot configuration)
     {
         ConfigurePOCO<LoggingConfiguration>(services, configuration.GetSection(nameof(LoggingConfiguration)));
+        ConfigurePOCO<ApiSettings>(services, configuration.GetSection(nameof(ApiSettings)));
     }
 
 	/// <summary>Registers the setting classes as POCO rather than IOption<T>.</summary>
