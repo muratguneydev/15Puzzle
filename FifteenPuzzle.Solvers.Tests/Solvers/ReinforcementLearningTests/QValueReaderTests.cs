@@ -4,6 +4,7 @@ using System.Text;
 using AutoFixture.NUnit3;
 using FifteenPuzzle.Game;
 using FifteenPuzzle.Solvers.ReinforcementLearning;
+using FifteenPuzzle.Tests.Common;
 using FifteenPuzzle.Tests.Common.AutoFixture;
 using FluentAssertions;
 using Moq;

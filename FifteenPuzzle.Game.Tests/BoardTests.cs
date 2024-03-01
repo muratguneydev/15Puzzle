@@ -1,6 +1,7 @@
 namespace FifteenPuzzle.Tests.Game;
 
 using FifteenPuzzle.Game;
+using FifteenPuzzle.Tests.Common;
 using FluentAssertions;
 using NUnit.Framework;
 using Shouldly;

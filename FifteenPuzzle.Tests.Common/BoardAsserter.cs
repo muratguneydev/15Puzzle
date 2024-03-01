@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.Tests;
+namespace FifteenPuzzle.Tests.Common;
 
 using FifteenPuzzle.Game;
 using Shouldly;

@@ -20,15 +20,13 @@ public class PlayCommand : Command
 		var newGameOption = new Option<bool>(new[] { "--newGame", "-n" }, () => false, "Start a new game");
         AddOption(newGameOption);
         this.SetHandler(Execute, newGameOption);
-
-        //this.SetHandler(Execute);
     }
 
     private Task Execute(bool newGame)
     {
 		if (newGame)
 		{
-			
+
 		}
     	return Task.CompletedTask;
     }

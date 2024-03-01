@@ -1,7 +1,7 @@
 namespace FifteenPuzzle.Tests.Game;
 
+using AutoFixture.NUnit3;
 using FifteenPuzzle.Game;
-using global::AutoFixture.NUnit3;
 using NUnit.Framework;
 using Shouldly;
 
