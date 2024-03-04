@@ -5,17 +5,14 @@ using System.Text;
 public class QValueReader
 {
     private readonly BoardActionQValuesStringConverter _boardActionQValuesStringConverter;
-    private readonly QLearningHyperparameters _parameters;
     private readonly QLearningSystemConfiguration _qLearningSystemConfiguration;
     private readonly FileSystem _fileSystem;
 
     public QValueReader(BoardActionQValuesStringConverter boardActionQValuesStringConverter,
-		QLearningHyperparameters parameters,
 		QLearningSystemConfiguration qLearningSystemConfiguration,
 		FileSystem fileSystem)
     {
         _boardActionQValuesStringConverter = boardActionQValuesStringConverter;
-        _parameters = parameters;
         _qLearningSystemConfiguration = qLearningSystemConfiguration;
         _fileSystem = fileSystem;
     }
@@ -24,7 +21,7 @@ public class QValueReader
     {
 		if (!_fileSystem.FileExists(_qLearningSystemConfiguration.QValueStorageFilePath))
 		{
-			return QValueTable.Empty(_parameters);
+			return QValueTable.Empty;
 		}
 		
 		var qValueStream = _fileSystem.GetFileStreamToRead(_qLearningSystemConfiguration.QValueStorageFilePath);

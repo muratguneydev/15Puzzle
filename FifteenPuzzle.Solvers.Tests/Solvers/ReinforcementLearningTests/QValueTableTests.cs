@@ -73,7 +73,7 @@ public class QValueTableTests
 	[Test, DomainAutoData]
 	public void ShouldProvideEmptyQValueTable(QLearningHyperparameters qLearningHyperparameters)
 	{
-		QValueTable.Empty(qLearningHyperparameters).ShouldBeEmpty();
+		QValueTable.Empty.ShouldBeEmpty();
 	}
 
 	private static BoardActionQValues GetNextBoardActionQValues(BoardActionQValues selectedBoardActionQValues, ActionQValue selectedActionQValue)

@@ -1,4 +1,4 @@
-namespace FifteenPuzzle.Tests.SolverTests.ReinforcementLearningTests;
+namespace FifteenPuzzle.Tests.Common;
 
 using System.Diagnostics.CodeAnalysis;
 using FifteenPuzzle.Solvers.ReinforcementLearning;

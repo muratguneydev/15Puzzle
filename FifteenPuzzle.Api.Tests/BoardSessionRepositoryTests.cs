@@ -2,8 +2,8 @@ namespace FifteenPuzzle.Api.Tests;
 
 using System.Text;
 using AutoFixture.NUnit3;
-using FifteenPuzzle.Api;
 using FifteenPuzzle.Game;
+using FifteenPuzzle.Tests.Common;
 using FifteenPuzzle.Tests.Common.AutoFixture;
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using Shouldly;
 
-public class BoardStorageTests
+public class BoardSessionRepositoryTests
 {
 	private static readonly DistributedCacheEntryOptionsComparer CacheEntryOptionsComparer = new();
 
@@ -19,12 +19,12 @@ public class BoardStorageTests
 	public async Task ShoulGetBoard(Board expectedBoard,
 		CancellationToken cancellationToken,
 		[Frozen] Mock<IDistributedCache> cacheStub,
-		BoardStorage sut)
+		BoardSessionRepository sut)
 	{
 		//Arrange
 		var serializedBoardJson = JsonConvert.SerializeObject(expectedBoard, Formatting.Indented);
 		cacheStub
-			.Setup(stub => stub.GetAsync(BoardStorage.BoardStorageKey, cancellationToken))
+			.Setup(stub => stub.GetAsync(BoardSessionRepository.BoardSessionKey, cancellationToken))
 			.ReturnsAsync(Encoding.UTF8.GetBytes(serializedBoardJson));
 		//Act
 		var retrievedBoard = await sut.Get(cancellationToken);
@@ -36,14 +36,14 @@ public class BoardStorageTests
 	public async Task ShoulUpdateBoard(Board expectedBoard,
 		CancellationToken cancellationToken,
 		[Frozen] Mock<IDistributedCache> cacheSpy,
-		BoardStorage sut)
+		BoardSessionRepository sut)
 	{
 		//Act
 		await sut.Update(expectedBoard, cancellationToken);
 		//Assert
 		var serializedBoardJson = JsonConvert.SerializeObject(expectedBoard, Formatting.Indented);
 		var serializedBoardJsonBytes = Encoding.UTF8.GetBytes(serializedBoardJson);
-		cacheSpy.Verify(spy => spy.SetAsync(BoardStorage.BoardStorageKey, serializedBoardJsonBytes,
+		cacheSpy.Verify(spy => spy.SetAsync(BoardSessionRepository.BoardSessionKey, serializedBoardJsonBytes,
 			It.Is<DistributedCacheEntryOptions>(o => CacheEntryOptionsComparer.Equals(o, new DistributedCacheEntryOptions())),
 			cancellationToken));
 	}

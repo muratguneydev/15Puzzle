@@ -8,19 +8,17 @@ using Microsoft.AspNetCore.Mvc;
 [Route("[controller]")]
 public class GameController : ControllerBase
 {
-    private readonly BoardStorage _boardStorage;
+    private readonly BoardSessionRepository _boardSessionRepository;
 
-    public GameController(BoardStorage boardStorage)
+    public GameController(BoardSessionRepository boardSessionRepository)
 	{
-        _boardStorage = boardStorage;
+        _boardSessionRepository = boardSessionRepository;
     }
-
-	//TODO: Add start game method.
 
 	[HttpGet]
     public async Task<IActionResult> GetGameState(CancellationToken cancellationToken)
     {
-        var board = await _boardStorage.Get(cancellationToken);
+        var board = await _boardSessionRepository.Get(cancellationToken);
 		var boardDto = GetBoardDto(board);
 		var gameState = new GameStateDto(boardDto);
         return Ok(gameState);
@@ -30,7 +28,7 @@ public class GameController : ControllerBase
 	public async Task<IActionResult> NewGame(CancellationToken cancellationToken)
 	{
 		var board = new RandomBoard();
-		await _boardStorage.Update(board, cancellationToken);
+		await _boardSessionRepository.Update(board, cancellationToken);
 
 		var boardDto = GetBoardDto(board);
 		var gameState = new GameStateDto(boardDto);
@@ -52,7 +50,7 @@ public class GameController : ControllerBase
     [HttpPut("{number}")]
 	public async Task<IActionResult> Move(int number, CancellationToken cancellationToken)
 	{
-		var board = await _boardStorage.Get(cancellationToken);
+		var board = await _boardSessionRepository.Get(cancellationToken);
 		board.Move(number.ToString());
 
 		var boardDto = GetBoardDto(board);

@@ -3,6 +3,7 @@ namespace FifteenPuzzle.Tests.SolverTests.ReinforcementLearningTests;
 using System.Diagnostics.CodeAnalysis;
 using FifteenPuzzle.Game;
 using FifteenPuzzle.Solvers.ReinforcementLearning;
+using FifteenPuzzle.Tests.Common;
 
 public class QValueTableComparer : IEqualityComparer<QValueTable>
 {

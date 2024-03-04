@@ -109,7 +109,7 @@ public class QLearning
 		catch(Exception e)
 		{
 			_logger.LogError("Error while loading previous learning results.", e);
-			return QValueTable.Empty(_parameters);
+			return QValueTable.Empty;
 		}
     }
 }

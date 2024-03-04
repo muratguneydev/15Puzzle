@@ -33,7 +33,7 @@ public record QValueTable : IEnumerable<BoardActionQValues>
 		actionToUpdate.UpdateQValue(reward);
 	}
 
-    public static QValueTable Empty(QLearningHyperparameters qLearningHyperparameters) =>
+    public static QValueTable Empty =>
 		new (Enumerable.Empty<BoardActionQValues>());
 
     public IEnumerator<BoardActionQValues> GetEnumerator() => _boardActionQValues.Values.GetEnumerator();

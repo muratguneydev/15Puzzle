@@ -91,7 +91,7 @@ public class GameControllerTests
     {
         var serializedBoardJson = JsonConvert.SerializeObject(board, Formatting.Indented);
         var cache = _factory.Services.CreateScope().ServiceProvider.GetRequiredService<IDistributedCache>();
-        await cache.SetStringAsync(BoardStorage.BoardStorageKey, serializedBoardJson);
+        await cache.SetStringAsync(BoardSessionRepository.BoardSessionKey, serializedBoardJson);
     }
 
     private GameStateDto GetExpected(Board board)
