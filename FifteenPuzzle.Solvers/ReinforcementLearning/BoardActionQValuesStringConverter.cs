@@ -29,19 +29,21 @@ public class BoardActionQValuesStringConverter
         return boardActionQValues;
     }
 
+    public string GetLine(BoardActionQValues boardActionQValues) =>
+		$"{GetBoardString(boardActionQValues.Board)}{Separator}{GetActionQValuesString(boardActionQValues.ActionQValues)}";
+
+    public string GetBoardQValueFileContent(IEnumerable<BoardActionQValues> boardActionQValuesCollection) =>
+		string.Join(Environment.NewLine, boardActionQValuesCollection.Select(GetLine));
+
     private ActionQValue GetActionQValue(string actionQValueString)
     {
         var parts = actionQValueString.Split(ActionQValueSeparator);
 		return new ActionQValue(new Move(int.Parse(parts[0])), double.Parse(parts[1]));
     }
 
-    public string GetLine(BoardActionQValues boardActionQValues) =>
-		$"{GetBoardString(boardActionQValues.Board)}{Separator}{GetActionQValuesString(boardActionQValues.ActionQValues)}";
-
     private string GetActionQValuesString(ActionQValues actionQValues) =>
 		string.Join(Separator, actionQValues.Select(a => $"{a.Move.Number}{ActionQValueSeparator}{a.QValue}"));
-		//$"{actionQValues.Up}{Separator}{actionQValues.Right}{Separator}{actionQValues.Down}{Separator}{actionQValues.Left}";
 
-    private object GetBoardString(Board board) =>
+    private string GetBoardString(Board board) =>
 		string.Join(Separator, board.Flattened.Select(cell => cell.Value));
 }

@@ -19,7 +19,7 @@ public class QValueWriter
 		var stream = _fileSystem.GetFileStreamToWrite(_qLearningSystemConfiguration.QValueStorageFilePath);
         var streamWriter = new StreamWriter(stream);//don't dispose as it will dispose the stream too.
 
-        var lines = string.Join(Environment.NewLine, qValueTable.Select(_boardActionQValuesStringConverter.GetLine));
+        var lines = _boardActionQValuesStringConverter.GetBoardQValueFileContent(qValueTable);
 
         await streamWriter.WriteAsync(lines);
         await streamWriter.FlushAsync();

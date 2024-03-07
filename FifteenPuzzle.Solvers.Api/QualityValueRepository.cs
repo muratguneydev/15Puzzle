@@ -45,7 +45,7 @@ public class QualityValueRepository
 
     private async Task SaveItemToCache(BoardActionQValues boardActionQValue, CancellationToken cancellationToken)
     {
-        var serializedJson = JsonConvert.SerializeObject(boardActionQValue, Formatting.Indented);
+        var serializedJson = JsonConvert.SerializeObject(boardActionQValue.ActionQValues, new MoveConverter());
         var serializedJsonBytes = Encoding.UTF8.GetBytes(serializedJson);
         await _distributedCache.SetAsync(GetKey(boardActionQValue), serializedJsonBytes, new DistributedCacheEntryOptions(), cancellationToken);
     }

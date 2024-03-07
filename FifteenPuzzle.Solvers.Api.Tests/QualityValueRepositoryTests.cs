@@ -51,7 +51,7 @@ public class QualityValueRepositoryTests
 		//Assert
 		foreach (var boardActionQValues in boardActionQValuesCollection)
 		{
-			var serializedJson = JsonConvert.SerializeObject(boardActionQValues, Formatting.Indented);
+			var serializedJson = JsonConvert.SerializeObject(boardActionQValues.ActionQValues, Formatting.Indented);
 			var serializedJsonBytes = Encoding.UTF8.GetBytes(serializedJson);
 			cacheSpy.Verify(spy => spy.SetAsync(GetKey(boardActionQValues).ToString(), serializedJsonBytes,
 				It.Is<DistributedCacheEntryOptions>(o => CacheEntryOptionsComparer.Equals(o, new DistributedCacheEntryOptions())),

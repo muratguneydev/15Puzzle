@@ -1,39 +1,67 @@
 namespace FifteenPuzzle.Solvers.Api.Tests;
 
-using System.Text;
 using FifteenPuzzle.Game;
 using FifteenPuzzle.Solvers.Contracts;
 using FifteenPuzzle.Solvers.ReinforcementLearning;
-using FifteenPuzzle.Tests.Common;
 using FifteenPuzzle.Tests.Common.AutoFixture;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Shouldly;
 
 public class ActionQualityControllerTests
 {
-	//WebApplicationFactory<TEntryPoint> is used to create a TestServer for the integration tests. TEntryPoint is the entry point class of the SUT, usually Program.cs.
-	private readonly WebApplicationFactory<Program> _factory = new ();
+	private static readonly BoardComparer BoardComparer = new();
 
     [Test, DomainAutoData]
-	public async Task ShouldGetActionQualityValues(Board board)
+	public async Task ShouldGetActionQualityValues(BoardActionQValues[] boardActionQValuesCollection)
     {
         //Arrange
-        //await PutBoardInCache(board);
-        var client = _factory.CreateClient();
+		var factory = GetWebApplicationFactory(boardActionQValuesCollection);
+        var client = factory.CreateClient();
+		var expected = boardActionQValuesCollection[0];
         //Act
-		var boardHashCode = 0;
-        var response = await client.GetAsync($"/ActionQuality/{boardHashCode}");
+		var key = GetKey(expected);
+        var response = await client.GetAsync($"/ActionQuality/{key}");
         //Assert
         response.EnsureSuccessStatusCode();
-
-        //var expected = BoardDtoProvider.Get(board);
 
         var responseString = await response.Content.ReadAsStringAsync();
         var actionQualityValues = JsonConvert.DeserializeObject<IEnumerable<ActionQualityValueDto>>(responseString)
             ?? throw new Exception("Deserialized actional quality result is null.");
-		//actionQualityValues.ShouldBe(expected, GameStateDtoComparer);
-		actionQualityValues.ShouldBeEmpty();
+		
+		var expectedDtos = expected.ActionQValues.Select(aqv => new ActionQualityValueDto(new MoveDto(aqv.Move.Number), aqv.QValue));
+		actionQualityValues.ShouldBe(expectedDtos, ignoreOrder: true);
     }
-}
 
+	private WebApplicationFactory<Program> GetWebApplicationFactory(BoardActionQValues[] boardActionQValuesCollection)
+	{
+		var fileContent = new BoardActionQValuesStringConverter().GetBoardQValueFileContent(boardActionQValuesCollection);
+		var fileSystemFake = new FileSystemFake(fileContent);
+
+		var factory = new CustomWebApplicationFactory(services =>
+		{
+			services.AddTransient<FileSystem>(_ => fileSystemFake);
+		});
+		//https://dotnetfromthemountain.com/aspnet-core-testing-strategies-the-basics/
+		//https://khalidabuhakmeh.com/testing-aspnet-core-6-apps
+
+		return factory;
+	}
+
+    // private async Task PutBoardActionQValuesInCache(IEnumerable<BoardActionQValues> boardActionQValuesCollection)
+    // {
+	// 	var cache = _factory.Services.CreateScope().ServiceProvider.GetRequiredService<IDistributedCache>();
+
+	// 	foreach (var boardActionQValues in boardActionQValuesCollection)
+	// 	{
+	// 		var serializedJson = JsonConvert.SerializeObject(boardActionQValues.ActionQValues, new MoveConverter());
+    //     	await cache.SetStringAsync(GetKey(boardActionQValues).ToString(), serializedJson);
+	// 	}
+    // }
+
+	private static int GetKey(BoardActionQValues boardActionQValue) =>
+			BoardComparer.GetHashCode(boardActionQValue.Board);
+
+	
+}
