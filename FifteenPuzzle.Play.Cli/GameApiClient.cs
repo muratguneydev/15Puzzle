@@ -35,8 +35,6 @@ public class GameApiClient
 		return board;
     }
 
-	//TODO: method for getting data from ActionQualityController
-
 	private Board GetBoard(BoardDto boardDto)
     {
 		var boardCells = boardDto.Cells;

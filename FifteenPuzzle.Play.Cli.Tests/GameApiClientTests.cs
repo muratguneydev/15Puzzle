@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using Shouldly;
 
-public class ApiClientTests//Broker?
+public class GameApiClientTests//Broker?
 {
 	[Test, ApiAutoMoqData]
 	public async Task ShouldReturnCurrentBoard(
