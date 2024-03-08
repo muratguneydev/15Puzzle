@@ -6,13 +6,13 @@ using FifteenPuzzle.Cli.Tools.BoardRendering;
 
 public class NewGameCommand : Command
 {
-    private readonly ApiClient _apiClient;
+    private readonly GameApiClient _apiClient;
     private readonly ConsoleBoardRenderer _renderer;
     private readonly PuzzleLogger _logger;
     
     //dotnet run play
 
-    public NewGameCommand(ApiClient apiClient, ConsoleBoardRenderer renderer, PuzzleLogger logger)
+    public NewGameCommand(GameApiClient apiClient, ConsoleBoardRenderer renderer, PuzzleLogger logger)
         : base("new", "Creates a new game board.")
     {
         _apiClient = apiClient;

@@ -15,7 +15,7 @@ public class ApiClientTests//Broker?
 	public async Task ShouldReturnCurrentBoard(
 		Board board,
 		[Frozen] Mock<IHttpClientFactory> httpClientFactoryStub,
-		ApiClient sut)
+		GameApiClient sut)
 	{
 		//Arrange
 		SetUpToReturnBoard("Game", board, httpClientFactoryStub);
@@ -29,7 +29,7 @@ public class ApiClientTests//Broker?
 	public async Task ShouldReturnNewBoard(
 		Board board,
 		[Frozen] Mock<IHttpClientFactory> httpClientFactoryStub,
-		ApiClient sut)
+		GameApiClient sut)
     {
         //Arrange
         SetUpToReturnBoard("Game/new", board, httpClientFactoryStub);
@@ -45,7 +45,7 @@ public class ApiClientTests//Broker?
         var gameStateDto = new GameStateDto(boardDto);
         var serializedGameStateJson = JsonConvert.SerializeObject(gameStateDto, Formatting.Indented);
 
-        var httpMessageHandlerStub = new HttpMessageHandlerStub(ApiClient.Name);
+        var httpMessageHandlerStub = new HttpMessageHandlerStub(GameApiClient.Name);
         httpMessageHandlerStub.AddResponse(url, serializedGameStateJson);
         httpMessageHandlerStub.SetUpHttpClientFactory(httpClientFactoryStub);
     }

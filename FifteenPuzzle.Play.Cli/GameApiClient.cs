@@ -4,12 +4,12 @@ using FifteenPuzzle.Api.Contracts;
 using FifteenPuzzle.Game;
 using Newtonsoft.Json;
 
-public class ApiClient
+public class GameApiClient
 {
 	public const string Name = "ApiHttpClient";
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public ApiClient(IHttpClientFactory httpClientFactory)
+    public GameApiClient(IHttpClientFactory httpClientFactory)
 	{
         _httpClientFactory = httpClientFactory;
     }
@@ -34,6 +34,8 @@ public class ApiClient
 		var board = GetBoard(gameState.Board);
 		return board;
     }
+
+	//TODO: method for getting data from ActionQualityController
 
 	private Board GetBoard(BoardDto boardDto)
     {

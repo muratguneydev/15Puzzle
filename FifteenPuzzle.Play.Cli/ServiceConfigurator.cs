@@ -35,8 +35,8 @@ public class ServiceConfigurator
         services.AddTransient<ConsoleBoardRenderer>();
         services.AddSingleton<PuzzleLogger>();
 
-        services.AddTransient<ApiClient>();
-		services.AddHttpClient(ApiClient.Name, (serviceProvider, httpClient) =>
+        services.AddTransient<GameApiClient>();
+		services.AddHttpClient(GameApiClient.Name, (serviceProvider, httpClient) =>
 		{
 			var options = serviceProvider.GetRequiredService<ApiSettings>();
 			httpClient.BaseAddress = new Uri(options.BaseUrl);
