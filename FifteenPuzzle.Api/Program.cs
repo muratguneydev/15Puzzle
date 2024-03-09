@@ -1,9 +1,13 @@
 using FifteenPuzzle.Api;
+//using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//builder.Logging.ClearProviders();
+//builder.Logging.AddConsole();
+builder.Services.AddHttpLogging(o => { });
 
+// Add services to the container.
 builder.Services.AddControllers()
 	.AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -17,6 +21,7 @@ builder.Services.AddSingleton<BoardSessionRepository>();
 builder.WebHost.UseUrls("http://localhost:5057");
 
 var app = builder.Build();
+app.UseHttpLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

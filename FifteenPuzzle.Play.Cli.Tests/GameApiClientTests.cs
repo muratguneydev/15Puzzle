@@ -39,6 +39,21 @@ public class GameApiClientTests//Broker?
         result.ShouldBe(board, new BoardComparer());
     }
 
+	[Test, ApiAutoMoqData]
+	public async Task ShouldReturnCorrectBoard_WhenMoveMade(
+		Move move,
+		Board nextBoard,
+		[Frozen] Mock<IHttpClientFactory> httpClientFactoryStub,
+		GameApiClient sut)
+    {
+        //Arrange
+        SetUpToReturnBoard($"Game/{move.Number}", nextBoard, httpClientFactoryStub);
+        //Act
+        var result = await sut.Move(move.Number);
+        //Assert
+        result.ShouldBe(nextBoard, new BoardComparer());
+    }
+
     private static void SetUpToReturnBoard(string url, Board board, Mock<IHttpClientFactory> httpClientFactoryStub)
     {
         var boardDto = BoardDtoProvider.Get(board);

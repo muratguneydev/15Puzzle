@@ -35,6 +35,17 @@ public class GameApiClient
 		return board;
     }
 
+	public async Task<Board> Move(int number)
+    {
+        var httpClient = _httpClientFactory.CreateClient(Name);
+		var response = await httpClient.PutAsync($"Game/{number}", null);
+		var responseString = await response.Content.ReadAsStringAsync();
+        var gameState = JsonConvert.DeserializeObject<GameStateDto>(responseString)
+            ?? throw new Exception("Deserialized board is null.");
+		var board = GetBoard(gameState.Board);
+		return board;
+    }
+
 	private Board GetBoard(BoardDto boardDto)
     {
 		var boardCells = boardDto.Cells;

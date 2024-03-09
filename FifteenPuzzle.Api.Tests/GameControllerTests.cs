@@ -78,6 +78,28 @@ public class GameControllerTests
 		gameState.ShouldBe(expected, GameStateDtoComparer);
     }
 
+	[Test, DomainAutoData]
+	public async Task ShouldStoreNewState_WhenMoveIsMade(Board board)
+    {
+        //Arrange
+        await PutBoardInCache(board);
+        var client = _factory.CreateClient();
+		var aMove = board.GetMoves().First();
+        //Act
+       	await client.PutAsync($"/Game/{aMove.Number}", null);
+		var getCurrentBoardResponse = await client.GetAsync("/Game");
+        //Assert
+        getCurrentBoardResponse.EnsureSuccessStatusCode();
+
+		board.Move(aMove.Number.ToString());
+        var expected = GetExpected(board);
+
+        var responseString = await getCurrentBoardResponse.Content.ReadAsStringAsync();
+        var gameState = JsonConvert.DeserializeObject<GameStateDto>(responseString)
+            ?? throw new Exception("Deserialized board is null.");
+		gameState.ShouldBe(expected, GameStateDtoComparer);
+    }
+
 	private static async Task<BoardDto> GetBoardFromResponse(HttpResponseMessage response)
     {
         var responseString = await response.Content.ReadAsStringAsync();

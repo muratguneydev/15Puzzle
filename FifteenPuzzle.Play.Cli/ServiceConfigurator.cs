@@ -38,7 +38,14 @@ public class ServiceConfigurator
         services.AddTransient<GameApiClient>();
 		services.AddHttpClient(GameApiClient.Name, (serviceProvider, httpClient) =>
 		{
-			var options = serviceProvider.GetRequiredService<ApiSettings>();
+			var options = serviceProvider.GetRequiredService<GameApiSettings>();
+			httpClient.BaseAddress = new Uri(options.BaseUrl);
+		});
+
+		services.AddTransient<SolversApiClient>();
+		services.AddHttpClient(SolversApiClient.Name, (serviceProvider, httpClient) =>
+		{
+			var options = serviceProvider.GetRequiredService<SolversApiSettings>();
 			httpClient.BaseAddress = new Uri(options.BaseUrl);
 		});
     }
@@ -46,12 +53,14 @@ public class ServiceConfigurator
     private static void RegisterCommands(IServiceCollection services)
     {
         services.AddTransient<Command, NewGameCommand>();
+        services.AddTransient<Command, MoveCommand>();
     }
 
     private static void RegisterSettings(IServiceCollection services, IConfigurationRoot configuration)
     {
         ConfigurePOCO<LoggingConfiguration>(services, configuration.GetSection(nameof(LoggingConfiguration)));
-        ConfigurePOCO<ApiSettings>(services, configuration.GetSection(nameof(ApiSettings)));
+        ConfigurePOCO<GameApiSettings>(services, configuration.GetSection(nameof(GameApiSettings)));
+        ConfigurePOCO<SolversApiSettings>(services, configuration.GetSection(nameof(SolversApiSettings)));
     }
 
 	/// <summary>Registers the setting classes as POCO rather than IOption<T>.</summary>

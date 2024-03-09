@@ -1,6 +1,6 @@
 namespace FifteenPuzzle.Play.Cli;
 
-public record ApiSettings
+public record SolversApiSettings
 {
 	public string BaseUrl { get; set; } = string.Empty;
 }

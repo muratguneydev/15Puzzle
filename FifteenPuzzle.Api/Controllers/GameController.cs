@@ -1,5 +1,6 @@
 namespace FifteenPuzzle.Api.Controllers;
 
+using System.Globalization;
 using FifteenPuzzle.Api.Contracts;
 using FifteenPuzzle.Game;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +53,8 @@ public class GameController : ControllerBase
 	{
 		var board = await _boardSessionRepository.Get(cancellationToken);
 		board.Move(number.ToString());
+
+		await _boardSessionRepository.Update(board, cancellationToken);
 
 		var boardDto = GetBoardDto(board);
 		var gameState = new GameStateDto(boardDto);
