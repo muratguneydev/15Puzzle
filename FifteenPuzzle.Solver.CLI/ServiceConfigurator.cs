@@ -29,13 +29,16 @@ public class ServiceConfigurator
     {
         RegisterSettings(services, _configuration);
         RegisterCommands(services);
-        services.AddTransient(_ => AnsiConsole.Console);
         RegisterServices(services);
     }
 
     private static void RegisterServices(IServiceCollection services)
     {
+        services.AddTransient(_ => AnsiConsole.Console);
+		services.AddTransient<TableBoardRenderer>();
+        services.AddTransient<FlatBoardRenderer>();
         services.AddTransient<ConsoleBoardRenderer>();
+		
         services.AddTransient<Random>();
         services.AddSingleton<PuzzleLogger>();
 

@@ -6,19 +6,14 @@ using Spectre.Console;
 public class FlatBoardRenderer
 {
 	private readonly IAnsiConsole _console;
-	private readonly Board _board;
 
-	public FlatBoardRenderer(IAnsiConsole console, Board board)
-	{
-		_console = console;
-		_board = board;
-	}
+    public FlatBoardRenderer(IAnsiConsole console) => _console = console;
 
-	public void Render()
+    public void Render(Board board)
 	{
-		foreach(var cell in _board.Flattened)
+		foreach(var cell in board.Flattened)
 		{
-			_console.Markup(new FlatCellRenderer(cell, _board).Render());
+			_console.Markup(new FlatCellRenderer(cell, board).Render());
 		}
 		_console.WriteLine();
 	}

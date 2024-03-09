@@ -1,18 +1,22 @@
 namespace FifteenPuzzle.Cli.Tools.BoardRendering;
 
-using Spectre.Console;
 using FifteenPuzzle.Game;
 
 public class ConsoleBoardRenderer
 {
-    private readonly IAnsiConsole _console;
+    private readonly TableBoardRenderer _tableBoardRenderer;
+    private readonly FlatBoardRenderer _flatBoardRenderer;
 
-    public ConsoleBoardRenderer(IAnsiConsole console) => _console = console;
+    public ConsoleBoardRenderer(TableBoardRenderer tableBoardRenderer, FlatBoardRenderer flatBoardRenderer)
+	{
+        _tableBoardRenderer = tableBoardRenderer;
+        _flatBoardRenderer = flatBoardRenderer;
+    }
 
     public void Render(Board board)
 	{
-		new TableBoardRenderer(_console, board).Render();
-		new FlatBoardRenderer(_console, board).Render();
+		_tableBoardRenderer.Render(board);
+		_flatBoardRenderer.Render(board);
 		Thread.Sleep(1000);
 	}
 }
