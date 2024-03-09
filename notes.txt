@@ -5,3 +5,10 @@ Docker desktop / Preferences / Resources / File Sharing
 
 
 After adding a new project, for the intellisense to work add the project to the solution for C# Dev Kit to be able to load it.
+
+To run:
+Start Game api: dotnet run
+Start Solver api: dotner run
+On Player Cli:
+	dotnet run new
+	dotnet run move -n <number to move> 
