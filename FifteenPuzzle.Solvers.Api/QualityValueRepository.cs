@@ -20,8 +20,9 @@ public class QualityValueRepository
 
     public virtual async Task<IEnumerable<ActionQValue>> Get(int boardHashCode, CancellationToken cancellationToken)
 	{
-		var serializedActionQValuesJsonBytes = await _distributedCache.GetAsync(boardHashCode.ToString(), cancellationToken)
-		 	?? throw new Exception("Couldn't find any board in the cache.");
+		var serializedActionQValuesJsonBytes = await _distributedCache.GetAsync(boardHashCode.ToString(), cancellationToken);
+		if (serializedActionQValuesJsonBytes == null)
+			return Enumerable.Empty<ActionQValue>();
 		var serializedActionQValuesJson = Encoding.UTF8.GetString(serializedActionQValuesJsonBytes);
 		var actionQValues = JsonConvert.DeserializeObject<IEnumerable<ActionQValue>>(serializedActionQValuesJson, new MoveConverter())
 			?? throw new Exception("Couldn't deserialize cells.");

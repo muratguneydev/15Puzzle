@@ -35,6 +35,7 @@ public class ServiceConfigurator
         services.AddTransient<ConsoleBoardRenderer>();
         services.AddTransient<TableBoardRenderer>();
         services.AddTransient<FlatBoardRenderer>();
+        services.AddTransient<SuggestionsRenderer>();
 		
         services.AddSingleton<PuzzleLogger>();
 

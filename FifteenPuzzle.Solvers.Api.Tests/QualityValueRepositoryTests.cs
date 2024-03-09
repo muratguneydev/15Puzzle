@@ -18,6 +18,22 @@ public class QualityValueRepositoryTests
 	private static readonly BoardComparer BoardComparer = new();
 
 	[Test, AutoMoqData]
+	public async Task Should_ReturnEmptyActionQValues_WhenBoardNotFound(int key,
+		CancellationToken cancellationToken,
+		[Frozen] Mock<IDistributedCache> cacheStub,
+		QualityValueRepository sut)
+	{
+		//Arrange
+		cacheStub
+			.Setup(stub => stub.GetAsync(key.ToString(), cancellationToken))
+			.ReturnsAsync(null as byte[]);
+		//Act
+		var result = await sut.Get(key, cancellationToken);
+		//Assert
+		result.ShouldBeEmpty();
+	}
+	
+	[Test, AutoMoqData]
 	public async Task ShoulGetActionQValues(BoardActionQValues boardActionQValues,
 		CancellationToken cancellationToken,
 		[Frozen] Mock<IDistributedCache> cacheStub,
